@@ -1,0 +1,11 @@
+{
+    "name": "sneakers-store",
+    "private": true,
+    "scripts": {
+        "dev": "npm --prefix frontend run dev",
+        "build": "npm --prefix frontend run build",
+        "types:check": "npm --prefix frontend run types:check",
+        "backend:serve": "php backend/artisan serve --host=localhost --port=8000",
+        "test": "composer --working-dir=backend test"
+    }
+}

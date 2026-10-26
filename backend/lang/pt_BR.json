@@ -1,0 +1,10 @@
+{
+    "Unauthenticated.": "Não autenticado.",
+    "Forbidden": "Acesso negado.",
+    "Not Found": "Não encontrado.",
+    "Too Many Attempts.": "Muitas tentativas.",
+    "The given data was invalid.": "Os dados informados são inválidos.",
+    "This password has appeared in a data leak. Please choose a different password.": "Esta senha apareceu em um vazamento de dados. Escolha outra senha.",
+    "You may store up to four addresses.": "Você pode cadastrar até quatro endereços.",
+    "Cart quantity cannot exceed 999.": "A quantidade no carrinho não pode ultrapassar 999."
+}

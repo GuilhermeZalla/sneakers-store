@@ -2,6 +2,8 @@
 
 Análise estática de 26/10/2026. Fonte: https://github.com/GuilhermeZalla/sneakers/tree/master, commit `438224126ba5239b4f6c357feafcf4b16473b75c`. A branch padrão `main`, commit `642c8c5695be621c1d70502b23f6c27f9349be2b`, contém somente README e LICENSE; a implementação está em `master`.
 
+Decisões posteriores aprovadas na mesma data, que substituem as propostas abaixo: MySQL; monorepo backend/frontend com React Router + API/Sanctum; Wallet simulada cobrando o total integral, sem desconto fictício; inglês/USD e pt-BR/BRL vinculados, com preços fixos por moeda. Preços BRL iniciais de demonstração serão 5× os USD originais, sem conversão em tempo real. O usuário determinou não fazer novos commits; a instrução de commits por fase ao final deste plano fica substituída por atualização do STATUS sem commit. O repositório remoto é somente fonte de consulta.
+
 ## Inventário do original
 
 Express concentra todos os handlers em `server/src/routes/account.js`, sem controllers separados. `server/index.js` monta esse mesmo router em **`/account` e `/product`**. Assim, os 21 handlers abaixo são expostos sob ambos os prefixos; `/product` não é uma API de catálogo.
