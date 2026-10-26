@@ -1,6 +1,8 @@
 # Sneakers Store
 
-Loja online em desenvolvimento com API Laravel e interface React. A API oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e histórico de pedidos. O frontend inclui cadastro, login, Home, catálogo, produto, favoritos e carrinho; checkout e painel serão desenvolvidos na próxima fase.
+Projeto de estudo independente, sem vínculo, associação ou endosso das marcas citadas.
+
+Loja online em desenvolvimento com API Laravel e interface React. A API oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e histórico de pedidos. O frontend inclui cadastro, login, Home, catálogo, produto, favoritos, carrinho, checkout e painel da conta.
 
 ## Estrutura e stack
 
@@ -44,7 +46,9 @@ Abra `http://localhost:5173`. O Vite encaminha `/api` e `/sanctum` ao backend co
 
 ## Autenticação e interface
 
-A autenticação usa sessão por cookie com [Sanctum SPA](https://laravel.com/docs/13.x/sanctum). O cliente obtém `/sanctum/csrf-cookie`, envia credenciais e inclui o token XSRF nas alterações. As páginas `/login` e `/register` permitem entrar ou criar conta; `/account` exige autenticação. Ao entrar depois de acessar uma rota protegida, o usuário retorna ao endereço solicitado.
+A autenticação usa sessão por cookie com [Sanctum SPA](https://laravel.com/docs/13.x/sanctum). O cliente obtém `/sanctum/csrf-cookie`, envia credenciais e inclui o token XSRF nas alterações. As páginas `/login` e `/register` permitem entrar ou criar conta; `/account` exige autenticação e reúne perfil, senha, endereços, favoritos e histórico de pedidos. Ao entrar depois de acessar uma rota protegida, o usuário retorna ao endereço solicitado.
+
+O checkout em `/checkout` usa as etapas de carrinho, entrega, Wallet simulada e confirmação. Uma tentativa pendente mantém a chave de idempotência e os dados em `sessionStorage`, permitindo repetir a confirmação mesmo se a resposta se perder. O histórico apresenta os valores na moeda registrada pelo pedido.
 
 O catálogo mantém busca, marca, categoria, faixa de preço, ordenação e paginação na URL. Favoritos e carrinho exigem autenticação; ao favoritar sem sessão, o usuário entra e retorna à página com o produto adicionado. O seletor no cabeçalho vincula inglês a USD e português brasileiro a BRL. A interface salva a preferência de idioma e envia `Accept-Language` à API. A base visual usa tokens de cores, bordas, sombras e espaçamento, com componentes reutilizáveis e foco visível.
 
@@ -72,7 +76,7 @@ O servidor calcula valores e armazena snapshots de itens, endereço, moeda, subt
 - Os fretes BRL são **valores provisórios de demonstração** fixados inicialmente em 5× os valores USD, sem cotação em tempo real.
 - Todos os métodos de pagamento são simulados. Na Wallet, o valor considerado é exatamente o total do pedido, sem desconto fictício de US$ 10, saldo financeiro ou integração com gateway.
 - As descrições dos 63 produtos possuem versões em inglês e português. O seeder preenche traduções ausentes sem sobrescrever textos e preços editados.
-- As imagens de demonstração são carregadas de servidores externos `images.solecollector.com` e `cdn.shopify.com`. A licença de uso dessas imagens não foi identificada; confirme as permissões com os titulares antes de publicar ou substitua-as por imagens licenciadas.
+- As imagens de demonstração são carregadas de servidores externos `images.solecollector.com` e `cdn.shopify.com`. A licença de uso dessas imagens não foi confirmada. Elas devem ser substituídas antes de tornar o repositório público ou fazer deploy. As URLs de demonstração estão em `backend/database/seeders/data/products.json`; registros já cadastrados no banco também precisam ser atualizados.
 
 ## Verificação
 

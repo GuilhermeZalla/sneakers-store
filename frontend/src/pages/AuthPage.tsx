@@ -6,6 +6,7 @@ import { Badge, Button, Card, Input, Select } from '../components/ui';
 import { useAuth, type Registration } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
 import { ApiError } from '../lib/api';
+import { formatPhone } from '../lib/checkout';
 
 const copy = {
     en: {
@@ -141,7 +142,14 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
                     type={type}
                     value={form[id] ?? ''}
                     required={required}
-                    onChange={(event) => update(id, event.target.value)}
+                    onChange={(event) =>
+                        update(
+                            id,
+                            id === 'phone' || id === 'second_contact'
+                                ? formatPhone(event.target.value)
+                                : event.target.value,
+                        )
+                    }
                     aria-invalid={!!error}
                     aria-describedby={error ? id + '-error' : undefined}
                     autoComplete={

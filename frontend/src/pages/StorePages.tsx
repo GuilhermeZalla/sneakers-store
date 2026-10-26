@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FavoriteButton, ProductCard } from '../components/ProductCard';
+import { ProductImage } from '../components/ProductImage';
 import { Button, Select } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
@@ -315,10 +316,10 @@ export function ProductPage() {
             {product && !loading && (
                 <div className="product-detail">
                     <div className="detail-image">
-                        <img
+                        <ProductImage
                             src={product.images[0] || product.thumbnail}
                             alt={product.name}
-                            loading="lazy"
+
                             width="700"
                             height="700"
                         />
@@ -421,10 +422,10 @@ export function CartPage() {
                         {cart.data.map((item) => (
                             <article className="cart-item" key={item.id}>
                                 <Link to={'/products/' + item.product.slug} className="cart-image">
-                                    <img
+                                    <ProductImage
                                         src={item.product.thumbnail}
                                         alt={item.product.name}
-                                        loading="lazy"
+
                                         width="160"
                                         height="160"
                                     />
@@ -488,6 +489,9 @@ export function CartPage() {
                                 ? 'Frete calculado no checkout.'
                                 : 'Shipping calculated at checkout.'}
                         </p>
+                        <Link className="store-link-button" to="/checkout">
+                            {pt ? 'FINALIZAR COMPRA' : 'CHECKOUT'} →
+                        </Link>
                     </aside>
                 </div>
             )}

@@ -4,7 +4,7 @@ Atualizado em 26/10/2026. Controle interno; instruções de uso ficam no README.
 
 ## Fase atual
 
-**Fase 6 concluída.** Próxima fase: checkout e dashboard no frontend. Home, catálogo, produto, favoritos e carrinho estão implementados.
+**Fase 7 concluída.** Checkout e dashboard estão implementados e verificados. Próxima fase: revisão final do README e screenshots.
 
 Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c`, de GuilhermeZalla/sneakers. Análise original em `ANALISE_MIGRACAO.md`.
 
@@ -16,7 +16,7 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - [x] 4. Backend: checkout, pedidos e testes.
 - [x] 5. Frontend: design tokens, componentes base e autenticação.
 - [x] 6. Frontend: home, catálogo, produto, wishlist e carrinho.
-- [ ] 7. Frontend: checkout e dashboard.
+- [x] 7. Frontend: checkout e dashboard.
 - [ ] 8. README final, screenshots, instruções locais e exclusões de escopo; README inicial criado.
 
 ## Decisões tomadas
@@ -86,13 +86,24 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - Frontend: 8 testes passaram, além de lint, tipos e build. Backend: 85 testes e 387 assertions; Pint aplicado e PHPStan sem erros.
 - Navegador real com Laravel e MySQL: favorito após login retorna à URL do catálogo; quantidade, remoção e troca de moeda no carrinho verificadas. Home, catálogo, produto, favoritos e carrinho sem overflow horizontal em 360, 768 e 1280 px. Contas temporárias removidas.
 
+## Verificação da fase 7
+
+- Frontend: 11 testes passaram, incluindo idempotência, máscaras e moeda do pedido; lint, tipos e build passaram. Backend: 85 testes e 387 assertions em SQLite isolado.
+- Navegador real com Laravel e MySQL: cadastro, carrinho, endereço, Wallet simulada, confirmação e histórico passaram. Resposta perdida após criação do pedido foi simulada e a tentativa repetida com a mesma chave confirmou o pedido.
+- Checkout, histórico e seções do dashboard verificados em 360, 768 e 1280 px sem overflow horizontal. Fallback de imagem validado; contas temporárias removidas.
+- URLs de imagens permanecem no JSON do seeder; fallback reutilizável no frontend. Não foram adicionadas cópias de imagens.
+
+## IMPEDIMENTO PARA PUBLICAÇÃO
+
+As imagens referenciadas em `images.solecollector.com` e `cdn.shopify.com` não têm licença confirmada. Devem ser substituídas por imagens com licença apropriada antes de tornar o repositório público ou fazer deploy. Não baixar nem commitar cópias dessas imagens. As URLs de demonstração estão centralizadas em `backend/database/seeders/data/products.json`; dados já cadastrados no banco podem exigir atualização separada.
+
 ## Pendências
 
 - Fase 4: concluída com checkout transacional, idempotência por usuário e fretes fixos. Valores BRL de frete são provisórios para demonstração, inicialmente 5× os USD, sem cotação em tempo real.
-- Fase 7: checkout e dashboard no frontend. Revisar também máscaras, estados de interface e responsividade dos próximos fluxos.
+- Fase 7 concluída: checkout e dashboard no frontend, com máscaras, erros de campos e moeda dos pedidos.
 - Referência visual e screenshots na etapa apropriada. README final será complementado com o fluxo completo.
 - Não há exportação MongoDB; nenhuma migração de dados pessoais reais foi feita.
 
 ## Próximo passo concreto
 
-Após aprovação, iniciar a fase 7: checkout e dashboard no frontend. Não fazer push.
+Após aprovação, iniciar a fase 8: documentação final e screenshots. O impedimento de publicação das imagens permanece. Não fazer push.

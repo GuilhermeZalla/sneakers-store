@@ -553,6 +553,21 @@ a {
     position: relative;
     overflow: hidden;
 }
+.image-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    color: #555;
+    background: #e6e4dc;
+    font-weight: 800;
+    font-size: 0.65rem;
+    text-align: center;
+    padding: 0.5rem;
+}
 .product-image a {
     display: block;
     width: 100%;
@@ -821,4 +836,119 @@ a {
         width: 36px;
         height: 36px;
     }
+}
+
+.checkout h1,
+.account-dashboard h1,
+.order-detail h1 {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 1000;
+    letter-spacing: -0.065em;
+    line-height: 1;
+    margin: 1rem 0;
+    overflow-wrap: anywhere;
+}
+.checkout-panel,
+.dashboard-panel {
+    background: var(--white);
+    border: var(--border);
+    padding: clamp(1rem, 3vw, 2rem);
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow);
+    max-width: 900px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.checkout-panel h2,
+.dashboard-panel h2 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    margin: 0 0 1.2rem;
+}
+.checkout-panel p,
+.dashboard-panel p {
+    margin: 0.8rem 0;
+    line-height: 1.5;
+}
+.checkout-panel ul,
+.dashboard-panel ul {
+    list-style: disc;
+    padding-left: 1.3rem;
+    margin: 1rem 0;
+}
+.checkout-panel li,
+.dashboard-panel li {
+    margin: 0.5rem 0;
+}
+.checkout-panel fieldset {
+    border: var(--border);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    min-width: 0;
+}
+.checkout-panel legend {
+    font-weight: 900;
+    padding: 0 0.35rem;
+}
+.radio-card {
+    display: flex;
+    align-items: start;
+    gap: 0.6rem;
+    padding: 0.8rem;
+    border: var(--border);
+    margin: 0.6rem 0;
+    background: #fff;
+    cursor: pointer;
+}
+.radio-card input {
+    margin-top: 0.2rem;
+}
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin: 1rem 0;
+}
+.check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+.dashboard-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+}
+.dashboard-nav button {
+    border: var(--border);
+    background: var(--white);
+    padding: 0.7rem 1rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+.dashboard-nav button[aria-current='page'] {
+    background: var(--yellow);
+}
+.dashboard-row {
+    border-top: var(--border);
+    padding: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.dashboard-row .button-row {
+    margin: 0;
+}
+.checkout .form-alert button {
+    margin-left: 1rem;
+}
+.cart-summary .store-link-button {
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
 }

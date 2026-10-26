@@ -1,4 +1,5 @@
 import { Heart } from 'lucide-react';
+import { ProductImage } from './ProductImage';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
@@ -56,10 +57,9 @@ export function ProductCard({ product }: { product: Product }) {
         <article className="product-card">
             <div className="product-image">
                 <Link to={'/products/' + product.slug}>
-                    <img
+                    <ProductImage
                         src={product.thumbnail}
                         alt={product.name}
-                        loading="lazy"
                         width="328"
                         height="240"
                     />

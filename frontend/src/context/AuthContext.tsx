@@ -10,7 +10,15 @@ import {
 import { apiRequest, ApiError, initializeCsrf } from '../lib/api';
 import { useLocale } from './LocaleContext';
 
-export type User = { id: number; name: string; email: string };
+export type User = {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string | null;
+    birthday?: string | null;
+    gender?: string | null;
+    second_contact?: string | null;
+};
 export type Registration = {
     name: string;
     email: string;
