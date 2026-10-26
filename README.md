@@ -1,6 +1,6 @@
 # Sneakers Store
 
-Migração em fases do projeto MERN [GuilhermeZalla/sneakers](https://github.com/GuilhermeZalla/sneakers/tree/master) para Laravel + React. A API já oferece autenticação, catálogo, carrinho, favoritos e endereços. As páginas da loja, dashboard e checkout serão implementadas nas fases seguintes; o frontend atual é apenas a entrada React Router.
+Migração em fases do projeto MERN [GuilhermeZalla/sneakers](https://github.com/GuilhermeZalla/sneakers/tree/master) para Laravel + React. A API já oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e pedidos. As páginas da loja, dashboard e checkout serão implementadas nas fases seguintes; o frontend atual é apenas a entrada React Router.
 
 ## Estrutura e stack
 
@@ -64,6 +64,10 @@ O catálogo é público. Carrinho, wishlist e endereços exigem sessão autentic
 - `GET/POST /api/v1/wishlist` lista ou adiciona por `product_id`. `DELETE /api/v1/wishlist/{id}` remove pelo ID do item da wishlist. Adicionar novamente é idempotente.
 - `GET/POST /api/v1/addresses` lista ou cria. `GET/PATCH/PUT/DELETE /api/v1/addresses/{id}` consulta, altera ou remove. `PUT /api/v1/addresses/{id}/default` define o padrão. O usuário pode ter até quatro endereços e, no máximo, um padrão. CEP é string com oito dígitos e hífen opcional; `type` aceita `home`, `work` ou `other`, e `state` aceita uma UF brasileira.
 
+- `GET /api/v1/shipping-methods` informa preços e prazos fixos na moeda selecionada.
+- `POST /api/v1/checkout` recebe `address_id`, `shipping_method` (`blue`, `sedex`, `fedex`, `red`) e `payment_method` (`debit`, `credit`, `paypal`, `wallet`). Envie um cabeçalho `Idempotency-Key` único de 16 a 64 caracteres alfanuméricos, hífen ou sublinhado por tentativa de compra. Repetir a mesma chave e os mesmos dados retorna o mesmo pedido; dados ou idioma diferentes retornam 409. Para uma nova compra, use outra chave.
+- `GET /api/v1/orders` lista os pedidos da conta; `GET /api/v1/orders/{id}` retorna seus detalhes. Pedidos mantêm snapshots dos itens, endereço, moeda, subtotal, frete e total. Valores recebidos do cliente são ignorados e o carrinho é limpo na mesma transação de criação do pedido.
+
 Gênero aceita `male`, `female` ou `not_informed`. Telefones e CEP são strings. Não envie o e-mail do usuário como mecanismo de autorização. CORS permite somente a origem configurada; para HTTPS em produção, configure cookies seguros e o domínio de sessão adequadamente.
 
 ## Idiomas, moedas e valores
@@ -78,9 +82,9 @@ Gênero aceita `male`, `female` ou `not_informed`. Telefones e CEP são strings.
 
 ## Pagamento simulado e desvios do original
 
-O checkout será implementado na fase 4. A regra aprovada é **valor cobrado = total do pedido**, inclusive para Wallet. A Wallet continuará sendo um método de pagamento simulado, **sem o desconto fictício de US$ 10 do projeto MERN**, sem saldo financeiro e sem integração com gateway.
+O pagamento é simulado. A regra aprovada é **valor cobrado = total do pedido**, inclusive para Wallet. A Wallet continuará sendo um método de pagamento simulado, **sem o desconto fictício de US$ 10 do projeto MERN**, sem saldo financeiro e sem integração com gateway.
 
-Os fretes continuarão simulados. Não há estoque quantitativo, painel administrativo ou avaliações enviadas por usuários no original. `rank` é a nota estática exibida em estrelas. O catálogo inclui os 50 tênis e também 13 roupas, acessórios e presentes.
+O limite de quatro endereços por usuário é um desvio do projeto original. Os fretes são simulados e fixos por moeda; os valores BRL iniciais de demonstração foram definidos como 5× os valores USD, sem cotação em tempo real. Não há estoque quantitativo, painel administrativo ou avaliações enviadas por usuários no original. `rank` é a nota estática exibida em estrelas. O catálogo inclui os 50 tênis e também 13 roupas, acessórios e presentes.
 
 ## Verificação
 
@@ -90,7 +94,7 @@ php artisan test --compact
 composer types:check
 ```
 
-Os testes usam SQLite em memória e não alteram o MySQL configurado. Executar os testes não substitui validar a instalação/migração no MySQL local.
+Os testes usam SQLite em memória e não alteram o MySQL configurado. Para testar concorrência real no MySQL local com uma conta temporária e dois servidores locais: `python tests/Integration/mysql_concurrency.py` dentro de `backend/`. Use apenas um banco de desenvolvimento com migrations e catálogo já aplicados; a conta de teste e seus dados são removidos ao final. Executar os testes não substitui validar a instalação/migração no MySQL local.
 
 ```powershell
 cd frontend

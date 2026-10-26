@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['user_id', 'order_number', 'status', 'payment_method', 'shipping_method', 'currency', 'locale', 'shipping_price', 'subtotal', 'total', 'ordered_at', 'shipping_name', 'shipping_postal_code', 'shipping_street', 'shipping_number', 'shipping_complement', 'shipping_reference', 'shipping_district', 'shipping_city', 'shipping_state'])]
+#[Fillable(['user_id', 'order_number', 'idempotency_key', 'request_hash', 'status', 'payment_method', 'shipping_method', 'currency', 'locale', 'shipping_price', 'subtotal', 'total', 'ordered_at', 'shipping_name', 'shipping_postal_code', 'shipping_street', 'shipping_number', 'shipping_complement', 'shipping_reference', 'shipping_district', 'shipping_city', 'shipping_state'])]
 class Order extends Model
 {
     /** @use HasFactory<OrderFactory> */

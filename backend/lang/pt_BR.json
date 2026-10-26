@@ -6,5 +6,8 @@
     "The given data was invalid.": "Os dados informados são inválidos.",
     "This password has appeared in a data leak. Please choose a different password.": "Esta senha apareceu em um vazamento de dados. Escolha outra senha.",
     "You may store up to four addresses.": "Você pode cadastrar até quatro endereços.",
-    "Cart quantity cannot exceed 999.": "A quantidade no carrinho não pode ultrapassar 999."
+    "Cart quantity cannot exceed 999.": "A quantidade no carrinho não pode ultrapassar 999.",
+    "Your cart is empty.": "Seu carrinho está vazio.",
+    "The selected address is invalid.": "O endereço selecionado é inválido.",
+    "This idempotency key was already used for a different checkout.": "Esta chave de idempotência já foi usada em outro checkout."
 }

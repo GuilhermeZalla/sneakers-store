@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +15,10 @@ Route::prefix('v1')->group(function (): void {
     Route::get('products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
     Route::middleware('auth:sanctum')->group(function (): void {
+        Route::get('shipping-methods', [CheckoutController::class, 'shipping']);
+        Route::post('checkout', [CheckoutController::class, 'store']);
+        Route::get('orders', [OrderController::class, 'index']);
+        Route::get('orders/{order}', [OrderController::class, 'show']);
         Route::get('cart', [CartController::class, 'index'])->name('cart.index');
         Route::post('cart/items', [CartController::class, 'store'])->name('cart.store');
         Route::patch('cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.update');
