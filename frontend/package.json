@@ -8,7 +8,7 @@
         "check": "vp check",
         "check:fix": "vp check --fix",
         "types:check": "tsc --noEmit",
-        "test": "node --experimental-strip-types --test src/lib/locale.test.ts"
+        "test": "node --experimental-strip-types --test src/lib/locale.test.ts src/lib/api.test.ts"
     },
     "dependencies": {
         "@radix-ui/react-avatar": "^1.1.3",

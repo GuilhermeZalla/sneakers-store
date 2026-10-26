@@ -4,7 +4,7 @@ Atualizado em 26/10/2026. Controle interno; instruções de uso ficam no README.
 
 ## Fase atual
 
-**Fase 4 concluída.** Próxima fase: componentes e autenticação no frontend. O frontend tem somente a base React Router; páginas da loja e checkout seguem nas fases 5–7.
+**Fase 5 concluída.** Próxima fase: páginas da loja. Login, cadastro e acesso autenticado estão implementados; catálogo visual, carrinho, checkout e painel seguem nas fases 6–7.
 
 Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c`, de GuilhermeZalla/sneakers. Análise original em `ANALISE_MIGRACAO.md`.
 
@@ -14,7 +14,7 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - [x] 2. Backend: migrations, models, factories, seeder do catálogo e autenticação.
 - [x] 3. Backend: produtos, carrinho, wishlist, endereços e testes.
 - [x] 4. Backend: checkout, pedidos e testes.
-- [ ] 5. Frontend: design tokens, componentes base e autenticação; setup básico já antecipado pela separação do monorepo.
+- [x] 5. Frontend: design tokens, componentes base e autenticação.
 - [ ] 6. Frontend: home, produto, wishlist e carrinho.
 - [ ] 7. Frontend: checkout e dashboard.
 - [ ] 8. README final, screenshots, instruções locais e exclusões de escopo; README inicial criado.
@@ -26,13 +26,13 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - Monorepo aprovado com Laravel em `backend/` e React/Vite/React Router em `frontend/`, substituindo Inertia. AGENTS.md alterado apenas nos dois blocos ligados ao Inertia; regras gerais, estilo, testes e convenções foram preservados.
 - Fortify do starter reaproveitado sem telas para login, cadastro, logout e recuperação de senha; Sanctum protege a API por sessão/cookies e CSRF. Perfil e troca de senha foram adaptados para JSON; testes existentes foram adaptados sem excluir arquivos de testes.
 - Componentes e páginas do starter preservados em `frontend/starter/` para reaproveitar nas fases de frontend. Não são compilados nem usados pela entrada atual.
-- TypeScript mantido; Tailwind com tokens CSS planejados; Context/reducers para auth/carrinho planejados.
+- TypeScript e Tailwind mantidos; tokens CSS neobrutalistas e React Context para sessão e idioma implementados. Estado do carrinho será feito nas próximas fases.
 - Idioma/moeda vinculados: `en`/USD com formatação en-US e `pt_BR`/BRL com formatação pt-BR. A API negocia pelo Accept-Language. Mensagens de auth/validação e utilitários de dinheiro/data têm suporte aos dois pares.
 - Preços fixos e independentes por moeda, armazenados em centavos. O usuário aprovou **5× o USD original apenas para gerar os BRL iniciais de demonstração**, sem cotação em tempo real. Reexecutar o seeder não sobrescreve ajustes posteriores de preço.
 - Preservados 63 produtos, marcas, categorias, imagens, cores e tamanhos. `rank` é rating estático do produto; não criar votação ou estoque quantitativo inexistentes.
 - Carrinho e pedido possuem moeda explícita; itens de pedido preservam snapshots. O carrinho mantém o preço de adição enquanto a moeda não muda e, na troca de idioma/moeda, atualiza todos os itens em transação com os preços da moeda selecionada.
 - Carrinho aceita quantidades de 1 a 999 e soma ao adicionar um produto já existente. Favoritar novamente é idempotente. A lista de endereços tem limite de quatro, e pode haver no máximo um endereço padrão por usuário.
-- **Wallet simulada sem desconto fictício de US$ 10; valor cobrado = total do pedido.** Regra aprovada e registrada no README; implementação do pagamento pertence à fase 4.
+- **Wallet simulada sem desconto fictício de US$ 10; valor cobrado = total do pedido.** Regra aprovada, implementada e registrada no README.
 - A skill `testing-best-practices` exigida no AGENTS.md não está disponível. O usuário autorizou usar a documentação oficial do Pest/Laravel como substituta, mantendo as demais regras de testes.
 
 ## Desvios do original
@@ -73,13 +73,19 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - Teste de integração no MySQL local: dez pares simultâneos de alteração de endereço padrão e checkout simultâneo com a mesma chave, com uma conta temporária removida ao final.
 - Pint aplicado; PHPStan nível 7 sem erros; suíte completa: 83 testes e 380 assertions, em SQLite em memória. Migration de idempotência aplicada no MySQL local.
 
+## Verificação da fase 5
+
+- Teste de navegador real com proxy Vite, Laravel e MySQL: cadastro, rota protegida com retorno ao endereço, logout e login passaram; conta temporária removida.
+- Testes de frontend cobrem formatação e cliente HTTP, incluindo credenciais, CSRF e erros 401/419/422. Lint, tipos e build verificados.
+- Histórico Git: apenas modelos .env.example rastreados; busca por padrões comuns de chave privada, token GitHub, chave AWS e APP_KEY Laravel não encontrou ocorrências.
+
 ## Pendências
 
-- Fase 4: concluída com checkout transacional, idempotência por usuário e fretes fixos. Valores BRL de frete são dados iniciais de demonstração de 5× os USD, sem cotação em tempo real.
-- Fases de frontend: seletor vinculado de idioma/moeda em todas as telas, traduções das interfaces e das descrições do catálogo para pt-BR, máscaras, foco/teclado, loading/erros, responsividade e design neobrutalista. A API ainda retorna as descrições originais em inglês.
+- Fase 4: concluída com checkout transacional, idempotência por usuário e fretes fixos. Valores BRL de frete são provisórios para demonstração, inicialmente 5× os USD, sem cotação em tempo real.
+- Fases de frontend: páginas da loja e checkout, traduções das descrições do catálogo para pt-BR, máscaras, foco/teclado, loading/erros e responsividade. Login e cadastro já oferecem seletor vinculado de idioma/moeda. A API ainda retorna descrições do catálogo em inglês.
 - Referência visual e screenshots na etapa apropriada. README final será complementado com o fluxo completo.
 - Não há exportação MongoDB; nenhuma migração de dados pessoais reais foi feita.
 
 ## Próximo passo concreto
 
-Após aprovação, iniciar a fase 5: componentes, tokens visuais e autenticação no frontend. Não fazer push.
+Após aprovação, iniciar a fase 6: home, produto, wishlist e carrinho. Não fazer push.
