@@ -4,7 +4,7 @@ Atualizado em 26/10/2026. Controle interno; instruções de uso ficam no README.
 
 ## Fase atual
 
-**Fase 5 concluída.** Próxima fase: páginas da loja. Login, cadastro e acesso autenticado estão implementados; catálogo visual, carrinho, checkout e painel seguem nas fases 6–7.
+**Fase 6 concluída.** Próxima fase: checkout e dashboard no frontend. Home, catálogo, produto, favoritos e carrinho estão implementados.
 
 Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c`, de GuilhermeZalla/sneakers. Análise original em `ANALISE_MIGRACAO.md`.
 
@@ -15,7 +15,7 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - [x] 3. Backend: produtos, carrinho, wishlist, endereços e testes.
 - [x] 4. Backend: checkout, pedidos e testes.
 - [x] 5. Frontend: design tokens, componentes base e autenticação.
-- [ ] 6. Frontend: home, produto, wishlist e carrinho.
+- [x] 6. Frontend: home, catálogo, produto, wishlist e carrinho.
 - [ ] 7. Frontend: checkout e dashboard.
 - [ ] 8. README final, screenshots, instruções locais e exclusões de escopo; README inicial criado.
 
@@ -26,7 +26,7 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - Monorepo aprovado com Laravel em `backend/` e React/Vite/React Router em `frontend/`, substituindo Inertia. AGENTS.md alterado apenas nos dois blocos ligados ao Inertia; regras gerais, estilo, testes e convenções foram preservados.
 - Fortify do starter reaproveitado sem telas para login, cadastro, logout e recuperação de senha; Sanctum protege a API por sessão/cookies e CSRF. Perfil e troca de senha foram adaptados para JSON; testes existentes foram adaptados sem excluir arquivos de testes.
 - Componentes e páginas do starter preservados em `frontend/starter/` para reaproveitar nas fases de frontend. Não são compilados nem usados pela entrada atual.
-- TypeScript e Tailwind mantidos; tokens CSS neobrutalistas e React Context para sessão e idioma implementados. Estado do carrinho será feito nas próximas fases.
+- TypeScript e Tailwind mantidos; tokens CSS neobrutalistas e React Context para sessão, idioma, carrinho e favoritos implementados.
 - Idioma/moeda vinculados: `en`/USD com formatação en-US e `pt_BR`/BRL com formatação pt-BR. A API negocia pelo Accept-Language. Mensagens de auth/validação e utilitários de dinheiro/data têm suporte aos dois pares.
 - Preços fixos e independentes por moeda, armazenados em centavos. O usuário aprovou **5× o USD original apenas para gerar os BRL iniciais de demonstração**, sem cotação em tempo real. Reexecutar o seeder não sobrescreve ajustes posteriores de preço.
 - Preservados 63 produtos, marcas, categorias, imagens, cores e tamanhos. `rank` é rating estático do produto; não criar votação ou estoque quantitativo inexistentes.
@@ -79,13 +79,20 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - Testes de frontend cobrem formatação e cliente HTTP, incluindo credenciais, CSRF e erros 401/419/422. Lint, tipos e build verificados.
 - Histórico Git: apenas modelos .env.example rastreados; busca por padrões comuns de chave privada, token GitHub, chave AWS e APP_KEY Laravel não encontrou ocorrências.
 
+## Verificação da fase 6
+
+- As 63 descrições de demonstração receberam versões pt-BR; API seleciona pelo idioma e o seeder preserva alterações existentes.
+- Imagens remotas: Sole Collector e CDN Shopify; não foi identificada licença para uso. Confirmar autorização ou substituir antes da publicação.
+- Frontend: 8 testes passaram, além de lint, tipos e build. Backend: 85 testes e 387 assertions; Pint aplicado e PHPStan sem erros.
+- Navegador real com Laravel e MySQL: favorito após login retorna à URL do catálogo; quantidade, remoção e troca de moeda no carrinho verificadas. Home, catálogo, produto, favoritos e carrinho sem overflow horizontal em 360, 768 e 1280 px. Contas temporárias removidas.
+
 ## Pendências
 
 - Fase 4: concluída com checkout transacional, idempotência por usuário e fretes fixos. Valores BRL de frete são provisórios para demonstração, inicialmente 5× os USD, sem cotação em tempo real.
-- Fases de frontend: páginas da loja e checkout, traduções das descrições do catálogo para pt-BR, máscaras, foco/teclado, loading/erros e responsividade. Login e cadastro já oferecem seletor vinculado de idioma/moeda. A API ainda retorna descrições do catálogo em inglês.
+- Fase 7: checkout e dashboard no frontend. Revisar também máscaras, estados de interface e responsividade dos próximos fluxos.
 - Referência visual e screenshots na etapa apropriada. README final será complementado com o fluxo completo.
 - Não há exportação MongoDB; nenhuma migração de dados pessoais reais foi feita.
 
 ## Próximo passo concreto
 
-Após aprovação, iniciar a fase 6: home, produto, wishlist e carrinho. Não fazer push.
+Após aprovação, iniciar a fase 7: checkout e dashboard no frontend. Não fazer push.

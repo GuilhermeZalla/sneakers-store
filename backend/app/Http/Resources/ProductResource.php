@@ -20,7 +20,7 @@ class ProductResource extends JsonResource
             'legacy_id' => $this->legacy_id,
             'slug' => $this->slug,
             'name' => $this->name,
-            'description' => $this->description,
+            'description' => $locale === StoreLocale::Portuguese ? ($this->description_pt_br ?? $this->description) : $this->description,
             'brand' => $this->brand,
             'type' => $this->type,
             'price' => $this->priceFor($locale),

@@ -1,6 +1,6 @@
 # Sneakers Store
 
-Loja online em desenvolvimento com API Laravel e interface React. A API oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e histórico de pedidos. O frontend já permite cadastro, login e acesso autenticado; as páginas de catálogo, carrinho, checkout e painel serão desenvolvidas nas próximas fases.
+Loja online em desenvolvimento com API Laravel e interface React. A API oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e histórico de pedidos. O frontend inclui cadastro, login, Home, catálogo, produto, favoritos e carrinho; checkout e painel serão desenvolvidos na próxima fase.
 
 ## Estrutura e stack
 
@@ -46,7 +46,7 @@ Abra `http://localhost:5173`. O Vite encaminha `/api` e `/sanctum` ao backend co
 
 A autenticação usa sessão por cookie com [Sanctum SPA](https://laravel.com/docs/13.x/sanctum). O cliente obtém `/sanctum/csrf-cookie`, envia credenciais e inclui o token XSRF nas alterações. As páginas `/login` e `/register` permitem entrar ou criar conta; `/account` exige autenticação. Ao entrar depois de acessar uma rota protegida, o usuário retorna ao endereço solicitado.
 
-O seletor no cabeçalho vincula inglês a USD e português brasileiro a BRL. A interface salva a preferência de idioma e envia `Accept-Language` à API. A base visual usa tokens de cores, bordas, sombras e espaçamento, com componentes reutilizáveis e foco visível.
+O catálogo mantém busca, marca, categoria, faixa de preço, ordenação e paginação na URL. Favoritos e carrinho exigem autenticação; ao favoritar sem sessão, o usuário entra e retorna à página com o produto adicionado. O seletor no cabeçalho vincula inglês a USD e português brasileiro a BRL. A interface salva a preferência de idioma e envia `Accept-Language` à API. A base visual usa tokens de cores, bordas, sombras e espaçamento, com componentes reutilizáveis e foco visível.
 
 ## API
 
@@ -71,7 +71,8 @@ O servidor calcula valores e armazena snapshots de itens, endereço, moeda, subt
 - Os preços de produtos em BRL foram inicialmente cadastrados para demonstração em 5× os valores USD; depois podem ser alterados independentemente. Não há cotação em tempo real.
 - Os fretes BRL são **valores provisórios de demonstração** fixados inicialmente em 5× os valores USD, sem cotação em tempo real.
 - Todos os métodos de pagamento são simulados. Na Wallet, o valor considerado é exatamente o total do pedido, sem desconto fictício de US$ 10, saldo financeiro ou integração com gateway.
-- A tradução das descrições comerciais dos produtos para português ainda está pendente.
+- As descrições dos 63 produtos possuem versões em inglês e português. O seeder preenche traduções ausentes sem sobrescrever textos e preços editados.
+- As imagens de demonstração são carregadas de servidores externos `images.solecollector.com` e `cdn.shopify.com`. A licença de uso dessas imagens não foi identificada; confirme as permissões com os titulares antes de publicar ou substitua-as por imagens licenciadas.
 
 ## Verificação
 
