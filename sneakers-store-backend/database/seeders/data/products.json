@@ -393,16 +393,12 @@
         },
         {
             "id": "51",
-            "brand": "bayc",
-            "shoeName": "Bayc Beanie",
-            "description": "Complex Chinese's latest recruitment, BAYC#4593 debuted in Everyday Struggle show in December 2021. Since then he interviewed many hip-hop artists at the show and appeared in various social medias. He has now released his own fashion label collaborating with Complex Chinese.",
+            "brand": "lume",
+            "shoeName": "Lume Beanie Orange",
+            "description": "Orange knit beanie with a folded cuff.",
             "price": "36",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/Beanie_closeup2_1_610x.png?v=1648057455",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/Beanie_closeup2_1_610x.png?v=1648057455",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/Beanie_closeup1_610x.png?v=1648057481",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/Beanie_closeup_1_610x.png?v=1648057481"
-            ],
+            "thumbnail": "/products/lume-beanie-orange-400.webp",
+            "image_url": "/products/lume-beanie-orange.webp",
             "rank": 5,
             "color": [
                 "orange"
@@ -411,31 +407,26 @@
         },
         {
             "id": "52",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones Logo Snapback",
-            "description": "6 Panel Structured Snapback with embroidered Hot Ones logo.",
+            "brand": "lume",
+            "shoeName": "Lume Bucket Blue",
+            "description": "Blue bucket hat with a soft brim.",
             "price": "35",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/FWFSnapback_Ecom_8_2cee267c-d743-4db6-8ff6-5260fadd26f8_610x.jpg?v=1629985136",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/FWFSnapback_Ecom_8_2cee267c-d743-4db6-8ff6-5260fadd26f8_610x.jpg?v=1629985136"
-            ],
+            "thumbnail": "/products/lume-bucket-blue-400.webp",
+            "image_url": "/products/lume-bucket-blue.webp",
             "rank": 4,
             "color": [
-                "black"
+                "blue"
             ],
             "type": "cap"
         },
         {
             "id": "53",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones Friends of the Snow T-Shirt",
-            "description": "6 Panel Structured Snapback with embroidered Hot Ones logo.",
+            "brand": "lume",
+            "shoeName": "Lume Tee Black",
+            "description": "Plain black short-sleeve T-shirt with a round neckline.",
             "price": "30",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnes_Lucha_Tee_Black_Back_610x.jpg?v=1629985113",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnes_Lucha_Tee_Black_Back_610x.jpg?v=1629985113",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/FWF_HotOnes_Online-Store-Merch-Lucha-tshirt-front-1200x1200-_1_610x.jpg?v=1629985116"
-            ],
+            "thumbnail": "/products/lume-tee-black-400.webp",
+            "image_url": "/products/lume-tee-black.webp",
             "rank": 5,
             "color": [
                 "black"
@@ -450,15 +441,12 @@
         },
         {
             "id": "54",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones I Survived the Last Dab T-Shirt",
-            "description": "The show with hot questions and even hotter wings. Watch Sean Evans interview celebrities such as Gordon Ramsay, Padma Lakshmi, and DJ Khaled as they burn their tastebuds.",
+            "brand": "lume",
+            "shoeName": "Lume Tee White",
+            "description": "Plain white short-sleeve T-shirt with a round neckline.",
             "price": "30",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/PDPUpdates_lastdab_0000_ISurvivedtheLastDabTee-Back_610x.jpg?v=1657559699",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/PDPUpdates_lastdab_0000_ISurvivedtheLastDabTee-Back_610x.jpg?v=1657559699",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/PDPUpdates_lastdab_0001_ISurvivedtheLastDabTee-Front_610x.jpg?v=1657559699"
-            ],
+            "thumbnail": "/products/lume-tee-white-400.webp",
+            "image_url": "/products/lume-tee-white.webp",
             "rank": 3,
             "color": [
                 "white"
@@ -473,20 +461,15 @@
         },
         {
             "id": "55",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones X Champion Limited Edition Hoddie",
-            "description": "The show with hot questions and even hotter wings. Watch Sean Evans interview celebrities such as Gordon Ramsay, Padma Lakshmi, and DJ Khaled as they burn their tastebuds.",
+            "brand": "lume",
+            "shoeName": "Lume Hoodie White",
+            "description": "Plain white hooded sweatshirt, shown from the back.",
             "price": "80",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnesHoodie_Wht_01_610x.jpg?v=1652365321",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnesHoodie_Wht_01_610x.jpg?v=1652365321",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/SeanEvans_ChampionHoodie_64_610x.jpg?v=1652365217",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnesHoodie_Detail_02_610x.jpg?v=1652365217",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnesHoodie_Detail_01_1_610x.jpg?v=1652365217"
-            ],
+            "thumbnail": "/products/lume-hoodie-white-400.webp",
+            "image_url": "/products/lume-hoodie-white.webp",
             "rank": 4,
             "color": [
-                "black"
+                "white"
             ],
             "size": [
                 "S",
@@ -498,18 +481,15 @@
         },
         {
             "id": "56",
-            "brand": "hot ones",
-            "shoeName": "The Burger Show Burgers Tee",
-            "description": "Classic. Simple. Just like your favorite burger.",
+            "brand": "lume",
+            "shoeName": "Lume Tee Orange",
+            "description": "Orange short-sleeve T-shirt with a round neckline.",
             "price": "30",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/FWF_OSM_BRGR_B1_1_610x.jpg?v=1629997622",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/FWF_OSM_BRGR_B1_1_610x.jpg?v=1629997622",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/FWF_OSM_BRGRF1_2_610x.jpg?v=1629997624"
-            ],
+            "thumbnail": "/products/lume-tee-orange-400.webp",
+            "image_url": "/products/lume-tee-orange.webp",
             "rank": 4,
             "color": [
-                "white"
+                "orange"
             ],
             "size": [
                 "S",
@@ -521,53 +501,13 @@
         },
         {
             "id": "57",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones Logo Long Sleeve Tee",
-            "description": "Classic. Simple. Just like your favorite burger.",
+            "brand": "lume",
+            "shoeName": "Lume Studio White",
+            "description": "White short-sleeve T-shirt with a simple, straight cut.",
             "price": "32",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/20210524_FWF_MERCH_LOGOTEE_BLACK_LONGSLEEVE_01_280x.png?v=1629985122",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/20210524_FWF_MERCH_LOGOTEE_BLACK_LONGSLEEVE_01_280x.png?v=1629985122"
-            ],
+            "thumbnail": "/products/lume-studio-white-400.webp",
+            "image_url": "/products/lume-studio-white.webp",
             "rank": 5,
-            "color": [
-                "black"
-            ],
-            "size": [
-                "S",
-                "M",
-                "XL",
-                "2XL"
-            ],
-            "type": "shirt"
-        },
-        {
-            "id": "58",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones Beanie",
-            "description": "The First We Feast crew loves a good beanie. Now’s the time to grab yours featuring our signature Hot Ones logo!",
-            "price": "25",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/Beanie_2_280x.jpg?v=1629985113",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/Beanie_2_610x.jpg?v=1629985113"
-            ],
-            "rank": 3,
-            "color": [
-                "red"
-            ],
-            "type": "cap"
-        },
-        {
-            "id": "59",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones Logo Long Sleeve Tee Heather Grey",
-            "description": "Hot Ones Logo Long Sleeve Tee Heather Grey",
-            "price": "32",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/20210524_FWF_MERCH_LOGOTEE_SPORTGREY_LONGSLEEVE_01_610x.png?v=1629985123",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/20210524_FWF_MERCH_LOGOTEE_SPORTGREY_LONGSLEEVE_01_610x.png?v=1629985123"
-            ],
-            "rank": 4,
             "color": [
                 "white"
             ],
@@ -580,16 +520,47 @@
             "type": "shirt"
         },
         {
-            "id": "60",
-            "brand": "the burger",
-            "shoeName": "The Burger Show Meat. Cheese. Bun",
-            "description": "Just like a great burger, this old-school tee is on demand 24/7. Call Alvin and ask him yourself!",
-            "price": "30",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/TBS_Pink_Back_060319_610x.jpg?v=1629997655",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/TBS_Pink_Back_060319_610x.jpg?v=1629997655",
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/TBS_Pink_Front_060319_610x.jpg?v=1629997678"
+            "id": "58",
+            "brand": "lume",
+            "shoeName": "Lume Beanie Red",
+            "description": "Red knit beanie with a folded cuff.",
+            "price": "25",
+            "thumbnail": "/products/lume-beanie-red-400.webp",
+            "image_url": "/products/lume-beanie-red.webp",
+            "rank": 3,
+            "color": [
+                "red"
             ],
+            "type": "cap"
+        },
+        {
+            "id": "59",
+            "brand": "lume",
+            "shoeName": "Lume Shirt Grey",
+            "description": "Grey short-sleeve shirt with a textured finish and open neckline.",
+            "price": "32",
+            "thumbnail": "/products/lume-shirt-grey-400.webp",
+            "image_url": "/products/lume-shirt-grey.webp",
+            "rank": 4,
+            "color": [
+                "grey"
+            ],
+            "size": [
+                "S",
+                "M",
+                "XL",
+                "2XL"
+            ],
+            "type": "shirt"
+        },
+        {
+            "id": "60",
+            "brand": "lume",
+            "shoeName": "Lume Tee Rose",
+            "description": "Rose-coloured short-sleeve T-shirt with a round neckline.",
+            "price": "30",
+            "thumbnail": "/products/lume-tee-rose-400.webp",
+            "image_url": "/products/lume-tee-rose.webp",
             "rank": 5,
             "color": [
                 "pink"
@@ -604,30 +575,27 @@
         },
         {
             "id": "61",
-            "brand": "hot ones",
-            "shoeName": "Hot Ones Logo Snapback - White",
-            "description": "6 Panel Structured Snapback with embroidered Hot Ones logo.",
+            "brand": "lume",
+            "shoeName": "Lume Trucker White",
+            "description": "Trucker cap with a white front, black brim and mesh back.",
             "price": "35",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/FWFSnapback_Ecom_7_280x.jpg?v=1629985136",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/FWFSnapback_Ecom_7_610x.jpg?v=1629985136"
-            ],
+            "thumbnail": "/products/lume-trucker-white-400.webp",
+            "image_url": "/products/lume-trucker-white.webp",
             "rank": 3,
             "color": [
-                "white"
+                "white",
+                "black"
             ],
             "type": "cap"
         },
         {
             "id": "62",
-            "brand": "hot ones",
-            "shoeName": "Hote Ones Logo Mug",
-            "description": "Hote Ones Logo Mug",
+            "brand": "lume",
+            "shoeName": "Lume Mug White",
+            "description": "Plain white ceramic mug with a rounded handle.",
             "price": "20",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnesLogoMug_280x.jpg?v=1646248801",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/HotOnesLogoMug_610x.jpg?v=1646248801"
-            ],
+            "thumbnail": "/products/lume-mug-white-400.webp",
+            "image_url": "/products/lume-mug-white.webp",
             "rank": 5,
             "color": [
                 "white"
@@ -636,17 +604,15 @@
         },
         {
             "id": "63",
-            "brand": "hot ones",
-            "shoeName": "Burger Scholar Sessions Apron",
-            "description": "9 oz. 100% heavy cotton canvas. Pouch style pocket stitched into four handy compartments. Large metal eyelet detail for adjustable neckband knot. Riveted pocket detail. Metal eyelets secure 35 self fabric waist ties .34 L x 28 W ",
+            "brand": "lume",
+            "shoeName": "Lume Apron Brown",
+            "description": "Brown apron with a neck strap and front pocket.",
             "price": "30",
-            "thumbnail": "https://cdn.shopify.com/s/files/1/0679/8549/products/SummerApron_1_280x.png?v=1629984826",
-            "image_url": [
-                "https://cdn.shopify.com/s/files/1/0679/8549/products/SummerApron_1_280x.png?v=1629984826"
-            ],
+            "thumbnail": "/products/lume-apron-brown-400.webp",
+            "image_url": "/products/lume-apron-brown.webp",
             "rank": 5,
             "color": [
-                "black"
+                "brown"
             ],
             "type": "gift"
         }
