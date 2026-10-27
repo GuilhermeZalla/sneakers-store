@@ -162,6 +162,236 @@
             "type": "sneaker"
         },
         {
+            "id": "108",
+            "brand": "lume",
+            "shoeName": "Lume Canvas Stitch",
+            "description": "White canvas sneakers with dark zigzag stitching and white laces.",
+            "price": "55",
+            "price_brl": 25900,
+            "thumbnail": "/products/lume-canvas-stitch-400.webp",
+            "image_url": "/products/lume-canvas-stitch.webp",
+            "rank": 4,
+            "color": [
+                "white"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "109",
+            "brand": "lume",
+            "shoeName": "Lume Meadow Green",
+            "description": "Light green high-top canvas sneakers with white laces and toe caps.",
+            "price": "56",
+            "price_brl": 26900,
+            "thumbnail": "/products/lume-meadow-green-400.webp",
+            "image_url": "/products/lume-meadow-green.webp",
+            "rank": 4,
+            "color": [
+                "green"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "110",
+            "brand": "lume",
+            "shoeName": "Lume Star White",
+            "description": "White low-top sneakers with star-shaped perforations and metallic heel details.",
+            "price": "62",
+            "price_brl": 29900,
+            "thumbnail": "/products/lume-star-white-400.webp",
+            "image_url": "/products/lume-star-white.webp",
+            "rank": 4,
+            "color": [
+                "white"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "111",
+            "brand": "lume",
+            "shoeName": "Lume Garden Pink",
+            "description": "Light pink canvas sneakers with white toe caps and pink laces.",
+            "price": "52",
+            "price_brl": 23900,
+            "thumbnail": "/products/lume-garden-pink-400.webp",
+            "image_url": "/products/lume-garden-pink.webp",
+            "rank": 4,
+            "color": [
+                "pink"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "112",
+            "brand": "lume",
+            "shoeName": "Lume Flow Blue",
+            "description": "White athletic sneakers with blue details and white laces.",
+            "price": "73",
+            "price_brl": 34900,
+            "thumbnail": "/products/lume-flow-blue-400.webp",
+            "image_url": "/products/lume-flow-blue.webp",
+            "rank": 4,
+            "color": [
+                "white"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "113",
+            "brand": "lume",
+            "shoeName": "Lume Star Black",
+            "description": "Black low-top sneakers with white laces, soles and star details.",
+            "price": "59",
+            "price_brl": 27900,
+            "thumbnail": "/products/lume-star-black-400.webp",
+            "image_url": "/products/lume-star-black.webp",
+            "rank": 4,
+            "color": [
+                "black"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "114",
+            "brand": "lume",
+            "shoeName": "Lume High Black",
+            "description": "Black high-top canvas sneakers with white laces and a worn finish.",
+            "price": "58",
+            "price_brl": 27500,
+            "thumbnail": "/products/lume-high-black-400.webp",
+            "image_url": "/products/lume-high-black.webp",
+            "rank": 4,
+            "color": [
+                "black"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "115",
+            "brand": "lume",
+            "shoeName": "Lume Forest Brown",
+            "description": "Brown sneakers with black laces and a white sole.",
+            "price": "67",
+            "price_brl": 31900,
+            "thumbnail": "/products/lume-forest-brown-400.webp",
+            "image_url": "/products/lume-forest-brown.webp",
+            "rank": 4,
+            "color": [
+                "brown"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "116",
+            "brand": "lume",
+            "shoeName": "Lume Street Brown",
+            "description": "Dark brown low-top canvas sneakers with white laces and toe caps.",
+            "price": "53",
+            "price_brl": 24900,
+            "thumbnail": "/products/lume-street-brown-400.webp",
+            "image_url": "/products/lume-street-brown.webp",
+            "rank": 4,
+            "color": [
+                "brown"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
+            "id": "117",
+            "brand": "lume",
+            "shoeName": "Lume Autumn Tan",
+            "description": "Tan sneakers with white laces and a light sole.",
+            "price": "65",
+            "price_brl": 30900,
+            "thumbnail": "/products/lume-autumn-tan-400.webp",
+            "image_url": "/products/lume-autumn-tan.webp",
+            "rank": 4,
+            "color": [
+                "brown"
+            ],
+            "size": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+            ],
+            "type": "sneaker"
+        },
+        {
             "id": "51",
             "brand": "bayc",
             "shoeName": "Bayc Beanie",

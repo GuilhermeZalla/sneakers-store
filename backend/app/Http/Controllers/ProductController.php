@@ -40,7 +40,7 @@ class ProductController extends Controller
         $field = ltrim($sort, '-');
         $query->orderBy($field === 'price' ? $priceColumn : $field, $direction)->orderBy('id');
 
-        return ProductResource::collection($query->paginate($filters['per_page'] ?? 24)->withQueryString());
+        return ProductResource::collection($query->paginate($filters['per_page'] ?? 30)->withQueryString());
     }
 
     public function show(Product $product): ProductResource

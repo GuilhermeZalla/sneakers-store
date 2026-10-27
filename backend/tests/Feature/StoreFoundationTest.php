@@ -14,11 +14,13 @@ use Illuminate\Database\QueryException;
 test('the catalog seeds fixed prices and preserves edits', function () {
     $this->seed(ProductSeeder::class);
 
-    $this->assertDatabaseCount('products', 20);
-    expect(Product::where('type', 'sneaker')->count())->toBe(7)
+    $this->assertDatabaseCount('products', 30);
+    expect(Product::where('type', 'sneaker')->count())->toBe(17)
         ->and(Product::where('type', 'shirt')->count())->toBe(7)
         ->and(Product::where('type', 'cap')->count())->toBe(4)
         ->and(Product::where('type', 'gift')->count())->toBe(2);
+
+    $this->getJson('/api/v1/products')->assertOk()->assertJsonCount(30, 'data');
 
     $product = Product::where('legacy_id', 101)->firstOrFail();
     expect($product->price_brl)->toBe(32900)
@@ -28,7 +30,7 @@ test('the catalog seeds fixed prices and preserves edits', function () {
     $product->update(['price_brl' => 12345]);
     $this->seed(ProductSeeder::class);
 
-    $this->assertDatabaseCount('products', 20);
+    $this->assertDatabaseCount('products', 30);
     expect($product->fresh()->priceFor(StoreLocale::Portuguese))->toBe(12345)
         ->and($product->fresh()->priceFor(StoreLocale::English))->toBe($originalUsd);
 });
