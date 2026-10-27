@@ -24,7 +24,7 @@ Gravações reais com dados fictícios em banco temporário isolado. O pagamento
 
 ### Loja no celular
 
-![Navegação mobile pelo catálogo, produto, favoritos, carrinho e troca de moeda](docs/demo/loja-mobile.gif)
+<img src="docs/demo/loja-mobile.gif" alt="Navegação mobile pelo catálogo, produto, favoritos, carrinho e troca de moeda" width="300">
 
 
 ## Screenshots
