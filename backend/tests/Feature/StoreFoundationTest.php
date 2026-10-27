@@ -11,26 +11,60 @@ use App\Support\Money;
 use Database\Seeders\ProductSeeder;
 use Illuminate\Database\QueryException;
 
-test('the catalog preserves all products and seeds independent fixed prices', function () {
+test('the catalog seeds fixed prices and preserves edits', function () {
     $this->seed(ProductSeeder::class);
 
-    $this->assertDatabaseCount('products', 63);
-    expect(Product::where('type', 'sneaker')->count())->toBe(50)
+    $this->assertDatabaseCount('products', 20);
+    expect(Product::where('type', 'sneaker')->count())->toBe(7)
         ->and(Product::where('type', 'shirt')->count())->toBe(7)
         ->and(Product::where('type', 'cap')->count())->toBe(4)
         ->and(Product::where('type', 'gift')->count())->toBe(2);
 
-    $product = Product::where('legacy_id', 1)->firstOrFail();
-    expect($product->price_brl)->toBe($product->price_usd * 5)
+    $product = Product::where('legacy_id', 101)->firstOrFail();
+    expect($product->price_brl)->toBe(32900)
         ->and($product->images)->toBeArray()->and($product->sizes)->toBeArray();
 
     $originalUsd = $product->price_usd;
     $product->update(['price_brl' => 12345]);
     $this->seed(ProductSeeder::class);
 
-    $this->assertDatabaseCount('products', 63);
+    $this->assertDatabaseCount('products', 20);
     expect($product->fresh()->priceFor(StoreLocale::Portuguese))->toBe(12345)
         ->and($product->fresh()->priceFor(StoreLocale::English))->toBe($originalUsd);
+});
+
+test('replacing the old footwear preserves other products and order snapshots', function () {
+    $old = Product::factory()->create(['legacy_id' => 1, 'type' => 'sneaker']);
+    $other = Product::factory()->create(['legacy_id' => 51, 'type' => 'shirt']);
+    $cart = CartItem::factory()->create(['product_id' => $old->id]);
+    $favorite = WishlistItem::factory()->create(['product_id' => $old->id]);
+    $orderItem = OrderItem::factory()->create(['product_id' => $old->id, 'product_name' => 'Historic shoe']);
+
+    $this->artisan('catalog:replace-footwear')->assertSuccessful();
+
+    expect($old->fresh())->toBeNull()
+        ->and($other->fresh())->not->toBeNull()
+        ->and($cart->fresh())->toBeNull()
+        ->and($favorite->fresh())->toBeNull()
+        ->and($orderItem->fresh()->product_id)->toBeNull()
+        ->and($orderItem->fresh()->product_name)->toBe('Historic shoe')
+        ->and(Product::where('legacy_id', 101)->exists())->toBeTrue();
+});
+
+test('replacing the catalog is blocked outside local and testing environments', function () {
+    app()->detectEnvironment(fn () => 'production');
+
+    $this->artisan('catalog:replace-footwear')->assertFailed();
+});
+
+test('replacing the catalog rolls back removed footwear when seeding fails', function () {
+    $old = Product::factory()->create(['legacy_id' => 1, 'type' => 'sneaker']);
+    $seeder = Mockery::mock(ProductSeeder::class);
+    $seeder->shouldReceive('run')->once()->andThrow(new RuntimeException('Seed failed'));
+    app()->instance(ProductSeeder::class, $seeder);
+
+    expect(fn () => $this->artisan('catalog:replace-footwear')->run())->toThrow(RuntimeException::class);
+    expect($old->fresh())->not->toBeNull();
 });
 
 test('address and profile identifiers preserve leading zeros and non numeric characters', function () {

@@ -14,7 +14,7 @@ test('catalog returns descriptions in the requested language', function () {
 
 test('seeder fills missing translations without overwriting existing catalog edits', function () {
     $this->seed(ProductSeeder::class);
-    $product = Product::where('legacy_id', 1)->firstOrFail();
+    $product = Product::where('legacy_id', 101)->firstOrFail();
     expect($product->description_pt_br)->not->toBeNull();
     $product->update(['price_brl' => 123, 'description_pt_br' => 'Texto editado']);
     $this->seed(ProductSeeder::class);

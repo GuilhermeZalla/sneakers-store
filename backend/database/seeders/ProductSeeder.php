@@ -12,7 +12,7 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        /** @var array{products: list<array{id: string, shoeName: string, description: string, brand: string, type: string, price: string, thumbnail: string, image_url: string|list<string>, color: list<string>, size?: list<string>, rank: int}>} $catalog */
+        /** @var array{products: list<array{id: string, shoeName: string, description: string, brand: string, type: string, price: string, price_brl?: int, thumbnail: string, image_url: string|list<string>, color: list<string>, size?: list<string>, rank: int}>} $catalog */
         $catalog = json_decode(File::get(database_path('seeders/data/products.json')), true, flags: JSON_THROW_ON_ERROR);
 
         /** @var array<int, string> $translations */
@@ -29,7 +29,7 @@ class ProductSeeder extends Seeder
                 'brand' => $product['brand'],
                 'type' => $product['type'],
                 'price_usd' => $priceUsd,
-                'price_brl' => $priceUsd * 5,
+                'price_brl' => $product['price_brl'] ?? $priceUsd * 5,
                 'thumbnail' => $product['thumbnail'],
                 'images' => Arr::wrap($product['image_url']),
                 'colors' => array_values(array_unique($product['color'])),
