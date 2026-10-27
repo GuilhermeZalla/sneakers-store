@@ -31,10 +31,6 @@ Gravações reais com dados fictícios em banco temporário isolado. O pagamento
 
 Capturas reais do site em português/BRL, com dados fictícios em um banco SQLite temporário. Desktop em 1440 × 1000 e celular em 390 × 844. As 30 fotos do catálogo são arquivos locais, com autores, fontes e licença em [CREDITS.md](CREDITS.md). Capturas atualizadas após a substituição das fotos de roupas e acessórios.
 
-![Home no desktop](docs/screenshots/home-desktop.png)
-
-![Catálogo no desktop](docs/screenshots/catalogo-desktop.png)
-
 | Tela | Desktop | Celular |
 | --- | --- | --- |
 | Home | [Ver captura](docs/screenshots/home-desktop.png) | [Ver captura](docs/screenshots/home-mobile.png) |
