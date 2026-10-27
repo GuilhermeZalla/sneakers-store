@@ -18,9 +18,9 @@ export default defineConfig(({ mode }) => {
                 '/sanctum': { target: backend, changeOrigin: true },
             },
         },
-        lint: { ignorePatterns: ['starter/**', 'node_modules/**', 'dist/**'] },
+        lint: { ignorePatterns: ['node_modules/**', 'dist/**'] },
         fmt: {
-            ignorePatterns: ['starter/**', 'node_modules/**', 'dist/**'],
+            ignorePatterns: ['node_modules/**', 'dist/**'],
             singleQuote: true,
             tabWidth: 4,
         },
