@@ -2,15 +2,17 @@
 
 Projeto de estudo independente, sem vínculo, associação ou endosso das marcas citadas.
 
+Esta versão reimplementa o [projeto original MERN (2022)](https://github.com/GuilhermeZalla/sneakers). Código sob [licença MIT](LICENSE); imagens e seus termos próprios estão em [CREDITS.md](CREDITS.md). Dois produtos (Lume Beanie Orange e Lume Beanie Red) usam imagens geradas por IA com a ferramenta OpenAI image_gen; o restante do catálogo vem de bancos de imagens livres (Pexels), conforme detalhado em CREDITS.md.
+
 Loja online em desenvolvimento com API Laravel e interface React. A API oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e histórico de pedidos. O frontend inclui cadastro, login, verificação de e-mail, recuperação de senha, Home, catálogo, produto, favoritos, carrinho, checkout e painel da conta com notificações.
 
 ## Screenshots
 
-Capturas reais do site em português/BRL, com dados fictícios em um banco SQLite temporário. Desktop em 1440 × 1000 e celular em 390 × 844. A home mostra as imagens externas dos produtos como na execução local; a revisão da licença dessas imagens permanece pendente antes da publicação. As fotos locais dos calçados têm créditos em [CREDITS.md](CREDITS.md).
+Capturas reais do site em português/BRL, com dados fictícios em um banco SQLite temporário. Desktop em 1440 × 1000 e celular em 390 × 844. As 30 fotos do catálogo são arquivos locais, com autores, fontes e licença em [CREDITS.md](CREDITS.md). Capturas atualizadas após a substituição das fotos de roupas e acessórios.
 
 ![Home no desktop](docs/screenshots/home-desktop.png)
 
-![Catálogo de calçados no desktop](docs/screenshots/catalogo-desktop.png)
+![Catálogo no desktop](docs/screenshots/catalogo-desktop.png)
 
 | Tela | Desktop | Celular |
 | --- | --- | --- |
@@ -31,11 +33,10 @@ Capturas reais do site em português/BRL, com dados fictícios em um banco SQLit
 - `sneakers-store-backend/`: PHP 8.4, Laravel 13, MySQL, Fortify, Sanctum e Pest.
 - `sneakers-store-frontend/`: React 19, Vite Plus, React Router 7, TypeScript e Tailwind CSS 4.
 - `docs/STATUS.md`: controle de progresso.
-- `sneakers-store-frontend/starter/`: componentes de referência ainda não utilizados pela aplicação.
 
 ## Executar localmente
 
-Requisitos: PHP com PDO MySQL, PDO SQLite e Intl; Composer; Node.js 22 ou superior; e MySQL.
+Requisitos: **PHP 8.4** com PDO MySQL, PDO SQLite, Intl e as extensões exigidas pelo Composer; Composer 2; **Node.js 24.15.0** (fixado em `.nvmrc`); e MySQL 8. O Vite Plus aceita `^22.18.0 || ^24.11.0 || >=26.0.0`; use 24.15.0 para reproduzir os checks desta entrega. Os testes de navegador exigem Chrome/Chromium ou Edge instalado; `BROWSER_PATH` permite indicar o executável.
 
 ### Projeto já configurado
 
@@ -59,6 +60,16 @@ Também é possível iniciar os serviços pela raiz, um comando em cada terminal
 
 Se o projeto já tiver `.env`, banco e chave configurados, preserve-os: não copie novamente os arquivos de exemplo nem gere outra chave. O frontend usa `http://localhost:8000` como padrão do proxy quando `sneakers-store-frontend/.env` não existe.
 
+### Falha do servidor local com OPcache no Windows
+
+Na validação com PHP 8.4.27 do Herd, o servidor embutido falhou com `SplFileInfo`/`Class "view" does not exist` quando OPcache estava ativo. Se encontrar esse erro, encerre `artisan serve` e use, dentro do backend, a alternativa abaixo. Ela desativa OPcache apenas nesse processo, sem editar o PHP global:
+
+```powershell
+php -d opcache.enable=0 -S localhost:8000 -t public public/index.php
+```
+
+Use a mesma porta definida em `APP_URL` e `VITE_API_URL`. O script de concorrência já aplica essa opção aos seus servidores temporários e configura seus próprios domínios Sanctum.
+
 ### Primeira instalação
 
 No PowerShell, para uma instalação nova:
@@ -70,14 +81,14 @@ Copy-Item .env.example .env
 php artisan key:generate
 ```
 
-Crie um banco vazio chamado `sneakers_store` no MySQL e ajuste `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD` em `sneakers-store-backend/.env`. Depois:
+Para uma validação descartável, use o procedimento de banco isolado na seção “Teste MySQL isolado” antes das migrations; preserve o banco habitual. Para desenvolvimento normal, crie um banco vazio chamado `sneakers_store` no MySQL e ajuste `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD` em `sneakers-store-backend/.env`. Depois:
 
 ```powershell
 php artisan migrate --seed --no-interaction
 php artisan serve --host=localhost --port=8000
 ```
 
-O seeder cadastra 30 produtos sem criar contas com senha padrão. Uma nova execução preserva produtos e preços já cadastrados. Execute os comandos de cópia e `key:generate` somente na primeira instalação, quando ainda não houver `.env` configurado.
+O seeder cadastra 30 produtos sem criar contas com senha padrão. A `UserFactory` tem senha previsível apenas para testes; não a use para cadastrar contas reais. O comando de integração substitui essa senha por um segredo aleatório e recusa bancos fora do padrão local/de teste. Uma nova execução preserva produtos e preços já cadastrados. Execute os comandos de cópia e `key:generate` somente na primeira instalação, quando ainda não houver `.env` configurado.
 
 Para substituir o catálogo antigo de calçados em um banco de desenvolvimento local já existente, execute dentro de `sneakers-store-backend/`:
 
@@ -140,8 +151,8 @@ O servidor calcula valores e armazena snapshots de itens, endereço, moeda, subt
 - Os preços dos novos calçados foram definidos independentemente em USD e BRL. Os demais preços BRL de demonstração foram inicialmente definidos em 5× os valores USD e podem ser alterados independentemente. Não há cotação em tempo real.
 - Os fretes BRL são **valores provisórios de demonstração** fixados inicialmente em 5× os valores USD, sem cotação em tempo real.
 - Todos os métodos de pagamento são simulados. Na Wallet, o valor considerado é exatamente o total do pedido, sem desconto fictício de US$ 10, saldo financeiro ou integração com gateway.
-- As descrições dos produtos possuem versões em inglês e português. Os dados do catálogo foram criados manualmente; os nomes e a marca Lume dos novos calçados são fictícios. O seeder preenche traduções ausentes sem sobrescrever textos e preços editados.
-- As fotos dos calçados são arquivos locais; autores, fontes e licenças estão em [CREDITS.md](CREDITS.md). As imagens de roupas e acessórios continuam carregadas de `cdn.shopify.com` e não têm licença confirmada: devem ser substituídas antes de publicar o repositório ou fazer deploy.
+- As descrições dos produtos possuem versões em inglês e português. Os nomes e a marca Lume do catálogo são fictícios. O seeder preenche traduções ausentes sem sobrescrever textos e preços editados.
+- As fotos dos 30 produtos são arquivos WebP locais, com miniaturas de 400 px e versões maiores. Autores, fontes e licença estão em [CREDITS.md](CREDITS.md). A home, o catálogo e os detalhes não dependem de CDN de imagens.
 
 ## Fluxo de demonstração
 
@@ -156,7 +167,7 @@ O servidor calcula valores e armazena snapshots de itens, endereço, moeda, subt
 - Não há painel administrativo, controle quantitativo de estoque ou votação de avaliações; o rating é um dado estático do catálogo.
 - A recuperação de senha tem telas React e envio em fila; a exclusão de conta permanece disponível apenas na API. Para entrega real de e-mails, configure SMTP e mantenha o worker ativo.
 - Não foi feita importação de dados pessoais do MongoDB original. O seeder contém apenas produtos de demonstração.
-- A publicação continua pendente da substituição das imagens externas de roupas e acessórios sem licença confirmada.
+- As imagens de roupas e acessórios sem licença confirmada foram substituídas por fotos locais creditadas. O catálogo permanece fictício e voltado à demonstração.
 
 
 ## E-mails, verificação e notificações
@@ -245,8 +256,8 @@ Ajuste origem de CORS, domínios stateful do Sanctum e domínio do cookie à hos
 
 ### Links e limites
 
-- Verificação: link assinado de 30 minutos, usado uma vez. Abre o React e confirma pela API mesmo se o usuário estiver deslogado; depois é preciso entrar para usar a conta. Reenvio autenticado: uma vez por minuto.
-- Reset: telas `/forgot-password` e `/reset-password`; token de 15 minutos e uso único. Solicitação e confirmação limitadas a uma tentativa por e-mail/minuto e cinco por IP/minuto em cada endpoint.
+- Verificação: link assinado de 30 minutos, usado uma vez. Abre o React e confirma pela API mesmo se o usuário estiver deslogado; depois é preciso entrar para usar a conta. Cadastro, troca de e-mail e reenvio compartilham limite de cinco tentativas por IP/minuto; perfil e reenvio também compartilham uma tentativa por usuário/minuto. O envio inicial do cadastro inicia a cota do usuário. Alterar apenas outros campos do perfil não consome essa cota.
+- Reset: solicitação com o mesmo status e corpo para e-mail existente e inexistente; telas `/forgot-password` e `/reset-password`; token de 15 minutos e uso único. Solicitação e confirmação limitadas a uma tentativa por e-mail/minuto e cinco por IP/minuto em cada endpoint.
 - Mudança de e-mail invalida a verificação anterior e envia um novo link.
 - O histórico usa paginação de 15 itens. O sino atualiza a cada 30 segundos com a aba visível e ao reabrir a aba; também permite marcar uma ou todas como lidas.
 - Notificações de status são geradas quando uma instância de pedido muda de status via Eloquent. Não há painel administrativo nesta fase; atualizações em massa por SQL não disparam observers.
@@ -259,7 +270,7 @@ php artisan test --compact
 composer types:check
 ```
 
-Os testes PHP usam SQLite em memória e não alteram o MySQL configurado. Para testar concorrência no MySQL de desenvolvimento com uma conta temporária, execute `python tests/Integration/mysql_concurrency.py` dentro de `sneakers-store-backend/`; o banco deve estar migrado e com o catálogo cadastrado.
+Os testes PHP usam SQLite em memória e não alteram o MySQL configurado. `npm.cmd test` também monta o sino e seus providers em Chrome/Edge, com respostas HTTP e relógio controlados: teclado, aba oculta, carregamento/vazio/erro, troca de conta, logout e respostas atrasadas. O teste MySQL de concorrência só pode ser executado pelo procedimento isolado abaixo.
 
 ```powershell
 cd sneakers-store-frontend
@@ -267,4 +278,58 @@ npm.cmd test
 npm.cmd run types:check
 npm.cmd run check
 npm.cmd run build
+```
+
+### Atualizar as fotos em um banco local existente
+
+Instalações novas recebem as 30 fotos locais pelo seeder. Para um banco de desenvolvimento que já contém os 13 produtos antigos de roupas e acessórios:
+
+```bash
+cd sneakers-store-backend
+php artisan catalog:refresh-apparel
+```
+
+O comando é restrito ao ambiente local/de teste e a conexões locais. Atualiza apenas nome, marca, descrições, cores e imagens dos produtos com `legacy_id` de 51 a 63, em uma transação. Preserva IDs, slugs/URLs existentes, preços USD/BRL, tamanhos, avaliações, carrinho, favoritos e snapshots de pedidos. Não cria nem exclui produtos. É seguro repetir a execução, mas ela reaplica esses textos e fotos do catálogo de demonstração. Não precisa executar `migrate:fresh`.
+
+## Decisões técnicas
+
+- **Sanctum SPA com cookie:** sessão no servidor, proteção CSRF e cliente HTTP centralizado; React Router controla a navegação.
+- **Checkout transacional:** criação do pedido, snapshots e limpeza do carrinho na mesma transação, com bloqueio do usuário.
+- **Idempotência:** chave por usuário e hash dos dados impedem criar outro pedido ao repetir a confirmação.
+- **Snapshot do pedido:** nomes, preços, moeda e endereço ficam registrados no pedido e não dependem de alterações posteriores no catálogo/perfil.
+- **Moeda:** locale en/USD e pt_BR/BRL; centavos inteiros e preços independentes, sem câmbio em tempo real.
+- **E-mails em fila:** canais mail/database na fila database, após commit, com jobs criptografados e worker separado.
+- **Notificações:** policy por proprietário e polling leve com a aba visível, sem WebSocket.
+- **Tema único:** mantida a identidade visual aprovada, sem alternância de temas.
+
+## Teste MySQL isolado
+
+Requer Python 3.10+ (biblioteca padrão) e o cliente `mysql` no PATH. Abra **um terminal novo** para estas variáveis não afetarem seus serviços normais. Dentro de `sneakers-store-backend/`, gere um nome descartável e crie exclusivamente esse banco:
+
+```powershell
+$integrationDatabase = 'sneakers_test_' + [guid]::NewGuid().ToString('N')
+mysql --host=127.0.0.1 --user=root --execute="CREATE DATABASE $integrationDatabase CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+if ($LASTEXITCODE -ne 0) { throw 'Falha ao criar banco isolado' }
+$env:APP_ENV='testing'
+$env:DB_CONNECTION='mysql'
+$env:DB_HOST='127.0.0.1'
+$env:DB_DATABASE=$integrationDatabase
+$env:DB_URL=''
+$env:CACHE_STORE='database'
+$env:SESSION_DRIVER='database'
+$env:MAIL_MAILER='log'
+php artisan config:clear
+php artisan migrate --seed --no-interaction
+python tests/Integration/mysql_concurrency.py
+```
+
+Ajuste `DB_USERNAME` e `DB_PASSWORD` privadamente ao seu MySQL; não use credenciais reais em arquivos versionados. Se o cliente precisar de senha, use `mysql --password` para solicitar a senha sem gravá-la no comando. Se `php` não resolver para o executável PHP 8.4, configure `$env:PHP_BINARY='C:/caminho/para/php.exe'` antes de chamar o Python.
+
+O script confirma a configuração efetiva do Laravel antes de iniciar: ambiente testing, driver mysql, host localhost/127.0.0.1/::1 e nome `sneakers_test_` seguido de 12–32 caracteres hexadecimais. Cria uma conta **já verificada**, com senha aleatória transmitida por stdin, e a remove em finally. O fixture fica bloqueado para o banco normal `sneakers_store`. O teste cobre dez pares simultâneos de endereço padrão e checkout concorrente idempotente; não envia e-mails reais.
+
+Para conferir a instalação inteira nesse mesmo banco temporário, execute os passos de primeira instalação, frontend, Mailpit e worker acima; inicie backend e worker a partir deste terminal/ambiente, ou replique essas variáveis em terminais novos. Use portas diferentes se seus serviços habituais estiverem ativos e ajuste APP_URL, FRONTEND_URL, SANCTUM_STATEFUL_DOMAINS e VITE_API_URL de forma correspondente. Depois de encerrar todos os processos de teste, remova apenas o banco recém-criado:
+
+```powershell
+if ($integrationDatabase -notmatch '^sneakers_test_[a-f0-9]{32}$') { throw 'Nome de banco inesperado' }
+mysql --host=127.0.0.1 --user=root --execute="DROP DATABASE $integrationDatabase;"
 ```

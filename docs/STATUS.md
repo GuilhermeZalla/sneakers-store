@@ -4,7 +4,7 @@ Atualizado em 27/10/2026. Controle interno; instruções de uso ficam no README.
 
 ## Fase atual
 
-**Fase 9 concluída.** Sistema de notificações por e-mail e internas implementado e validado, incluindo verificação/reset na SPA e documentação de Mailpit, SMTP e worker. A publicação permanece impedida pelas imagens externas sem licença confirmada.
+**Fase 10 concluída e validada localmente.** Segurança, testes, limpeza e instalação isolada conferidos. Aguardam execução manual os commits, a unificação em main e a remoção das duas screenshots antigas do histórico; sem deploy ou push.
 
 Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c`, de GuilhermeZalla/sneakers. Análise original em `ANALISE_MIGRACAO.md`.
 
@@ -19,6 +19,7 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - [x] 7. Frontend: checkout e dashboard.
 - [x] 8. README final, screenshots, instruções locais e exclusões de escopo.
 - [x] 9. Notificações por e-mail e internas, verificação/reset SPA, testes e commit local autorizado.
+- [x] 10. Pré-publicação: segurança, testes e documentação validados; procedimentos de branch/histórico preparados para execução manual.
 
 ## Decisões tomadas
 
@@ -30,7 +31,7 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - TypeScript e Tailwind mantidos; tokens CSS neobrutalistas e React Context para sessão, idioma, carrinho e favoritos implementados.
 - Idioma/moeda vinculados: `en`/USD com formatação en-US e `pt_BR`/BRL com formatação pt-BR. A API negocia pelo Accept-Language. Mensagens de auth/validação e utilitários de dinheiro/data têm suporte aos dois pares.
 - Preços fixos e independentes por moeda, armazenados em centavos. O usuário aprovou **5× o USD original apenas para gerar os BRL iniciais de demonstração**, sem cotação em tempo real. Reexecutar o seeder não sobrescreve ajustes posteriores de preço.
-- Catálogo de calçados ampliado para 17 produtos fictícios com fotos locais verificadas; os 13 produtos de vestuário e acessórios foram mantidos. `rank` é rating estático do produto; não criar votação ou estoque quantitativo inexistentes.
+- Catálogo com 30 produtos fictícios Lume: 17 calçados, 7 peças de vestuário, 4 chapéus/gorros/bonés e 2 acessórios. Todas as fotos são locais e creditadas. `rank` é rating estático; não criar votação ou estoque quantitativo inexistentes.
 - Carrinho e pedido possuem moeda explícita; itens de pedido preservam snapshots. O carrinho mantém o preço de adição enquanto a moeda não muda e, na troca de idioma/moeda, atualiza todos os itens em transação com os preços da moeda selecionada.
 - Carrinho aceita quantidades de 1 a 999 e soma ao adicionar um produto já existente. Favoritar novamente é idempotente. A lista de endereços tem limite de quatro, e pode haver no máximo um endereço padrão por usuário.
 - **Wallet simulada sem desconto fictício de US$ 10; valor cobrado = total do pedido.** Regra aprovada, implementada e registrada no README.
@@ -38,7 +39,7 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 
 ## Desvios do original
 
-- Catálogo de calçados substituído por 17 produtos fictícios, com descrições bilíngues, preços independentes e fotos locais creditadas; roupas e acessórios foram mantidos conforme solicitado.
+- Catálogo substituído por produtos fictícios Lume com fotos locais creditadas e descrições bilíngues. As identidades dos 13 produtos de roupas e acessórios foram adaptadas às novas fotos por autorização do usuário; seus preços e vínculos foram preservados.
 - Starter Inertia substituído por React Router + API/Sanctum, com estrutura `sneakers-store-backend/` e `sneakers-store-frontend/`.
 - Desconto fictício da Wallet removido; pagamento simulado cobra o total integral. **Desvio mencionado no README.**
 - Limite de quatro endereços por usuário adicionado; o projeto original não impunha esse limite.
@@ -95,9 +96,9 @@ Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c
 - Checkout, histórico e seções do dashboard verificados em 360, 768 e 1280 px sem overflow horizontal. Fallback de imagem validado; contas temporárias removidas.
 - URLs de imagens permanecem no JSON do seeder; fallback reutilizável no frontend. Não foram adicionadas cópias de imagens.
 
-## IMPEDIMENTO PARA PUBLICAÇÃO
+## Situação das imagens para publicação
 
-As imagens de roupas e acessórios referenciadas em `cdn.shopify.com` não têm licença confirmada. Devem ser substituídas por imagens com licença apropriada antes de tornar o repositório público ou fazer deploy; não baixar nem commitar cópias dessas imagens. As URLs estão em `sneakers-store-backend/database/seeders/data/products.json`. Os calçados antigos também continuam no banco já existente até executar o comando local `catalog:replace-footwear`; suas URLs de `images.solecollector.com` não têm licença confirmada. Os créditos das novas fotos de calçados estão em `CREDITS.md`.
+Pendência resolvida nesta tarefa: as referências Shopify foram removidas do catálogo atual e substituídas por WebP locais com fonte e licença registradas em `CREDITS.md`. A auditoria do MySQL local encontrou 30 produtos, sendo 17 calçados locais e 13 itens Shopify; não havia calçados antigos com legacy_id entre 1 e 50. O comando `catalog:refresh-apparel` atualizou os 13 itens restantes sem excluir registros.
 
 ## Verificação da troca de calçados
 
@@ -127,7 +128,7 @@ As imagens de roupas e acessórios referenciadas em `cdn.shopify.com` não têm 
 
 ## Próximo passo concreto
 
-Fase 9 concluída. A revisão das imagens externas de roupas e acessórios depende de aprovação da próxima tarefa. Não fazer push.
+Revisar visualmente as novas imagens e screenshots. A substituição já foi aplicada e validada. Não fazer commit ou push sem autorização para esta tarefa.
 
 ## Verificação da fase 8
 
@@ -167,3 +168,70 @@ Fase 9 concluída. A revisão das imagens externas de roupas e acessórios depen
 - As duas migrations novas foram aplicadas no MySQL local; nenhum seed de catálogo foi executado e o .env foi preservado em log. Mailpit, navegador e servidores temporários encerrados. CI remoto não executado; commit local autorizado, sem push.
 - A entrega inclui a renomeação manual das pastas e as screenshots/créditos aprovados nas tarefas anteriores, que ainda estavam sem commit. Nenhuma dependência de aplicação foi adicionada ou atualizada.
 - Os avisos já existentes do PHP local (extensões duplicadas/pdo_firebird) permanecem; não impediram os checks com o PHP 8.4 correto. Configuração global do PHP não foi alterada.
+
+## Substituição das imagens pendentes — 27/10/2026
+
+- Autorizada pelo usuário a substituição, desde que as fotos continuem aparecendo no site. Mantido o tema único e a interface existente.
+- Auditoria inicial do MySQL local: 30 produtos, 17 com fotos locais e 13 com fotos remotas Shopify. Nenhum calçado antigo com legacy_id de 1 a 50.
+- Substituídas as imagens dos 13 itens restantes por fotos Pexels, com arquivos WebP locais em versões de lado máximo de 1100/400 px. Nomes, marca, descrições en/pt-BR e cores adaptados aos produtos fictícios Lume. Fontes, autores e licença em CREDITS.md; nenhum arquivo Shopify foi baixado.
+- Acrescentado e executado no MySQL local o comando transacional `catalog:refresh-apparel`: 13 itens atualizados. IDs, slugs/URLs, preços, tamanhos, avaliações e relações preservados; sem alterações em migrations, dependências ou layout. O ProductSeeder mantém sua regra de não sobrescrever edições existentes.
+- Testes afetados: **18 passaram, com 322 assertions**. Cobertura das 60 imagens locais, preservação dos dados/vínculos e snapshots, repetição do comando, bloqueio em produção e rollback se faltar um arquivo. Pint e PHPStan passaram.
+- Frontend: lint/formatação, TypeScript, **14 testes** e build passaram.
+- Edge com SQLite temporário: as 60 versões WebP foram decodificadas; CDNs externas bloqueadas durante o teste. Home e catálogo com imagens; catálogo de 30 cards sem placeholders/overflow em 360/768/1280 px. Detalhes dos 13 itens alterados, 13 imagens no carrinho e 13 nos favoritos conferidos.
+- Cadastro, verificação pelo Mailpit deslogado, login, checkout e histórico percorridos; 14 screenshots refeitas em 1440 × 1000 e 390 × 844. Servidores, navegador e Mailpit temporários encerrados; .env preservado.
+- README e créditos atualizados. Nenhum commit, stage ou push nesta tarefa; aguarda revisão visual do usuário. Suíte completa de backend não repetida nesta etapa; executados os testes afetados.
+
+## Ajuste visual dos gorros — 27/10/2026
+
+- O usuário preferiu os gorros isolados às fotos com pessoas. Substituídas somente as versões WebP de Lume Beanie Orange e Lume Beanie Red por imagens geradas com a ferramenta integrada OpenAI image_gen: fundo neutro, produto inteiro, sem pessoas, textos ou logotipos.
+- Mantidos os quatro caminhos de imagem e os dados existentes; nenhuma alteração de banco, código, preço ou layout nesta revisão. CREDITS.md registra a origem gerada por IA e os prompts, substituindo as duas atribuições Pexels anteriores.
+- Validação desta revisão: teste existente de integridade das imagens passou (1 teste, 241 assertions); build passou. Edge carregou as 60 versões locais, os dois detalhes e as imagens no carrinho/favoritos sem placeholders; catálogo sem overflow em 360/768/1280 px. Atualizadas as quatro capturas afetadas: home desktop/celular, catálogo e favoritos. Automação temporária encerrada; nenhum commit ou push.
+
+## Fase 10 — segurança, testes e preparação para publicação
+
+### Entrega concluída — 27/10/2026
+
+- Revisão retomada sobre a árvore atual, preservando as imagens aprovadas e as 117 exclusões de starter/ já preparadas no índice durante a pausa. A aplicação não dependia desse diretório; Vite/TypeScript e documentação foram conferidos. Nenhum stage, commit, merge, rename de branch, push, deploy ou reescrita de histórico foi executado nesta entrega.
+- Segurança: .env e .env.* ignorados em qualquer subpasta, com exceção dos .env.example; auth.json também ignorado em qualquer nível. Exemplos sem credenciais reais. Recuperação de senha retorna o mesmo status e JSON para conta existente/inexistente, em en e pt-BR; front mostra a mesma confirmação. Cadastro, troca de e-mail e reenvio compartilham cotas por IP/usuário, sem reiniciar o limite ao trocar o e-mail. CORS aceita Idempotency-Key, com preflight coberto.
+- MySQL: fixture cria usuário verificado com senha aleatória recebida por stdin; exige APP_ENV=testing, driver mysql, host local e nome sneakers_test_<12-32 hex>. Seis cenários de recusa são testados antes de acessar dados. Seeder padrão cria somente produtos; senha padrão da UserFactory é documentada como exclusiva de testes.
+- Front: teste monta AuthProvider, LocaleProvider, NotificationProvider, NotificationBell e histórico reais no navegador. Cobre teclado, foco, polling/aba oculta, carregamento/vazio/erro/retry, troca de conta, logout, resposta atrasada e recuperação uniforme. Sem dependências novas.
+- Limpeza: removidos HandleAppearance, TwoFactorAuthenticationRequest, config/inertia.php, teste trivial e helpers/comentários genéricos sem uso após busca e testes. A remoção adicional de starter/ já existente ao retomar foi preservada.
+- README: vínculo com MERN original (2022), aviso de estudo sem associação às marcas, LICENSE/CREDITS, decisões técnicas, Node 24.15.0/.nvmrc, Intl, instalação, Mailpit/SMTP/worker e teste MySQL isolado. LICENSE reproduz exatamente origin/main. ext-intl declarado e lockfile sincronizado sem atualizar versões de pacotes. Workflow preparado para main e pull_request.
+- PHPUnit força ambiente, banco SQLite em memória, mailer/fila e origem de teste, independentemente do .env ou de variáveis herdadas do terminal. Nenhum banco habitual ou .env da árvore principal foi alterado.
+
+### Instalação do zero e falhas corrigidas
+
+- Clone temporário de master, com o diff atual aplicado e novos arquivos copiados, pois as mudanças ainda aguardam seus commits. Dependências instaladas do zero com composer install e npm ci, sem reutilizar vendor/node_modules. Cópia de .env.example, key:generate e migrate/seed executados exclusivamente em banco MySQL temporário identificado por UUID.
+- Falha local do servidor embutido com OPcache no PHP 8.4.27/Herd: erro SplFileInfo e falha secundária de view. Alternativa com php -d opcache.enable=0 -S documentada e usada somente no processo de teste; configuração global preservada.
+- Script de concorrência dependia da origem localhost:5173. Agora usa origens Sanctum próprias dos dois servidores temporários e desativa OPcache nesses processos. Passou com front configurado em outra porta.
+- Quatro testes assumiam a origem padrão sem isolá-la do .env. Corrigido no PHPUnit; suíte completa também passou com variáveis MySQL herdadas, mantendo SQLite em memória.
+- Testes de navegador exigem Chrome/Edge; pré-requisito e BROWSER_PATH documentados. Nenhuma falha restante de instalação identificada no procedimento validado.
+
+### Verificações finais
+
+- PHP 8.4.27 com Intl / Laravel 13.38.0: Pint aplicado, PHPStan nível 7 sem erros e suíte completa com **124 testes, 835 assertions**, tanto na árvore principal quanto na cópia instalada do zero.
+- Front instalado do zero: lint/formatação, TypeScript, **14 testes unitários + 5 cenários montados no navegador** (6 resultados no node:test, contando o teste pai) e build passaram.
+- MySQL temporário: **10 pares concorrentes de troca de endereço padrão e checkout idempotente simultâneo** passaram, sem duplicar pedido.
+- Edge + Mailpit + worker database no clone: cadastro en/pt_BR, caixa vazia antes do worker, verificação via rota do front deslogado sem criar sessão, login, checkout, e-mail do pedido com resumo/moeda/endereço, sino/contador, teclado e histórico. Dropdown conferido em 360/768/1280 px.
+- Recuperação/reset e aviso de senha alterada passaram. Sete e-mails bilíngues, com HTML/texto e sem senha inicial, senha nova ou credencial. Preferência portuguesa restaurada ao entrar a partir do navegador em inglês.
+- Integridade dos 60 WebPs coberta pelo ProductMediaTest; créditos conferidos separadamente contra os arquivos reais. Gorros gerados por IA mantidos conforme aprovação. Nenhum dump/log novo foi incluído no repositório.
+- Varredura de todas as referências: 16 commits e 513 blobs; nenhum .env real ou padrão de chave/token privado examinado. Valores SMTP não vazios no histórico são placeholders do README. Nenhum blob acima de 2 MB; as duas screenshots antigas continuam pendentes de filtragem manual.
+- Dois bancos temporários criados nesta fase removidos após os testes. Servidores, Mailpit, worker e navegador temporários encerrados. CI remoto não executado.
+
+### Ações manuais restantes antes da publicação
+
+- Fazer os commits por tema. Mensagens e grupos estão no roteiro local docs/PRE_PUBLICACAO.md, que permanece fora de versionamento conforme a exclusão já existente.
+- Incorporar origin/main com --allow-unrelated-histories e renomear master para main usando o passo 8 desse roteiro. Não houve push.
+- Histórico antigo ainda contém duas screenshots com fotos sem licença confirmada. Caminhos, blobs e commits estão no passo 9 do roteiro. docs/remove-unlicensed-screenshots.ps1 prepara backup mirror e cópia filtrada, preserva as capturas novas e verifica todos os refs. Script apenas revisado sintaticamente; não executado por instrução do usuário.
+- Não há pendência funcional desta fase. Publicação pública depende dos procedimentos manuais acima; o histórico original foi preservado.
+
+### Conferência do plano de commits
+
+- Base atual conferida: 8c1c25c31ec4e0abefbad09009a502f91aada474, commit feito após a entrega anterior, que já reúne 148 arquivos do frontend (imagens, testes e remoção de starter/). Sem reset/amend ou alteração desse commit.
+- Plano dos arquivos ainda pendentes: cinco grupos de 19, 9, 4, 6 e 7 arquivos, sem omissões ou repetições. README/STATUS, composer.json/lock, workflow, .nvmrc e LICENSE entram inteiros no grupo 5; phpunit.xml entra inteiro no 3.
+- Validada uma cópia isolada sobre esse HEAD, aplicando apenas cada grupo na ordem 1 a 5. Cada estado passou por Pint, PHPStan, testes PHP, lint, tipos, testes frontend e build. Resultados PHP por grupo: 112/780, 119/830, 124/835, 124/835 e 124/835 (testes/assertions). Em cada grupo passaram os 14 testes unitários e os cinco cenários montados do frontend.
+- A garantia é dos estados sequenciais 1 → 5, cada um sobre os anteriores; não foi testado cherry-pick em ordem arbitrária. Nenhum commit foi criado na cópia ou na árvore principal; o índice principal permaneceu vazio.
+- Os dois procedimentos locais, PRE_PUBLICACAO.md e remove-unlicensed-screenshots.ps1, estão ignorados em .git/info/exclude e não são rastreados na branch atual. O script tem cópias históricas em snapshots de arquivos não rastreados do Cline; essas referências foram preservadas.
+- Nenhum caminho pessoal de usuário do Windows foi encontrado nos arquivos rastreados, nos arquivos novos planejados ou nos blobs históricos examinados.
+- Revisadas visualmente 28 versões distintas dos 14 caminhos de screenshots em todas as referências locais. Só as duas capturas antigas da home mostram fotos comerciais sem licença confirmada; as outras doze mostram fotos Pexels creditadas ou telas sem fotos. As versões novas usam fotos/IA creditadas ou não exibem fotos de produtos. O inventário dos dois blobs antigos agora inclui também o commit 8c1c25c3.
+- Conferidos separadamente 60 WebPs contra 60 nomes de arquivo em CREDITS: nenhuma imagem sem crédito e nenhum crédito sem arquivo. O ProductMediaTest verifica existência/formato e integridade do catálogo, não a documentação de créditos.
