@@ -8,6 +8,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Middleware\ThrottleVerificationDelivery;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -15,7 +16,7 @@ Route::prefix('v1')->group(function (): void {
     Route::get('auth/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
         ->middleware(['signed:relative', 'throttle:6,1'])->name('verification.verify');
     Route::post('auth/email/verification-notification', [EmailVerificationController::class, 'resend'])
-        ->middleware(['auth:sanctum', 'throttle:1,1'])->name('verification.send');
+        ->middleware(['auth:sanctum', ThrottleVerificationDelivery::class])->name('verification.send');
     Route::middleware('auth:sanctum')->prefix('notifications')->name('notifications.')->group(function (): void {
         Route::get('/', [NotificationController::class, 'index'])->name('index');
         Route::get('/unread-count', [NotificationController::class, 'count'])->name('count');
