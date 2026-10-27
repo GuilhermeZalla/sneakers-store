@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
+use App\Http\Middleware\ThrottleVerificationDelivery;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('user', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('user/locale', [ProfileController::class, 'locale'])->name('profile.locale');
-    Route::patch('user', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('user', [ProfileController::class, 'update'])->middleware(ThrottleVerificationDelivery::class)->name('profile.update');
     Route::delete('user', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('user/security', [SecurityController::class, 'edit'])->name('security.edit');
     Route::put('user/password', [SecurityController::class, 'update'])

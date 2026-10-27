@@ -9,5 +9,6 @@
     "Cart quantity cannot exceed 999.": "A quantidade no carrinho não pode ultrapassar 999.",
     "Your cart is empty.": "Seu carrinho está vazio.",
     "The selected address is invalid.": "O endereço selecionado é inválido.",
-    "This idempotency key was already used for a different checkout.": "Esta chave de idempotência já foi usada em outro checkout."
+    "This idempotency key was already used for a different checkout.": "Esta chave de idempotência já foi usada em outro checkout.",
+    "If an account exists for this email, you will receive a reset link.": "Se houver uma conta com esse e-mail, você receberá um link de redefinição."
 }
