@@ -29,16 +29,16 @@ jobs:
         with:
           node-version: '22'
       - name: Install backend
-        working-directory: backend
+        working-directory: sneakers-store-backend
         run: composer setup
       - name: Check backend
-        working-directory: backend
+        working-directory: sneakers-store-backend
         run: composer ci:check
       - name: Install frontend
-        working-directory: frontend
+        working-directory: sneakers-store-frontend
         run: npm ci
       - name: Check frontend
-        working-directory: frontend
+        working-directory: sneakers-store-frontend
         run: |
           npm test
           npm run types:check
