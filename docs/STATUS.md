@@ -235,3 +235,12 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 - Nenhum caminho pessoal de usuário do Windows foi encontrado nos arquivos rastreados, nos arquivos novos planejados ou nos blobs históricos examinados.
 - Revisadas visualmente 28 versões distintas dos 14 caminhos de screenshots em todas as referências locais. Só as duas capturas antigas da home mostram fotos comerciais sem licença confirmada; as outras doze mostram fotos Pexels creditadas ou telas sem fotos. As versões novas usam fotos/IA creditadas ou não exibem fotos de produtos. O inventário dos dois blobs antigos agora inclui também o commit 8c1c25c3.
 - Conferidos separadamente 60 WebPs contra 60 nomes de arquivo em CREDITS: nenhuma imagem sem crédito e nenhum crédito sem arquivo. O ProductMediaTest verifica existência/formato e integridade do catálogo, não a documentação de créditos.
+
+## Planos futuros
+
+### Pagamentos reais — planejado, sem implementação
+
+- Atualmente, Wallet e checkout simulam o pagamento e registram o pedido, sem cobrança ou movimentação de dinheiro.
+- Avaliar a integração com um gateway em uma fase futura, definindo o provedor e os meios de pagamento nessa etapa.
+- Prever validação em sandbox, confirmação segura pelo provedor (webhooks com assinatura), idempotência e tratamento de pagamentos pendentes, recusados, cancelados e estornados. O pedido só deve ser marcado como pago após confirmação válida do provedor.
+- Sem prazo definido. Este registro não altera o checkout atual nem inicia a implementação.

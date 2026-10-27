@@ -6,6 +6,27 @@ Esta versão reimplementa o [projeto original MERN (2022)](https://github.com/Gu
 
 Loja online em desenvolvimento com API Laravel e interface React. A API oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e histórico de pedidos. O frontend inclui cadastro, login, verificação de e-mail, recuperação de senha, Home, catálogo, produto, favoritos, carrinho, checkout e painel da conta com notificações.
 
+## Demonstrações
+
+Gravações reais com dados fictícios em banco temporário isolado. O pagamento por Wallet é simulado, sem cobrança real.
+
+### Loja
+
+![Home, catálogo com filtro e ordenação, produto, favoritos, carrinho e troca entre USD e BRL](docs/demo/loja-desktop.gif)
+
+### Compra simulada
+
+![Cadastro, verificação de e-mail pelo Mailpit e checkout com Wallet simulada até a confirmação do pedido](docs/demo/compra-desktop.gif)
+
+### Minha conta
+
+![Dashboard, criação e definição de endereço padrão, histórico de pedidos e notificações no sino](docs/demo/conta-desktop.gif)
+
+### Loja no celular
+
+![Navegação mobile pelo catálogo, produto, favoritos, carrinho e troca de moeda](docs/demo/loja-mobile.gif)
+
+
 ## Screenshots
 
 Capturas reais do site em português/BRL, com dados fictícios em um banco SQLite temporário. Desktop em 1440 × 1000 e celular em 390 × 844. As 30 fotos do catálogo são arquivos locais, com autores, fontes e licença em [CREDITS.md](CREDITS.md). Capturas atualizadas após a substituição das fotos de roupas e acessórios.
