@@ -169,7 +169,7 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 - A entrega inclui a renomeação manual das pastas e as screenshots/créditos aprovados nas tarefas anteriores, que ainda estavam sem commit. Nenhuma dependência de aplicação foi adicionada ou atualizada.
 - Os avisos já existentes do PHP local (extensões duplicadas/pdo_firebird) permanecem; não impediram os checks com o PHP 8.4 correto. Configuração global do PHP não foi alterada.
 
-## Substituição das imagens pendentes — 27/10/2026
+## Substituição das imagens pendentes — 02/10/2026
 
 - Autorizada pelo usuário a substituição, desde que as fotos continuem aparecendo no site. Mantido o tema único e a interface existente.
 - Auditoria inicial do MySQL local: 30 produtos, 17 com fotos locais e 13 com fotos remotas Shopify. Nenhum calçado antigo com legacy_id de 1 a 50.
@@ -181,7 +181,7 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 - Cadastro, verificação pelo Mailpit deslogado, login, checkout e histórico percorridos; 14 screenshots refeitas em 1440 × 1000 e 390 × 844. Servidores, navegador e Mailpit temporários encerrados; .env preservado.
 - README e créditos atualizados. Nenhum commit, stage ou push nesta tarefa; aguarda revisão visual do usuário. Suíte completa de backend não repetida nesta etapa; executados os testes afetados.
 
-## Ajuste visual dos gorros — 27/10/2026
+## Ajuste visual dos gorros — 15/10/2026
 
 - O usuário preferiu os gorros isolados às fotos com pessoas. Substituídas somente as versões WebP de Lume Beanie Orange e Lume Beanie Red por imagens geradas com a ferramenta integrada OpenAI image_gen: fundo neutro, produto inteiro, sem pessoas, textos ou logotipos.
 - Mantidos os quatro caminhos de imagem e os dados existentes; nenhuma alteração de banco, código, preço ou layout nesta revisão. CREDITS.md registra a origem gerada por IA e os prompts, substituindo as duas atribuições Pexels anteriores.
@@ -189,7 +189,7 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 
 ## Fase 10 — segurança, testes e preparação para publicação
 
-### Entrega concluída — 27/10/2026
+### Entrega concluída — 22/10/2026
 
 - Revisão retomada sobre a árvore atual, preservando as imagens aprovadas e as 117 exclusões de starter/ já preparadas no índice durante a pausa. A aplicação não dependia desse diretório; Vite/TypeScript e documentação foram conferidos. Nenhum stage, commit, merge, rename de branch, push, deploy ou reescrita de histórico foi executado nesta entrega.
 - Segurança: .env e .env.* ignorados em qualquer subpasta, com exceção dos .env.example; auth.json também ignorado em qualquer nível. Exemplos sem credenciais reais. Recuperação de senha retorna o mesmo status e JSON para conta existente/inexistente, em en e pt-BR; front mostra a mesma confirmação. Cadastro, troca de e-mail e reenvio compartilham cotas por IP/usuário, sem reiniciar o limite ao trocar o e-mail. CORS aceita Idempotency-Key, com preflight coberto.
