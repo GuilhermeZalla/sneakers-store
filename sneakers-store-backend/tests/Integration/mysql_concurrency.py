@@ -2,6 +2,8 @@
 import concurrent.futures
 import http.cookiejar
 import json
+import os
+import secrets
 import subprocess
 import threading
 import time
@@ -22,7 +24,7 @@ class Client:
         request = urllib.request.Request(self.base + path,
             data=json.dumps(payload).encode() if payload is not None else None,
             method=method, headers={"Accept": "application/json", "Content-Type": "application/json",
-                "Origin": "http://localhost:5173", "X-XSRF-TOKEN": token, **(headers or {})})
+                "Origin": self.base, "X-XSRF-TOKEN": token, **(headers or {})})
         try:
             with self.opener.open(request, timeout=20) as response:
                 body = response.read()
@@ -39,13 +41,28 @@ def check(condition, message):
 def main():
     servers = []
     first = second = None
-    registered = False
-    password = "test-password-123"
+    fixture_id = None
+    password = secrets.token_urlsafe(32)
+    php = os.environ.get("PHP_BINARY", "php")
+
+    def fixture(action, payload=None, user_id=None):
+        arguments = [php, "artisan", "integration:mysql-fixture", action, "--no-interaction"]
+        if user_id is not None:
+            arguments.append(f"--user-id={user_id}")
+        result = subprocess.run(arguments, input=json.dumps(payload) if payload else "",
+            capture_output=True, text=True, check=False)
+        if result.returncode != 0:
+            raise RuntimeError("Fixture refused or failed. Confirm APP_ENV=testing, local host, "
+                "and DB_DATABASE=sneakers_test_<12-32 hex characters>. No normal database is allowed.")
+        return json.loads(result.stdout) if result.stdout.strip() else None
     email = f"concurrency-{uuid.uuid4().hex}@example.test"
+    fixture("inspect")
     try:
+        fixture_id = fixture("create", {"email": email, "password": password})["id"]
         for port in (18131, 18132):
             servers.append(subprocess.Popen(
-                ["php", "-S", f"localhost:{port}", "-t", "public", "public/index.php"],
+                [php, "-d", "opcache.enable=0", "-S", f"localhost:{port}", "-t", "public", "public/index.php"],
+                env={**os.environ, "SANCTUM_STATEFUL_DOMAINS": "localhost:18131,localhost:18132"},
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                 creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)))
         first, second = Client(18131), Client(18132)
@@ -59,12 +76,7 @@ def main():
                     time.sleep(0.2)
             else:
                 raise RuntimeError("Server failed to start")
-        status, _ = first.call("POST", "/api/v1/auth/register", {
-            "name": "Concurrency Test", "email": email, "password": password,
-            "password_confirmation": password, "phone": "+5511999999999",
-            "birthday": "1995-05-20", "gender": "not_informed"})
-        check(status == 201, "registration failed")
-        registered = True
+        first.call("POST", "/api/v1/auth/login", {"email": email, "password": password})
         second.call("POST", "/api/v1/auth/login", {"email": email, "password": password})
         addresses = []
         for number in ("1", "2"):
@@ -105,8 +117,8 @@ def main():
         print("PASS: 10 concurrent default-address pairs and concurrent idempotent checkout against MySQL")
     finally:
         try:
-            if registered:
-                first.call("DELETE", "/api/v1/user", {"password": password})
+            if fixture_id is not None:
+                fixture("cleanup", user_id=fixture_id)
         finally:
             for server in servers:
                 server.terminate()
