@@ -4,7 +4,7 @@ Atualizado em 16/11/2026. Controle interno; instruções de uso ficam no README.
 
 ## Fase atual
 
-**Versão 1.0.0.** Revisão visual, demo estática e capas de portfólio concluídas. O frontend completo continua integrado à API Laravel; o build de demonstração usa dados fictícios locais e será publicado pelo workflow de main após o CI. Os registros anteriores de branch, commits e ausência de push são históricos. A limpeza das duas screenshots antigas do histórico permanece uma ação separada, pois envolve reescrita de commits já publicados.
+**Versão 1.0.0.** Revisão visual, demo estática e capas de portfólio concluídas. O frontend completo continua integrado à API Laravel; o build de demonstração usa dados fictícios locais e está publicado em https://guilhermezalla.github.io/sneakers-store/ pelo workflow de main após o CI. Os registros anteriores de branch, commits e ausência de push são históricos. A limpeza das duas screenshots antigas do histórico permanece uma ação separada, pois envolve reescrita de commits já publicados.
 
 Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c`, de GuilhermeZalla/sneakers. Análise original em `ANALISE_MIGRACAO.md`.
 
@@ -255,7 +255,9 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 - [ ] Hospedagem do sistema completo (frontend, API, banco e filas), quando houver infraestrutura definida.
 - [ ] Limpeza do histórico antigo: os blobs 08aeff48f8dec70ab9cf25ac7c041fe526544642 e 45566c69a7378431b08035be85608ac8b8f3e7b6 ainda são alcançáveis. Os arquivos atuais e a demo usam apenas imagens creditadas. O roteiro local prepara backup e cópia filtrada; aplicar o histórico ao remoto exige uma decisão explícita sobre a reescrita dos commits públicos.
 
-A exclusão local preexistente de docs/PERGUNTAS_ENTREVISTA.md foi preservada fora do commit desta entrega.
+A remoção de docs/PERGUNTAS_ENTREVISTA.md feita no remoto (7b6876be) foi incorporada por merge, sem reescrever o histórico.
+
+Validação de fechamento: 17 testes unitários de frontend, cinco cenários montados em navegador, tipos, lint e builds normal/demo passaram. CI remoto 43964857387 concluiu com sucesso, incluindo os checks de backend e a implantação no Pages. A demo publicada respondeu HTTP 200 e foi conferida no navegador, incluindo produto e inclusão no carrinho. Commit de implementação: a133ff8c; merge de sincronização: d173d7c0.
 
 ## Planos futuros
 
