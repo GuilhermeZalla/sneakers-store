@@ -91,6 +91,7 @@ test('mounted notification bell and provider in a real browser', { timeout: 1200
                 '--headless=new',
                 '--no-sandbox',
                 '--disable-gpu',
+                '--disable-dev-shm-usage',
                 '--disable-software-rasterizer',
                 '--no-first-run',
                 '--no-default-browser-check',
@@ -98,11 +99,21 @@ test('mounted notification bell and provider in a real browser', { timeout: 1200
                 '--user-data-dir=' + profile,
                 'about:blank',
             ],
-            { windowsHide: true, stdio: 'ignore' },
+            { windowsHide: true, stdio: ['ignore', 'ignore', 'pipe'] },
         );
+        let browserError = '';
+        browser.stderr.on('data', (chunk) => {
+            browserError = (browserError + chunk.toString()).slice(-3000);
+        });
+        browser.on('error', (error) => {
+            browserError = error.message;
+        });
         const activePort = path.join(profile, 'DevToolsActivePort');
-        for (let attempt = 0; !existsSync(activePort) && attempt < 200; attempt++) await delay(25);
-        assert.ok(existsSync(activePort), 'Browser did not start');
+        for (let attempt = 0; !existsSync(activePort) && attempt < 800; attempt++) {
+            if (browser.exitCode !== null || browser.signalCode !== null) break;
+            await delay(25);
+        }
+        assert.ok(existsSync(activePort), 'Browser did not start: ' + browserError);
         const debugPort = readFileSync(activePort, 'utf8').split('\n')[0];
         const targets = await fetch('http://127.0.0.1:' + debugPort + '/json/list').then(
             (response) => response.json(),
