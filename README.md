@@ -8,6 +8,32 @@ Loja online em desenvolvimento com API Laravel e interface React. A API oferece 
 
 ## Demonstrações
 
+**[Abrir a demo pública](https://guilhermezalla.github.io/sneakers-store/)** · [Release 1.0.0](https://github.com/GuilhermeZalla/sneakers-store/releases/tag/v1.0.0)
+
+A demo é um frontend estático no GitHub Pages. Funciona sem API ou banco: catálogo, busca, filtros, favoritos, carrinho, endereços de exemplo, checkout simulado, histórico e notificações usam dados fictícios na sessão do navegador. A conta Alex Demo já está disponível; nenhum cadastro, senha, pagamento ou e-mail real é necessário. Use apenas informações de exemplo. O botão **Reiniciar demo** restaura o estado inicial.
+
+Para executar a demo localmente:
+
+```powershell
+cd sneakers-store-frontend
+npm ci
+npm run dev:demo
+```
+
+Abra o endereço com o caminho `/sneakers-store/` mostrado pelo Vite. `npm run build:demo` gera o frontend estático; `npm run build` continua gerando a versão conectada à API. A demo usa rotas com hash para permitir links diretos no Pages. O workflow de testes publica o build estático após os checks da branch main.
+
+A hospedagem do sistema completo, com Laravel, MySQL e filas, permanece planejada para o futuro. Pagamentos reais também estão fora desta versão.
+
+### Capas para portfólio
+
+Capturas reais da Home com molduras editoriais, identificadas como site responsivo:
+
+- [Capa 1920 × 1320 (16:11)](docs/portfolio/sneakers-portfolio-cover.svg)
+- [Imagem 1920 × 1080 (16:9)](docs/portfolio/sneakers-home.svg)
+- Capturas originais: [desktop](docs/portfolio/sneakers-desktop.jpg) e [celular](docs/portfolio/sneakers-mobile.jpg).
+
+As screenshots e os GIFs abaixo documentam a versão anterior à revisão visual da 1.0. As duas capas acima mostram a Home atual.
+
 Gravações reais com dados fictícios em banco temporário isolado. O pagamento por Wallet é simulado, sem cobrança real.
 
 ### Loja

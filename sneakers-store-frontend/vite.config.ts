@@ -7,6 +7,8 @@ import { defineConfig } from 'vite-plus';
 export default defineConfig(({ mode }) => {
     const backend = loadEnv(mode, process.cwd(), 'VITE_').VITE_API_URL || 'http://localhost:8000';
     return {
+        base: mode === 'demo' ? '/sneakers-store/' : '/',
+        define: { 'import.meta.env.VITE_DEMO': JSON.stringify(mode === 'demo' ? 'true' : 'false') },
         plugins: [react(), tailwindcss()],
         resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
         server: {

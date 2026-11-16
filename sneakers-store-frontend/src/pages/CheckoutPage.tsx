@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
 import { useStore } from '../context/StoreContext';
 import { apiRequest, ApiError } from '../lib/api';
+import type { Cart } from '../lib/store';
 import {
     createAttempt,
     formatOrderMoney,
@@ -15,6 +16,53 @@ import {
     type Order,
     type ShippingOptions,
 } from '../lib/checkout';
+
+function CheckoutRecap({
+    cart,
+    shippingPrice,
+    money,
+    pt,
+}: {
+    cart: Cart | null;
+    shippingPrice: number | undefined;
+    money: (cents: number) => string;
+    pt: boolean;
+}) {
+    return (
+        <aside className="checkout-recap" aria-label={pt ? 'Resumo do pedido' : 'Order summary'}>
+            <h3>{pt ? 'Seu pedido' : 'Your order'}</h3>
+            {cart?.data.map((item) => (
+                <div className="checkout-recap-item" key={item.id}>
+                    <span>
+                        {item.product.name} × {item.quantity}
+                    </span>
+                    <strong>{money(item.subtotal)}</strong>
+                </div>
+            ))}
+            <div className="checkout-recap-line">
+                <span>Subtotal</span>
+                <strong>{cart ? money(cart.meta.subtotal) : '—'}</strong>
+            </div>
+            <div className="checkout-recap-line">
+                <span>{pt ? 'Entrega' : 'Shipping'}</span>
+                <strong>{shippingPrice === undefined ? '—' : money(shippingPrice)}</strong>
+            </div>
+            <div className="checkout-recap-total">
+                <span>{pt ? 'Total estimado' : 'Estimated total'}</span>
+                <strong>
+                    {cart && shippingPrice !== undefined
+                        ? money(cart.meta.subtotal + shippingPrice)
+                        : '—'}
+                </strong>
+            </div>
+            <p>
+                {pt
+                    ? 'O valor final é confirmado pelo servidor. O pagamento é simulado.'
+                    : 'The server confirms the final amount. Payment is simulated.'}
+            </p>
+        </aside>
+    );
+}
 
 export function CheckoutPage() {
     const { user } = useAuth();
@@ -178,140 +226,151 @@ export function CheckoutPage() {
                 </section>
             )}
             {step === 1 && !attempt && (
-                <section className="checkout-panel">
-                    <h2>{steps[1]}</h2>
-                    {loading ? (
-                        <p role="status">{pt ? 'Carregando...' : 'Loading...'}</p>
-                    ) : loadError ? (
-                        <div role="alert">
-                            {pt
-                                ? 'Não foi possível carregar a entrega.'
-                                : 'Could not load delivery.'}
-                            <Button onClick={() => setRetryLoad((x) => x + 1)}>
-                                {pt ? 'Tentar novamente' : 'Try again'}
-                            </Button>
-                        </div>
-                    ) : (
-                        <>
-                            <fieldset>
-                                <legend>{pt ? 'Escolha um endereço' : 'Choose an address'}</legend>
-                                {addresses.length === 0 && (
-                                    <p>
-                                        {pt ? 'Nenhum endereço cadastrado.' : 'No saved addresses.'}
-                                    </p>
-                                )}
-                                {addresses.map((a) => (
-                                    <label className="radio-card" key={a.id}>
-                                        <input
-                                            type="radio"
-                                            name="address"
-                                            checked={addressId === a.id}
-                                            onChange={() => setAddressId(a.id)}
-                                        />{' '}
-                                        {a.street}, {a.number} — {a.city}/{a.state} ({a.postal_code}
-                                        )
-                                    </label>
-                                ))}
-                                {errors.address_id?.[0] && (
-                                    <p role="alert" className="field-error">
-                                        {errors.address_id[0]}
-                                    </p>
-                                )}
-                            </fieldset>
-                            {adding ? (
-                                <AddressForm
-                                    onSaved={(a) => {
-                                        setAddresses((old) => [...old, a]);
-                                        setAddressId(a.id);
-                                        setAdding(false);
-                                    }}
-                                    onCancel={() => setAdding(false)}
-                                />
-                            ) : addresses.length < 4 ? (
-                                <Button variant="quiet" onClick={() => setAdding(true)}>
-                                    {pt ? 'Adicionar endereço' : 'Add address'}
-                                </Button>
-                            ) : (
-                                <p>
-                                    {pt
-                                        ? 'Limite de quatro endereços atingido.'
-                                        : 'Four-address limit reached.'}
-                                </p>
-                            )}
-                            <fieldset>
-                                <legend>{pt ? 'Entrega' : 'Shipping'}</legend>
-                                {shipping &&
-                                    Object.entries(shipping.data).map(([key, option]) => (
-                                        <label className="radio-card" key={key}>
-                                            <input
-                                                type="radio"
-                                                name="shipping"
-                                                value={key}
-                                                checked={shippingMethod === key}
-                                                onChange={() => setShippingMethod(key)}
-                                            />{' '}
-                                            {key.toUpperCase()} · {option.days}{' '}
-                                            {pt ? 'dias' : 'days'} · {money(option.price)}
-                                        </label>
-                                    ))}
-                                {errors.shipping_method?.[0] && (
-                                    <p role="alert" className="field-error">
-                                        {errors.shipping_method[0]}
-                                    </p>
-                                )}
-                            </fieldset>
-                            <div className="button-row">
-                                <Button variant="quiet" onClick={() => setStep(0)}>
-                                    {pt ? 'Voltar' : 'Back'}
-                                </Button>
-                                <Button disabled={!addressId || adding} onClick={() => setStep(2)}>
-                                    {pt ? 'Continuar' : 'Continue'} →
+                <section className="checkout-panel checkout-panel--with-recap">
+                    <div className="checkout-panel-main">
+                        <h2>{steps[1]}</h2>
+                        {loading ? (
+                            <p role="status">{pt ? 'Carregando...' : 'Loading...'}</p>
+                        ) : loadError ? (
+                            <div role="alert">
+                                {pt
+                                    ? 'Não foi possível carregar a entrega.'
+                                    : 'Could not load delivery.'}
+                                <Button onClick={() => setRetryLoad((x) => x + 1)}>
+                                    {pt ? 'Tentar novamente' : 'Try again'}
                                 </Button>
                             </div>
-                        </>
-                    )}
+                        ) : (
+                            <>
+                                <fieldset>
+                                    <legend>
+                                        {pt ? 'Escolha um endereço' : 'Choose an address'}
+                                    </legend>
+                                    {addresses.length === 0 && (
+                                        <p>
+                                            {pt
+                                                ? 'Nenhum endereço cadastrado.'
+                                                : 'No saved addresses.'}
+                                        </p>
+                                    )}
+                                    {addresses.map((a) => (
+                                        <label className="radio-card" key={a.id}>
+                                            <input
+                                                type="radio"
+                                                name="address"
+                                                checked={addressId === a.id}
+                                                onChange={() => setAddressId(a.id)}
+                                            />{' '}
+                                            {a.street}, {a.number} — {a.city}/{a.state} (
+                                            {a.postal_code})
+                                        </label>
+                                    ))}
+                                    {errors.address_id?.[0] && (
+                                        <p role="alert" className="field-error">
+                                            {errors.address_id[0]}
+                                        </p>
+                                    )}
+                                </fieldset>
+                                {adding ? (
+                                    <AddressForm
+                                        onSaved={(a) => {
+                                            setAddresses((old) => [...old, a]);
+                                            setAddressId(a.id);
+                                            setAdding(false);
+                                        }}
+                                        onCancel={() => setAdding(false)}
+                                    />
+                                ) : addresses.length < 4 ? (
+                                    <Button variant="quiet" onClick={() => setAdding(true)}>
+                                        {pt ? 'Adicionar endereço' : 'Add address'}
+                                    </Button>
+                                ) : (
+                                    <p>
+                                        {pt
+                                            ? 'Limite de quatro endereços atingido.'
+                                            : 'Four-address limit reached.'}
+                                    </p>
+                                )}
+                                <fieldset>
+                                    <legend>{pt ? 'Entrega' : 'Shipping'}</legend>
+                                    {shipping &&
+                                        Object.entries(shipping.data).map(([key, option]) => (
+                                            <label className="radio-card" key={key}>
+                                                <input
+                                                    type="radio"
+                                                    name="shipping"
+                                                    value={key}
+                                                    checked={shippingMethod === key}
+                                                    onChange={() => setShippingMethod(key)}
+                                                />{' '}
+                                                {key.toUpperCase()} · {option.days}{' '}
+                                                {pt ? 'dias' : 'days'} · {money(option.price)}
+                                            </label>
+                                        ))}
+                                    {errors.shipping_method?.[0] && (
+                                        <p role="alert" className="field-error">
+                                            {errors.shipping_method[0]}
+                                        </p>
+                                    )}
+                                </fieldset>
+                                <div className="button-row">
+                                    <Button variant="quiet" onClick={() => setStep(0)}>
+                                        {pt ? 'Voltar' : 'Back'}
+                                    </Button>
+                                    <Button
+                                        disabled={!addressId || adding}
+                                        onClick={() => setStep(2)}
+                                    >
+                                        {pt ? 'Continuar' : 'Continue'} →
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                    <CheckoutRecap
+                        cart={cart}
+                        shippingPrice={shipping?.data[shippingMethod]?.price}
+                        money={money}
+                        pt={pt}
+                    />
                 </section>
             )}
             {step === 2 && !attempt && (
-                <section className="checkout-panel">
-                    <h2>{steps[2]}</h2>
-                    <p>
-                        <strong>Wallet</strong> —{' '}
-                        {pt
-                            ? 'pagamento simulado pelo valor integral do pedido.'
-                            : 'simulated payment for the full order total.'}
-                    </p>
-                    <p>
-                        {pt ? 'Subtotal' : 'Subtotal'}: {cart && money(cart.meta.subtotal)}
-                    </p>
-                    <p>
-                        {pt ? 'Entrega' : 'Shipping'}:{' '}
-                        {shipping && money(shipping.data[shippingMethod]?.price ?? 0)}
-                    </p>
-                    <p>
-                        {pt
-                            ? 'O total final será calculado pelo servidor.'
-                            : 'The final total is calculated by the server.'}
-                    </p>
-                    {message && (
-                        <p role="alert" className="form-alert">
-                            {message}
+                <section className="checkout-panel checkout-panel--with-recap">
+                    <div className="checkout-panel-main">
+                        <h2>{steps[2]}</h2>
+                        <p>
+                            <strong>Wallet</strong> —{' '}
+                            {pt
+                                ? 'pagamento simulado pelo valor integral do pedido.'
+                                : 'simulated payment for the full order total.'}
                         </p>
-                    )}
-                    <div className="button-row">
-                        <Button variant="quiet" onClick={() => setStep(1)}>
-                            {pt ? 'Voltar' : 'Back'}
-                        </Button>
-                        <Button disabled={busy} onClick={() => void finish()}>
-                            {busy
-                                ? pt
-                                    ? 'Enviando...'
-                                    : 'Submitting...'
-                                : pt
-                                  ? 'Finalizar pedido'
-                                  : 'Place order'}
-                        </Button>
+                        {message && (
+                            <p role="alert" className="form-alert">
+                                {message}
+                            </p>
+                        )}
+                        <div className="button-row">
+                            <Button variant="quiet" onClick={() => setStep(1)}>
+                                {pt ? 'Voltar' : 'Back'}
+                            </Button>
+                            <Button disabled={busy} onClick={() => void finish()}>
+                                {busy
+                                    ? pt
+                                        ? 'Enviando...'
+                                        : 'Submitting...'
+                                    : pt
+                                      ? 'Finalizar pedido'
+                                      : 'Place order'}
+                            </Button>
+                        </div>
                     </div>
+                    <CheckoutRecap
+                        cart={cart}
+                        shippingPrice={shipping?.data[shippingMethod]?.price}
+                        money={money}
+                        pt={pt}
+                    />
                 </section>
             )}
             {attempt && message && (

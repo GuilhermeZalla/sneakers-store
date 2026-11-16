@@ -75,84 +75,99 @@ export function PasswordRecoveryPage({ reset = false }: { reset?: boolean }) {
                       ? 'RECUPERAR ACESSO.'
                       : 'RECOVER ACCESS.'}
             </h1>
-            <section className="dashboard-panel">
-                {done ? (
-                    <p role="status">
-                        {reset
-                            ? pt
-                                ? 'Senha alterada. Entre com sua nova senha.'
-                                : 'Password changed. Sign in with your new password.'
-                            : pt
-                              ? 'Se houver uma conta com esse e-mail, você receberá um link de redefinição.'
-                              : 'If an account exists for this email, you will receive a reset link.'}
+            {import.meta.env.VITE_DEMO === 'true' ? (
+                <section className="dashboard-panel">
+                    <p>
+                        {pt
+                            ? 'A demonstração não envia e-mails nem altera senhas.'
+                            : 'The demo does not send emails or change passwords.'}
                     </p>
-                ) : (
-                    <form onSubmit={(event) => void submit(event)}>
-                        <div className="field">
-                            <label htmlFor="recovery-email">{pt ? 'E-mail' : 'Email'}</label>
-                            <Input
-                                id="recovery-email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                value={email}
-                                onChange={(event) => setEmail(event.target.value)}
-                            />
-                        </div>
-                        {reset && (
-                            <>
-                                <div className="field">
-                                    <label htmlFor="new-password">
-                                        {pt ? 'Nova senha' : 'New password'}
-                                    </label>
-                                    <Input
-                                        id="new-password"
-                                        type="password"
-                                        autoComplete="new-password"
-                                        minLength={8}
-                                        required
-                                        value={password}
-                                        onChange={(event) => setPassword(event.target.value)}
-                                    />
-                                </div>
-                                <div className="field">
-                                    <label htmlFor="confirm-password">
-                                        {pt ? 'Confirme a senha' : 'Confirm password'}
-                                    </label>
-                                    <Input
-                                        id="confirm-password"
-                                        type="password"
-                                        autoComplete="new-password"
-                                        required
-                                        value={confirmation}
-                                        onChange={(event) => setConfirmation(event.target.value)}
-                                    />
-                                </div>
-                            </>
-                        )}
-                        {error && (
-                            <div role="alert">
-                                <p>{error}</p>
-                                {Object.entries(fields).map(([key, messages]) => (
-                                    <p key={key}>{messages.join(' ')}</p>
-                                ))}
-                            </div>
-                        )}
-                        <Button type="submit" disabled={busy}>
-                            {busy
+                    <Link to="/login">
+                        {pt ? 'Explorar com a conta fictícia' : 'Explore with the sample account'} →
+                    </Link>
+                </section>
+            ) : (
+                <section className="dashboard-panel">
+                    {done ? (
+                        <p role="status">
+                            {reset
                                 ? pt
-                                    ? 'Enviando...'
-                                    : 'Sending...'
+                                    ? 'Senha alterada. Entre com sua nova senha.'
+                                    : 'Password changed. Sign in with your new password.'
                                 : pt
-                                  ? 'Continuar'
-                                  : 'Continue'}
-                        </Button>
-                    </form>
-                )}
-                <p>
-                    <Link to="/login">{pt ? 'Voltar para entrar' : 'Back to sign in'}</Link>
-                </p>
-            </section>
+                                  ? 'Se houver uma conta com esse e-mail, você receberá um link de redefinição.'
+                                  : 'If an account exists for this email, you will receive a reset link.'}
+                        </p>
+                    ) : (
+                        <form onSubmit={(event) => void submit(event)}>
+                            <div className="field">
+                                <label htmlFor="recovery-email">{pt ? 'E-mail' : 'Email'}</label>
+                                <Input
+                                    id="recovery-email"
+                                    type="email"
+                                    autoComplete="email"
+                                    required
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
+                                />
+                            </div>
+                            {reset && (
+                                <>
+                                    <div className="field">
+                                        <label htmlFor="new-password">
+                                            {pt ? 'Nova senha' : 'New password'}
+                                        </label>
+                                        <Input
+                                            id="new-password"
+                                            type="password"
+                                            autoComplete="new-password"
+                                            minLength={8}
+                                            required
+                                            value={password}
+                                            onChange={(event) => setPassword(event.target.value)}
+                                        />
+                                    </div>
+                                    <div className="field">
+                                        <label htmlFor="confirm-password">
+                                            {pt ? 'Confirme a senha' : 'Confirm password'}
+                                        </label>
+                                        <Input
+                                            id="confirm-password"
+                                            type="password"
+                                            autoComplete="new-password"
+                                            required
+                                            value={confirmation}
+                                            onChange={(event) =>
+                                                setConfirmation(event.target.value)
+                                            }
+                                        />
+                                    </div>
+                                </>
+                            )}
+                            {error && (
+                                <div role="alert">
+                                    <p>{error}</p>
+                                    {Object.entries(fields).map(([key, messages]) => (
+                                        <p key={key}>{messages.join(' ')}</p>
+                                    ))}
+                                </div>
+                            )}
+                            <Button type="submit" disabled={busy}>
+                                {busy
+                                    ? pt
+                                        ? 'Enviando...'
+                                        : 'Sending...'
+                                    : pt
+                                      ? 'Continuar'
+                                      : 'Continue'}
+                            </Button>
+                        </form>
+                    )}
+                    <p>
+                        <Link to="/login">{pt ? 'Voltar para entrar' : 'Back to sign in'}</Link>
+                    </p>
+                </section>
+            )}
         </main>
     );
 }

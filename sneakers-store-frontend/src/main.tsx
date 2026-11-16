@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { DemoBanner } from './components/DemoBanner';
 import { AuthProvider } from './context/AuthContext';
 import { LocaleProvider } from './context/LocaleContext';
 import { StoreProvider } from './context/StoreContext';
@@ -14,13 +15,16 @@ import { NotificationProvider } from './context/NotificationContext';
 import { PasswordRecoveryPage, VerifyEmailPage } from './pages/AccessPages';
 import './styles.css';
 
+const Router = import.meta.env.VITE_DEMO === 'true' ? HashRouter : BrowserRouter;
+
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <LocaleProvider>
             <AuthProvider>
                 <NotificationProvider>
                     <StoreProvider>
-                        <BrowserRouter>
+                        <Router>
+                            {import.meta.env.VITE_DEMO === 'true' && <DemoBanner />}
                             <Routes>
                                 <Route path="/login" element={<AuthPage mode="login" />} />
                                 <Route path="/register" element={<AuthPage mode="register" />} />
@@ -54,7 +58,7 @@ createRoot(document.getElementById('root')!).render(
                                 </Route>
                                 <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>
-                        </BrowserRouter>
+                        </Router>
                     </StoreProvider>
                 </NotificationProvider>
             </AuthProvider>

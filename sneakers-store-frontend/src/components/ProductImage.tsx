@@ -31,7 +31,7 @@ export function ProductImage({
         );
     return (
         <img
-            src={src}
+            src={src.startsWith('/products/') ? import.meta.env.BASE_URL + src.slice(1) : src}
             alt={alt}
             loading="lazy"
             width={width}

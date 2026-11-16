@@ -1,10 +1,10 @@
 # Controle da migração Sneakers
 
-Atualizado em 27/10/2026. Controle interno; instruções de uso ficam no README.
+Atualizado em 16/11/2026. Controle interno; instruções de uso ficam no README.
 
 ## Fase atual
 
-**Fase 10 concluída e validada localmente.** Segurança, testes, limpeza e instalação isolada conferidos. Aguardam execução manual os commits, a unificação em main e a remoção das duas screenshots antigas do histórico; sem deploy ou push.
+**Versão 1.0.0.** Revisão visual, demo estática e capas de portfólio concluídas. O frontend completo continua integrado à API Laravel; o build de demonstração usa dados fictícios locais e será publicado pelo workflow de main após o CI. Os registros anteriores de branch, commits e ausência de push são históricos. A limpeza das duas screenshots antigas do histórico permanece uma ação separada, pois envolve reescrita de commits já publicados.
 
 Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c`, de GuilhermeZalla/sneakers. Análise original em `ANALISE_MIGRACAO.md`.
 
@@ -235,6 +235,27 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 - Nenhum caminho pessoal de usuário do Windows foi encontrado nos arquivos rastreados, nos arquivos novos planejados ou nos blobs históricos examinados.
 - Revisadas visualmente 28 versões distintas dos 14 caminhos de screenshots em todas as referências locais. Só as duas capturas antigas da home mostram fotos comerciais sem licença confirmada; as outras doze mostram fotos Pexels creditadas ou telas sem fotos. As versões novas usam fotos/IA creditadas ou não exibem fotos de produtos. O inventário dos dois blobs antigos agora inclui também o commit 8c1c25c3.
 - Conferidos separadamente 60 WebPs contra 60 nomes de arquivo em CREDITS: nenhuma imagem sem crédito e nenhum crédito sem arquivo. O ProductMediaTest verifica existência/formato e integridade do catálogo, não a documentação de créditos.
+
+## Próximas entregas e publicação
+
+### Revisão visual iniciada — 16/11/2026
+
+- Home: foto local do Lume Ruby integrada ao destaque, com composição adaptada para celular.
+- Catálogo: preço apresentado na moeda selecionada e convertido para centavos apenas na consulta à API; filtros em superfície neutra.
+- Produto e pedidos: cores, tipos e status apresentados no idioma selecionado; imagem principal com enquadramento mais compacto.
+- Checkout: resumo de itens, frete e total estimado nas etapas de entrega e pagamento, com indicação do valor confirmado pelo servidor e do pagamento simulado.
+- Conta e carrinho: navegação por abas mais leve, responsiva, e subtotal do item melhor alinhado no desktop.
+- Movimento: cards e botões usam transições de 240 ms, contorno laranja de 3 px e sombra. Por aprovação visual do usuário, movimento reduzido usa elevação menor (3 px nos cards/2 px nos botões), sem zoom da imagem; animações de entrada continuam desativadas nesse modo. Favoritos ficam laranja no hover/foco e preenchidos quando selecionados.
+- Validação: frontend passou em formatação/lint, tipos, 16 testes unitários, cinco cenários montados no navegador e build; backend passou em 124 testes/835 assertions. Home e filtros conferidos no navegador em desktop e 390 px, sem rolagem horizontal. As páginas autenticadas foram revisadas depois com os mesmos componentes e dados fictícios da demo; fluxo completo de compra, favoritos e edição de endereço conferidos no navegador. Acentuação de pt-BR corrigida no catálogo da demo.
+
+- [x] Revisão de Home, catálogo, produto, carrinho, checkout, conta e estados vazios/erro; layout conferido em 390, 768 e 1440 px, sem rolagem horizontal da página nas telas revisadas.
+- [x] Demo estática para portfólio: HashRouter, 30 produtos, idiomas en/pt-BR e preços independentes USD/BRL, favoritos, carrinho, endereços, checkout idempotente simulado e histórico na sessão. Nenhuma requisição de API, cobrança ou envio de e-mail; credenciais reais não são solicitadas.
+- [x] Capturas reais e duas capas SVG independentes: 1920 × 1320 e 1920 × 1080 em docs/portfolio. A versão no celular é identificada como site responsivo.
+- [x] Workflow de CI e publicação no Pages; README com comandos, limites da demo e links de portfólio.
+- [ ] Hospedagem do sistema completo (frontend, API, banco e filas), quando houver infraestrutura definida.
+- [ ] Limpeza do histórico antigo: os blobs 08aeff48f8dec70ab9cf25ac7c041fe526544642 e 45566c69a7378431b08035be85608ac8b8f3e7b6 ainda são alcançáveis. Os arquivos atuais e a demo usam apenas imagens creditadas. O roteiro local prepara backup e cópia filtrada; aplicar o histórico ao remoto exige uma decisão explícita sobre a reescrita dos commits públicos.
+
+A exclusão local preexistente de docs/PERGUNTAS_ENTREVISTA.md foi preservada fora do commit desta entrega.
 
 ## Planos futuros
 

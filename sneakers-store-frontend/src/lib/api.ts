@@ -24,6 +24,15 @@ export async function apiRequest<T>(
     options: RequestInit = {},
     locale: StoreLocale = 'en',
 ): Promise<T> {
+    if (import.meta.env?.VITE_DEMO === 'true') {
+        const { demoRequest, DemoError } = await import('./demo');
+        try {
+            return (await demoRequest(path, options, locale)) as T;
+        } catch (error) {
+            if (error instanceof DemoError) throw new ApiError(error.status, error.message);
+            throw error;
+        }
+    }
     const headers = new Headers(options.headers);
     headers.set('Accept', 'application/json');
     headers.set('Accept-Language', storeLocales[locale].language);

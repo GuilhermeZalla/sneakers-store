@@ -7,6 +7,12 @@ import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
 import { useStore } from '../context/StoreContext';
 import { apiRequest } from '../lib/api';
+import {
+    formatPriceInput,
+    formatProductColor,
+    formatProductType,
+    parsePriceInput,
+} from '../lib/locale';
 import type { Product } from '../lib/store';
 
 type ProductList = {
@@ -87,7 +93,7 @@ function Grid({ products }: { products: Product[] }) {
 export function HomePage() {
     const { locale } = useLocale();
     const pt = locale === 'pt_BR';
-    const { data, loading, error, retry } = useProducts('per_page=8');
+    const { data, loading, error, retry } = useProducts('type=sneaker&per_page=8');
     return (
         <main>
             <section className="store-hero">
@@ -113,9 +119,23 @@ export function HomePage() {
                 <Link className="store-link-button" to="/catalog">
                     {pt ? 'VER CATÁLOGO' : 'SHOP THE COLLECTION'} ↗
                 </Link>
-                <span className="store-hero-mark" aria-hidden="true">
-                    ✳
-                </span>
+                <Link
+                    className="store-hero-feature"
+                    to="/products/lume-ruby-101"
+                    aria-label={
+                        pt ? 'Conhecer o tênis Lume Ruby' : 'Explore the Lume Ruby sneakers'
+                    }
+                >
+                    <img
+                        src={import.meta.env.BASE_URL + 'products/lume-ruby.webp'}
+                        alt={pt ? 'Tênis vermelho Lume Ruby' : 'Red Lume Ruby sneakers'}
+                        width="440"
+                        height="360"
+                    />
+                    <span>
+                        Lume Ruby <span aria-hidden="true">↗</span>
+                    </span>
+                </Link>
             </section>
             <section className="store-section">
                 <div className="section-heading">
@@ -144,12 +164,34 @@ export function CatalogPage() {
     const [params, setParams] = useSearchParams();
     const query = params.toString();
     const { data, loading, error, retry } = useProducts(query);
+    const minPrice = params.get('min_price');
+    const maxPrice = params.get('max_price');
+    const [minPriceInput, setMinPriceInput] = useState(() => formatPriceInput(minPrice, locale));
+    const [maxPriceInput, setMaxPriceInput] = useState(() => formatPriceInput(maxPrice, locale));
+    const [priceError, setPriceError] = useState<'min_price' | 'max_price' | null>(null);
+    useEffect(() => {
+        setMinPriceInput(formatPriceInput(minPrice, locale));
+        setMaxPriceInput(formatPriceInput(maxPrice, locale));
+        setPriceError(null);
+    }, [minPrice, maxPrice, locale]);
     function update(name: string, value: string) {
         const next = new URLSearchParams(params);
         if (value) next.set(name, value);
         else next.delete(name);
         if (name !== 'page') next.delete('page');
         setParams(next);
+    }
+    function commitPrice(name: 'min_price' | 'max_price', value: string) {
+        const cents = parsePriceInput(value, locale);
+        if (cents === undefined) {
+            setPriceError(name);
+            return;
+        }
+        setPriceError(null);
+        const formatted = cents === null ? '' : formatPriceInput(String(cents), locale);
+        if (name === 'min_price') setMinPriceInput(formatted);
+        else setMaxPriceInput(formatted);
+        update(name, cents === null ? '' : String(cents));
     }
     return (
         <main className="store-section">
@@ -206,31 +248,64 @@ export function CatalogPage() {
             </div>
             <div className="filters filters--prices">
                 <label>
-                    {pt ? 'Preço mínimo (centavos)' : 'Minimum price (cents)'}
+                    {pt ? 'Preço mínimo (R$)' : 'Minimum price ($)'}
                     <input
                         className="input"
-                        type="number"
-                        min="0"
-                        value={params.get('min_price') ?? ''}
-                        onChange={(e) => update('min_price', e.target.value)}
+                        type="text"
+                        inputMode="decimal"
+                        value={minPriceInput}
+                        onChange={(e) => setMinPriceInput(e.target.value)}
+                        onBlur={() => commitPrice('min_price', minPriceInput)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') e.currentTarget.blur();
+                        }}
+                        aria-invalid={priceError === 'min_price'}
+                        aria-describedby={
+                            priceError === 'min_price' ? 'min-price-error' : undefined
+                        }
                     />
+                    {priceError === 'min_price' && (
+                        <span className="field-error" id="min-price-error">
+                            {pt ? 'Use um valor como 150,00.' : 'Use an amount like 150.00.'}
+                        </span>
+                    )}
                 </label>
                 <label>
-                    {pt ? 'Preço máximo (centavos)' : 'Maximum price (cents)'}
+                    {pt ? 'Preço máximo (R$)' : 'Maximum price ($)'}
                     <input
                         className="input"
-                        type="number"
-                        min="0"
-                        value={params.get('max_price') ?? ''}
-                        onChange={(e) => update('max_price', e.target.value)}
+                        type="text"
+                        inputMode="decimal"
+                        value={maxPriceInput}
+                        onChange={(e) => setMaxPriceInput(e.target.value)}
+                        onBlur={() => commitPrice('max_price', maxPriceInput)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') e.currentTarget.blur();
+                        }}
+                        aria-invalid={priceError === 'max_price'}
+                        aria-describedby={
+                            priceError === 'max_price' ? 'max-price-error' : undefined
+                        }
                     />
+                    {priceError === 'max_price' && (
+                        <span className="field-error" id="max-price-error">
+                            {pt ? 'Use um valor como 300,00.' : 'Use an amount like 300.00.'}
+                        </span>
+                    )}
                 </label>
             </div>
             <ListStatus loading={loading} error={error} empty={!data?.data.length} retry={retry} />
             {!loading && !error && data && (
                 <>
                     <p className="result-count">
-                        {data.meta.total} {pt ? 'produtos' : 'products'}
+                        {data.meta.total}{' '}
+                        {pt
+                            ? data.meta.total === 1
+                                ? 'produto'
+                                : 'produtos'
+                            : data.meta.total === 1
+                              ? 'product'
+                              : 'products'}
                     </p>
                     <Grid products={data.data} />
                     <div className="pagination">
@@ -331,7 +406,7 @@ export function ProductPage() {
                     <div className="detail-copy">
                         <FavoriteButton product={product} className="detail-favorite" />
                         <span className="store-eyebrow">
-                            {product.brand} / {product.type}
+                            {product.brand} / {formatProductType(product.type, locale)}
                         </span>
                         <h1>{product.name}</h1>
                         <strong className="detail-price">{money(product.price)}</strong>
@@ -343,7 +418,9 @@ export function ProductPage() {
                         {product.colors.length > 0 && (
                             <p>
                                 <strong>{pt ? 'Cores' : 'Colors'}:</strong>{' '}
-                                {product.colors.join(', ')}
+                                {product.colors
+                                    .map((color) => formatProductColor(color, locale))
+                                    .join(', ')}
                             </p>
                         )}
                         {product.sizes.length > 0 && (

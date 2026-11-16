@@ -203,65 +203,88 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
                             <p>{mode === 'login' ? t.loginSub : t.registerSub}</p>
                         </div>
                         <Card className="form-card">
-                            <form onSubmit={(event) => void submit(event)} noValidate={false}>
-                                {message && (
-                                    <div className="form-alert" role="alert">
-                                        {message}
-                                    </div>
-                                )}
-                                {mode === 'register' && field('name', t.name)}
-                                {field('email', t.email, 'email')}
-                                {mode === 'login' && (
-                                    <Link to="/forgot-password">
+                            {import.meta.env.VITE_DEMO === 'true' ? (
+                                <>
+                                    <p>
                                         {locale === 'pt_BR'
-                                            ? 'Esqueci minha senha'
-                                            : 'Forgot password'}
-                                    </Link>
-                                )}
-                                {mode === 'register' && (
-                                    <div className="field-grid">
-                                        {field('phone', t.phone, 'tel')}
-                                        {field('birthday', t.birthday, 'date')}
-                                    </div>
-                                )}
-                                {mode === 'register' && (
-                                    <>
-                                        {field('second_contact', t.second, 'tel', false)}
-                                        <div className="field">
-                                            <label htmlFor="gender">{t.gender}</label>
-                                            <Select
-                                                id="gender"
-                                                value={form.gender}
-                                                onChange={(event) =>
-                                                    update('gender', event.target.value)
-                                                }
-                                                aria-invalid={!!errors.gender}
-                                                aria-describedby={
-                                                    errors.gender?.length
-                                                        ? 'gender-error'
-                                                        : undefined
-                                                }
-                                            >
-                                                <option value="not_informed">{t.other}</option>
-                                                <option value="female">{t.female}</option>
-                                                <option value="male">{t.male}</option>
-                                            </Select>
-                                            {errors.gender?.[0] && (
-                                                <span className="field-error" id="gender-error">
-                                                    {errors.gender[0]}
-                                                </span>
-                                            )}
+                                            ? 'Explore com uma conta fictícia. Nenhum cadastro ou senha é necessário.'
+                                            : 'Explore with a sample account. No registration or password is needed.'}
+                                    </p>
+                                    <Button
+                                        className="submit-button"
+                                        onClick={() => {
+                                            void login('alex@example.test', '').then(() =>
+                                                navigate(destination, { replace: true }),
+                                            );
+                                        }}
+                                    >
+                                        {locale === 'pt_BR'
+                                            ? 'EXPLORAR DEMONSTRAÇÃO'
+                                            : 'EXPLORE DEMO'}{' '}
+                                        <ArrowRight size={18} />
+                                    </Button>
+                                </>
+                            ) : (
+                                <form onSubmit={(event) => void submit(event)} noValidate={false}>
+                                    {message && (
+                                        <div className="form-alert" role="alert">
+                                            {message}
                                         </div>
-                                    </>
-                                )}
-                                {field('password', t.password, 'password')}
-                                {mode === 'register' &&
-                                    field('password_confirmation', t.confirm, 'password')}
-                                <Button type="submit" className="submit-button" disabled={busy}>
-                                    {busy ? t.wait : mode === 'login' ? t.login : t.register}
-                                    <ArrowRight size={20} aria-hidden="true" />
-                                </Button>
-                            </form>
+                                    )}
+                                    {mode === 'register' && field('name', t.name)}
+                                    {field('email', t.email, 'email')}
+                                    {mode === 'login' && (
+                                        <Link to="/forgot-password">
+                                            {locale === 'pt_BR'
+                                                ? 'Esqueci minha senha'
+                                                : 'Forgot password'}
+                                        </Link>
+                                    )}
+                                    {mode === 'register' && (
+                                        <div className="field-grid">
+                                            {field('phone', t.phone, 'tel')}
+                                            {field('birthday', t.birthday, 'date')}
+                                        </div>
+                                    )}
+                                    {mode === 'register' && (
+                                        <>
+                                            {field('second_contact', t.second, 'tel', false)}
+                                            <div className="field">
+                                                <label htmlFor="gender">{t.gender}</label>
+                                                <Select
+                                                    id="gender"
+                                                    value={form.gender}
+                                                    onChange={(event) =>
+                                                        update('gender', event.target.value)
+                                                    }
+                                                    aria-invalid={!!errors.gender}
+                                                    aria-describedby={
+                                                        errors.gender?.length
+                                                            ? 'gender-error'
+                                                            : undefined
+                                                    }
+                                                >
+                                                    <option value="not_informed">{t.other}</option>
+                                                    <option value="female">{t.female}</option>
+                                                    <option value="male">{t.male}</option>
+                                                </Select>
+                                                {errors.gender?.[0] && (
+                                                    <span className="field-error" id="gender-error">
+                                                        {errors.gender[0]}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {field('password', t.password, 'password')}
+                                    {mode === 'register' &&
+                                        field('password_confirmation', t.confirm, 'password')}
+                                    <Button type="submit" className="submit-button" disabled={busy}>
+                                        {busy ? t.wait : mode === 'login' ? t.login : t.register}
+                                        <ArrowRight size={20} aria-hidden="true" />
+                                    </Button>
+                                </form>
+                            )}
                         </Card>
                         <p className="switch-auth">
                             {mode === 'login' ? t.noAccount : t.haveAccount}{' '}

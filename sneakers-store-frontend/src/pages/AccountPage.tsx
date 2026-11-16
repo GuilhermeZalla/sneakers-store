@@ -8,6 +8,7 @@ import { useLocale } from '../context/LocaleContext';
 import { useStore } from '../context/StoreContext';
 import { apiRequest, ApiError } from '../lib/api';
 import { formatOrderMoney, formatPhone, type Address, type Order } from '../lib/checkout';
+import { formatOrderStatus } from '../lib/locale';
 
 function Failure({ retry }: { retry: () => void }) {
     const { locale } = useLocale();
@@ -221,7 +222,24 @@ export function AccountPage() {
                     <NotificationList history />
                 </section>
             )}
-            {tab === 'profile' && (
+            {import.meta.env.VITE_DEMO === 'true' && (tab === 'profile' || tab === 'password') && (
+                <section className="dashboard-panel">
+                    <h2>{pt ? 'SUA CONTA DE DEMONSTRAÇÃO' : 'YOUR DEMO ACCOUNT'}</h2>
+                    <p>Alex Demo · alex@example.test</p>
+                    <p>
+                        {pt
+                            ? 'Dados e senha são fictícios. Explore endereços, pedidos e favoritos nesta sessão.'
+                            : 'Account details and password are fictional. Explore addresses, orders and favorites in this session.'}
+                    </p>
+                    <Button
+                        variant="quiet"
+                        onClick={() => void logout().then(() => navigate('/login'))}
+                    >
+                        {pt ? 'Sair da demo' : 'Sign out of demo'}
+                    </Button>
+                </section>
+            )}
+            {tab === 'profile' && import.meta.env.VITE_DEMO !== 'true' && (
                 <section className="dashboard-panel">
                     <h2>{pt ? 'DADOS DA CONTA' : 'ACCOUNT DETAILS'}</h2>
                     <form onSubmit={(e) => void submit(e, 'profile')}>
@@ -289,7 +307,7 @@ export function AccountPage() {
                     </Button>
                 </section>
             )}
-            {tab === 'password' && (
+            {tab === 'password' && import.meta.env.VITE_DEMO !== 'true' && (
                 <section className="dashboard-panel">
                     <h2>{pt ? 'TROCAR SENHA' : 'CHANGE PASSWORD'}</h2>
                     <form onSubmit={(e) => void submit(e, 'password')}>
@@ -398,7 +416,7 @@ export function AccountPage() {
                                     <strong>{o.order_number}</strong>
                                     <p>
                                         {formatOrderMoney(o.total, o.currency)} · {o.currency} ·{' '}
-                                        {o.status}
+                                        {formatOrderStatus(o.status, locale)}
                                     </p>
                                 </div>
                                 <Link to={'/account/orders/' + o.id}>
@@ -488,7 +506,7 @@ export function OrderDetailPage() {
         };
     }, [id, locale, retry]);
     return (
-        <main className="store-section">
+        <main className="store-section order-detail">
             <Link to="/account?tab=orders">← {pt ? 'Voltar aos pedidos' : 'Back to orders'}</Link>
             <h1>{pt ? 'DETALHES DO PEDIDO' : 'ORDER DETAILS'}</h1>
             {loading ? (
@@ -500,7 +518,7 @@ export function OrderDetailPage() {
                     <section className="dashboard-panel order-detail">
                         <h2>{order.order_number}</h2>
                         <p>
-                            {order.status} · {order.currency}
+                            {formatOrderStatus(order.status, locale)} · {order.currency}
                         </p>
                         <ul>
                             {order.items.map((item, index) => (
