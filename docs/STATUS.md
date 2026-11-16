@@ -238,7 +238,7 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 
 ## Próximas entregas e publicação
 
-- Demo: adicionar um produto cria um aviso no sino, com nome do item e link para o carrinho. Contador e histórico de notificações atualizados imediatamente, com leitura individual/em lote, paginação e textos EN/PT. Os eventos são locais à demonstração, sem envio de e-mail.
+- Aplicação e demo: adicionar um produto cria um aviso interno no sino, sem e-mail. A API grava o aviso na transação do carrinho; o frontend atualiza o sino imediatamente. Remoção individual e limpeza apenas das lidas preservam as não lidas e respeitam o proprietário. A lista retorna a uma página válida após exclusões.
 
 - Contador da sacola: quantidade total de unidades no carrinho, atualizado pelo estado compartilhado após adicionar, alterar quantidade ou remover produtos; oculto quando vazio e limitado visualmente a 99+. Rótulo acessível em português e inglês. Mesma navegação na demo e na aplicação conectada à API.
 
@@ -271,3 +271,16 @@ Validação de fechamento: 17 testes unitários de frontend, cinco cenários mon
 - Avaliar a integração com um gateway em uma fase futura, definindo o provedor e os meios de pagamento nessa etapa.
 - Prever validação em sandbox, confirmação segura pelo provedor (webhooks com assinatura), idempotência e tratamento de pagamentos pendentes, recusados, cancelados e estornados. O pedido só deve ser marcado como pago após confirmação válida do provedor.
 - Sem prazo definido. Este registro não altera o checkout atual nem inicia a implementação.
+
+
+## Correções da revisão de qualidade — 16/11/2026
+
+- API: DELETE /api/v1/notifications/{id} e DELETE /api/v1/notifications/read; policy por proprietário e consultas em lote limitadas ao usuário autenticado. Nenhuma migration nova.
+- Aviso interno do carrinho implementado também no Laravel, salvo atomicamente sem fila/e-mail; erro de persistência desfaz a inclusão.
+- Frontend compartilhado: exclusão individual, limpeza das lidas e atualização imediata do sino em ambos os modos; erros preservam a lista.
+- Demo: validação do estado restaurado, dados inválidos/antigos reiniciados com segurança, comparação do payload/idioma em retries idempotentes e correção de endereço padrão na edição.
+- Removida a cópia duplicada demo-catalog.json. Catálogo, traduções e fretes agora são dados públicos compartilhados com o backend. Preços e prazos existentes da API preservados.
+- README traduzido para inglês, incluindo comandos, configuração, limites e endpoints novos.
+- Checks locais: Pint, PHPStan, 128 testes PHP/874 assertions em SQLite em memória; 18 testes unitários frontend e sete cenários reais de navegador; tipos, lint e builds normal/demo passaram. Nenhuma operação no MySQL habitual, alteração de dependências ou comando de migration foi executado.
+- Revisão final: sem imports mortos ou scaffolds genéricos remanescentes nos arquivos alterados; testes adicionados para autorização, rollback, estado inválido, idempotência, limpeza/exclusão, falhas e atualização imediata.
+- Pendências de produto mantidas: hospedagem completa e pagamentos reais. A limpeza histórica é executada separadamente com backup e validação dos blobs e das árvores atuais.

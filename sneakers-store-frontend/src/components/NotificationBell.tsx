@@ -8,8 +8,20 @@ import { formatDate } from '../lib/locale';
 import { Button } from './ui';
 
 export function NotificationList({ history = false }: { history?: boolean }) {
-    const { items, count, loading, error, busy, page, lastPage, refresh, read, readAll } =
-        useNotifications();
+    const {
+        items,
+        count,
+        loading,
+        error,
+        busy,
+        page,
+        lastPage,
+        refresh,
+        read,
+        readAll,
+        remove,
+        clearRead,
+    } = useNotifications();
     const { locale } = useLocale();
     const pt = locale === 'pt_BR';
     const navigate = useNavigate();
@@ -66,6 +78,17 @@ export function NotificationList({ history = false }: { history?: boolean }) {
                                     {pt ? 'Marcar como lida' : 'Mark as read'}
                                 </button>
                             )}
+                            <button
+                                className="text-button"
+                                disabled={busy}
+                                aria-label={
+                                    (pt ? 'Remover notificação: ' : 'Remove notification: ') +
+                                    item.title
+                                }
+                                onClick={() => void remove(item.id)}
+                            >
+                                {pt ? 'Remover' : 'Remove'}
+                            </button>
                         </li>
                     ))}
                 </ul>
@@ -77,6 +100,13 @@ export function NotificationList({ history = false }: { history?: boolean }) {
                     onClick={() => void readAll()}
                 >
                     {pt ? 'Marcar todas como lidas' : 'Mark all as read'}
+                </Button>
+                <Button
+                    variant="quiet"
+                    disabled={busy || items.length === 0}
+                    onClick={() => void clearRead()}
+                >
+                    {pt ? 'Limpar notificações lidas' : 'Clear read notifications'}
                 </Button>
                 {!history && (
                     <Link to="/account?tab=notifications">

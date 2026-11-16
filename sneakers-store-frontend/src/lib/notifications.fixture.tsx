@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { StoreProvider, useStore } from '../context/StoreContext';
 import { NotificationBell, NotificationList } from '../components/NotificationBell';
 import { NotificationProvider, useNotifications } from '../context/NotificationContext';
 import { AuthProvider, useAuth, type User } from '../context/AuthContext';
@@ -78,6 +79,21 @@ window.fetch = async (input, init) => {
             headers: { 'Content-Type': 'application/json' },
         });
     if (path === '/api/v1/user') return harness.user ? json({ data: harness.user }) : json({}, 401);
+    if (path === '/api/v1/cart' || path === '/api/v1/wishlist')
+        return json({ data: [], meta: { currency: 'USD', subtotal: 0 } });
+    if (path === '/api/v1/cart/items' && init?.method === 'POST') {
+        harness.items.push({
+            id: 'cart-added',
+            event: 'cart_added',
+            title: 'Item added to cart',
+            body: 'Sample shoes are in your bag.',
+            url: '/cart',
+            read_at: null,
+            created_at: '2026-01-01T00:00:00Z',
+        });
+        harness.count++;
+        return json({ data: { id: 1 } }, 201);
+    }
     if (path.includes('/notifications')) {
         const fail = harness.fail;
         const items = structuredClone(harness.items);
@@ -85,8 +101,21 @@ window.fetch = async (input, init) => {
         if (path.includes('?page=')) harness.listCalls++;
         if (harness.hold) await new Promise<void>((resolve) => harness.pending.push(resolve));
         if (fail) return json({}, 503);
+        if (init?.method === 'DELETE') {
+            const id = decodeURIComponent(path.split('/')[4] ?? '');
+            harness.items = harness.items.filter((item) =>
+                path.endsWith('/read') ? !item.read_at : item.id !== id,
+            );
+            harness.count = harness.items.filter((item) => !item.read_at).length;
+            return new Response(null, { status: 204 });
+        }
         if (init?.method === 'PATCH') {
-            harness.count = 0;
+            const id = decodeURIComponent(path.split('/')[4] ?? '');
+            harness.items.forEach((item) => {
+                if (path.endsWith('/read-all') || item.id === id)
+                    item.read_at = new Date().toISOString();
+            });
+            harness.count = harness.items.filter((item) => !item.read_at).length;
             return new Response(null, { status: 204 });
         }
         return path.includes('unread-count')
@@ -102,6 +131,7 @@ window.fetch = async (input, init) => {
 };
 function Controls() {
     const auth = useAuth();
+    const store = useStore();
     const notifications = useNotifications();
     return (
         <>
@@ -120,6 +150,9 @@ function Controls() {
                     user: auth.user?.id,
                 })}
             </output>
+            <button id="cart-add" onClick={() => void store.addCart(1)}>
+                Add sample product
+            </button>
             <NotificationBell />
             <NotificationList history />
         </>
@@ -129,10 +162,12 @@ createRoot(document.getElementById('root')!).render(
     <LocaleProvider>
         <AuthProvider>
             <NotificationProvider>
-                <BrowserRouter>
-                    <Controls />
-                    <PasswordRecoveryPage />
-                </BrowserRouter>
+                <StoreProvider>
+                    <BrowserRouter>
+                        <Controls />
+                        <PasswordRecoveryPage />
+                    </BrowserRouter>
+                </StoreProvider>
             </NotificationProvider>
         </AuthProvider>
     </LocaleProvider>,

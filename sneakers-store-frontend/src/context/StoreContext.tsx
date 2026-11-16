@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { useAuth } from './AuthContext';
 import { useLocale } from './LocaleContext';
+import { useNotifications } from './NotificationContext';
 import { storeApi, type Cart, type WishlistItem } from '../lib/store';
 
 type StoreContextValue = {
@@ -30,6 +31,7 @@ type StoreContextValue = {
 const StoreContext = createContext<StoreContextValue | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
+    const { refresh: refreshNotifications } = useNotifications();
     const { user } = useAuth();
     const { locale } = useLocale();
     const [cart, setCart] = useState<Cart | null>(null);
@@ -130,7 +132,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
                 refreshCart,
                 refreshWishlist,
                 addCart: (id) =>
-                    mutate(() => storeApi.addCart(id, 1, locale), refreshCart, setCartError),
+                    mutate(
+                        async () => {
+                            const result = await storeApi.addCart(id, 1, locale);
+                            void refreshNotifications(1);
+                            return result;
+                        },
+                        refreshCart,
+                        setCartError,
+                    ),
                 updateCart: (id, quantity) =>
                     mutate(
                         () => storeApi.updateCart(id, quantity, locale),

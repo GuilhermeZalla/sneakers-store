@@ -22,6 +22,8 @@ type NotificationState = {
     refresh: (page?: number) => Promise<void>;
     read: (id: string) => Promise<boolean>;
     readAll: () => Promise<void>;
+    remove: (id: string) => Promise<void>;
+    clearRead: () => Promise<void>;
 };
 const Context = createContext<NotificationState | null>(null);
 export function NotificationProvider({ children }: { children: ReactNode }) {
@@ -45,10 +47,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
             const session = version.current;
             setLoading(true);
             try {
-                const [list, unread] = await Promise.all([
+                let [list, unread] = await Promise.all([
                     notificationApi.list(nextPage, locale),
                     notificationApi.count(locale),
                 ]);
+                if (list.data.length === 0 && nextPage > list.meta.last_page) {
+                    list = await notificationApi.list(Math.max(1, list.meta.last_page), locale);
+                }
                 if (session !== version.current || request !== sequence.current) return;
                 setItems(list.data);
                 setCount(unread.data.unread_count);
@@ -91,14 +96,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
             document.removeEventListener('visibilitychange', focus);
         };
     }, [userId, refresh]);
-    useEffect(() => {
-        if (import.meta.env?.VITE_DEMO !== 'true') return;
-        const update = () => {
-            void refresh(1);
-        };
-        window.addEventListener('sneakers-demo-notifications', update);
-        return () => window.removeEventListener('sneakers-demo-notifications', update);
-    }, [refresh]);
     const read = async (id: string) => {
         const session = version.current;
         setBusy(true);
@@ -126,9 +123,35 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
             if (session === version.current) setBusy(false);
         }
     };
+    const dismiss = async (id?: string) => {
+        const session = version.current;
+        setBusy(true);
+        try {
+            if (id) await notificationApi.remove(id, locale);
+            else await notificationApi.clearRead(locale);
+            if (session === version.current) await refresh();
+        } catch {
+            if (session === version.current) setError(true);
+        } finally {
+            if (session === version.current) setBusy(false);
+        }
+    };
     return (
         <Context.Provider
-            value={{ items, count, page, lastPage, loading, error, busy, refresh, read, readAll }}
+            value={{
+                items,
+                count,
+                page,
+                lastPage,
+                loading,
+                error,
+                busy,
+                refresh,
+                read,
+                readAll,
+                remove: (id) => dismiss(id),
+                clearRead: () => dismiss(),
+            }}
         >
             {children}
         </Context.Provider>

@@ -35,7 +35,7 @@ test('notification API uses paginated lists and server counts with session cooki
         calls.push({ path: String(input), method: init?.method ?? 'GET' });
         assert.equal(init?.credentials, 'include');
         assert.equal(new Headers(init?.headers).get('Accept-Language'), 'pt-BR');
-        if (init?.method === 'PATCH') {
+        if (init?.method === 'PATCH' || init?.method === 'DELETE') {
             assert.equal(new Headers(init.headers).get('X-XSRF-TOKEN'), 'csrf-token');
             return new Response(null, { status: 204 });
         }
@@ -46,11 +46,15 @@ test('notification API uses paginated lists and server counts with session cooki
         assert.equal((await notificationApi.count('pt_BR')).data.unread_count, 3);
         await notificationApi.read('notification-id', 'pt_BR');
         await notificationApi.readAll('pt_BR');
+        await notificationApi.remove('notice/id', 'pt_BR');
+        await notificationApi.clearRead('pt_BR');
         assert.deepEqual(calls, [
             { path: '/api/v1/notifications?page=2', method: 'GET' },
             { path: '/api/v1/notifications/unread-count', method: 'GET' },
             { path: '/api/v1/notifications/notification-id/read', method: 'PATCH' },
             { path: '/api/v1/notifications/read-all', method: 'PATCH' },
+            { path: '/api/v1/notifications/notice%2Fid', method: 'DELETE' },
+            { path: '/api/v1/notifications/read', method: 'DELETE' },
         ]);
         assert.ok(POLL_INTERVAL >= 30_000);
     } finally {

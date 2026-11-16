@@ -15,16 +15,10 @@ class CheckoutService
     /** @return array<string, array{price: int, days: int}> */
     public function shippingMethods(StoreLocale $locale): array
     {
-        $prices = $locale === StoreLocale::Portuguese
-            ? ['blue' => 7535, 'sedex' => 4450, 'fedex' => 11010, 'red' => 2350]
-            : ['blue' => 1507, 'sedex' => 890, 'fedex' => 2202, 'red' => 470];
+        /** @var array<string, array{price: int, days: int}> $methods */
+        $methods = config('shipping.'.$locale->currency());
 
-        return [
-            'blue' => ['price' => $prices['blue'], 'days' => 4],
-            'sedex' => ['price' => $prices['sedex'], 'days' => 8],
-            'fedex' => ['price' => $prices['fedex'], 'days' => 5],
-            'red' => ['price' => $prices['red'], 'days' => 3],
-        ];
+        return $methods;
     }
 
     /** @param array{idempotency_key: string, address_id: int|string, shipping_method: string, payment_method: string} $data */

@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'cart_added' => [
+        'title' => 'Item added to cart',
+        'body' => ':product is in your bag.',
+    ],
     'welcome' => [
         'title' => 'Welcome to Sneakers!',
         'body' => 'Your account is ready. Verify your email to start shopping.',

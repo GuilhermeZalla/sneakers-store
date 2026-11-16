@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { demoRequest, DemoError } from './demo.ts';
+import { demoRequest, DemoError, restoreDemoState } from './demo.ts';
 
 test('demo supports a complete isolated purchase, currency and retry flow', async () => {
     const storage = new Map<string, string>();
@@ -45,6 +45,25 @@ test('demo supports a complete isolated purchase, currency and retry flow', asyn
         };
         const retry = await demoRequest('/api/v1/checkout', request, 'pt_BR');
         assert.deepEqual(retry, purchase);
+        await assert.rejects(
+            demoRequest('/api/v1/checkout', request, 'en'),
+            (error) => error instanceof DemoError && error.status === 409,
+        );
+        await assert.rejects(
+            demoRequest(
+                '/api/v1/checkout',
+                {
+                    ...request,
+                    body: JSON.stringify({
+                        address_id: 1,
+                        shipping_method: 'blue',
+                        payment_method: 'wallet',
+                    }),
+                },
+                'pt_BR',
+            ),
+            (error) => error instanceof DemoError && error.status === 409,
+        );
         assert.equal(purchase.data.total, 35250);
         assert.equal(purchase.data.currency, 'BRL');
         assert.deepEqual(
@@ -84,6 +103,73 @@ test('demo supports a complete isolated purchase, currency and retry flow', asyn
             ).data.unread_count,
             0,
         );
+        await demoRequest('/api/v1/notifications/read', { method: 'DELETE' }, 'pt_BR');
+        assert.equal(
+            ((await demoRequest('/api/v1/notifications', {}, 'pt_BR')) as { data: unknown[] }).data
+                .length,
+            0,
+        );
+        for (let index = 0; index < 16; index++) {
+            await demoRequest(
+                '/api/v1/cart/items',
+                { method: 'POST', body: JSON.stringify({ product_id: 101 }) },
+                'en',
+            );
+        }
+        const secondPage = (await demoRequest('/api/v1/notifications?page=2', {}, 'en')) as {
+            data: { id: string }[];
+        };
+        assert.equal(secondPage.data.length, 1);
+        await demoRequest(
+            '/api/v1/notifications/' + secondPage.data[0].id,
+            { method: 'DELETE' },
+            'en',
+        );
+        const afterDeletion = (await demoRequest('/api/v1/notifications?page=2', {}, 'en')) as {
+            data: unknown[];
+            meta: { current_page: number; last_page: number };
+        };
+        assert.equal(afterDeletion.meta.current_page, 1);
+        assert.equal(afterDeletion.meta.last_page, 1);
+        assert.equal(afterDeletion.data.length, 15);
+        await demoRequest('/api/v1/notifications/read', { method: 'DELETE' }, 'en');
+        assert.equal(
+            (
+                (await demoRequest('/api/v1/notifications/unread-count', {}, 'en')) as {
+                    data: { unread_count: number };
+                }
+            ).data.unread_count,
+            15,
+        );
+        const newAddress = (await demoRequest(
+            '/api/v1/addresses',
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: 'home',
+                    postal_code: '01001-000',
+                    street: 'Sample Road',
+                    number: '2',
+                    district: 'Centro',
+                    city: 'São Paulo',
+                    state: 'SP',
+                    is_default: false,
+                }),
+            },
+            'en',
+        )) as { data: { id: number } };
+        await demoRequest(
+            '/api/v1/addresses/' + newAddress.data.id,
+            { method: 'PATCH', body: JSON.stringify({ is_default: true }) },
+            'en',
+        );
+        const addresses = (await demoRequest('/api/v1/addresses', {}, 'en')) as {
+            data: { id: number; is_default: boolean }[];
+        };
+        assert.deepEqual(
+            addresses.data.filter((address) => address.is_default).map((address) => address.id),
+            [newAddress.data.id],
+        );
         await assert.rejects(
             demoRequest(
                 '/api/v1/user/password',
@@ -107,4 +193,20 @@ test('demo supports a complete isolated purchase, currency and retry flow', asyn
         globalThis.fetch = originalFetch;
         Reflect.deleteProperty(globalThis, 'sessionStorage');
     }
+});
+
+test('invalid or outdated stored demo data safely restores the initial session', () => {
+    for (const raw of [
+        'invalid JSON',
+        'null',
+        '{}',
+        '{"cart":{}}',
+        '{"signedIn":true,"locale":"xx"}',
+    ]) {
+        assert.equal(restoreDemoState(raw).cart[0].quantity, 1);
+    }
+    const valid = restoreDemoState(null);
+    assert.deepEqual(restoreDemoState(JSON.stringify(valid)), valid);
+    const corrupted = { ...valid, cart: [{ id: 101, quantity: 'invalid' }] };
+    assert.deepEqual(restoreDemoState(JSON.stringify(corrupted)), valid);
 });

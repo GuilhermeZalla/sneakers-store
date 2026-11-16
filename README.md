@@ -1,18 +1,18 @@
 # Sneakers Store
 
-Projeto de estudo independente, sem vínculo, associação ou endosso das marcas citadas.
+An independent portfolio project, with no affiliation, association or endorsement from the brands mentioned.
 
-Esta versão reimplementa o [projeto original MERN (2022)](https://github.com/GuilhermeZalla/sneakers). Código sob [licença MIT](LICENSE); imagens e seus termos próprios estão em [CREDITS.md](CREDITS.md). Dois produtos (Lume Beanie Orange e Lume Beanie Red) usam imagens geradas por IA com a ferramenta OpenAI image_gen; o restante do catálogo vem de bancos de imagens livres (Pexels), conforme detalhado em CREDITS.md.
+This version reimplements the [original MERN project (2022)](https://github.com/GuilhermeZalla/sneakers). Code is available under the [MIT license](LICENSE). Images have their own terms, documented in [CREDITS.md](CREDITS.md). Lume Beanie Orange and Lume Beanie Red use images generated with OpenAI image_gen; the remaining catalog photographs come from Pexels and are credited individually.
 
-Loja online em desenvolvimento com API Laravel e interface React. A API oferece autenticação, catálogo, carrinho, favoritos, endereços, checkout e histórico de pedidos. O frontend inclui cadastro, login, verificação de e-mail, recuperação de senha, Home, catálogo, produto, favoritos, carrinho, checkout e painel da conta com notificações.
+A full-stack storefront built with a Laravel REST API and a React frontend. It includes registration, login, email verification, password recovery, a filterable product catalog, favorites, cart, addresses, simulated checkout, order history and account notifications. English/USD and Brazilian Portuguese/BRL are supported.
 
-## Demonstrações
+## Public demo
 
-**[Abrir a demo pública](https://guilhermezalla.github.io/sneakers-store/)** · [Release 1.0.0](https://github.com/GuilhermeZalla/sneakers-store/releases/tag/v1.0.0)
+**[Explore the demo](https://guilhermezalla.github.io/sneakers-store/)** · [Releases](https://github.com/GuilhermeZalla/sneakers-store/releases)
 
-A demo é um frontend estático no GitHub Pages. Funciona sem API ou banco: catálogo, busca, filtros, favoritos, carrinho, endereços de exemplo, checkout simulado, histórico e notificações usam dados fictícios na sessão do navegador. A conta Alex Demo já está disponível; nenhum cadastro, senha, pagamento ou e-mail real é necessário. Use apenas informações de exemplo. O botão **Reiniciar demo** restaura o estado inicial.
+The GitHub Pages demo runs entirely in the browser, without an API or database. The sample account, Alex Demo, is ready to use. Browse products, search and filter the catalog, save favorites, edit sample addresses and place simulated orders. No registration, password, real payment or email delivery is involved. Use sample information only.
 
-Para executar a demo localmente:
+Changes last for the browser session. **Reset demo** restores the initial sample data. Invalid or outdated stored data safely falls back to a fresh session. The bag shows the total item quantity; the bell shows unread notifications. Adding a product creates an internal notice immediately. Notices can be marked as read, removed individually or cleared in bulk using **Clear read notifications**, which preserves unread items.
 
 ```powershell
 cd sneakers-store-frontend
@@ -20,102 +20,101 @@ npm ci
 npm run dev:demo
 ```
 
-Abra o endereço com o caminho `/sneakers-store/` mostrado pelo Vite. `npm run build:demo` gera o frontend estático; `npm run build` continua gerando a versão conectada à API. A demo usa rotas com hash para permitir links diretos no Pages. O workflow de testes publica o build estático após os checks da branch main.
+Open the URL printed by Vite, including `/sneakers-store/`. `npm run build:demo` creates the static demo in `dist/`; `npm run build` creates the API-connected frontend. The demo uses hash routing so direct links work on GitHub Pages. The workflow publishes the demo after the checks on `main` pass.
 
-A hospedagem do sistema completo, com Laravel, MySQL e filas, permanece planejada para o futuro. Pagamentos reais também estão fora desta versão.
+The demo imports the public seed catalog, translations and shipping data directly from the backend source files. It does not read a live database or use private environment variables. Custom database changes are not mirrored into the demo. Keep the monorepo directories together when building it.
 
-### Capas para portfólio
+Full-system hosting and real payment integration remain future work.
 
-Capturas reais da Home com molduras editoriais, identificadas como site responsivo:
+## Portfolio covers
 
-- [Capa 1920 × 1320 (16:11)](docs/portfolio/sneakers-portfolio-cover.svg)
-- [Imagem 1920 × 1080 (16:9)](docs/portfolio/sneakers-home.svg)
-- Capturas originais: [desktop](docs/portfolio/sneakers-desktop.jpg) e [celular](docs/portfolio/sneakers-mobile.jpg).
+Real Home screenshots presented as a responsive website, with editorial browser frames:
 
-As screenshots e os GIFs abaixo documentam a versão anterior à revisão visual da 1.0. As duas capas acima mostram a Home atual.
+- [1920 × 1320 cover, 16:11](docs/portfolio/sneakers-portfolio-cover.svg)
+- [1920 × 1080 cover, 16:9](docs/portfolio/sneakers-home.svg)
+- Original captures: [desktop](docs/portfolio/sneakers-desktop.jpg) and [mobile](docs/portfolio/sneakers-mobile.jpg).
 
-Gravações reais com dados fictícios em banco temporário isolado. O pagamento por Wallet é simulado, sem cobrança real.
+The screenshots and recordings below document the interface before the 1.0 visual refresh. The covers above show the refreshed Home. Recordings use fictional data in an isolated temporary database; Wallet payments do not charge real money.
 
-### Loja
+### Store walkthrough
 
-![Home, catálogo com filtro e ordenação, produto, favoritos, carrinho e troca entre USD e BRL](docs/demo/loja-desktop.gif)
+![Home, catalog filters, product details, favorites, cart and currency switching](docs/demo/loja-desktop.gif)
 
-### Compra simulada
+### Simulated purchase
 
-![Cadastro, verificação de e-mail pelo Mailpit e checkout com Wallet simulada até a confirmação do pedido](docs/demo/compra-desktop.gif)
+![Registration, Mailpit verification and simulated Wallet checkout](docs/demo/compra-desktop.gif)
 
-### Minha conta
+### Account
 
-![Dashboard, criação e definição de endereço padrão, histórico de pedidos e notificações no sino](docs/demo/conta-desktop.gif)
+![Account dashboard, default addresses, order history and notifications](docs/demo/conta-desktop.gif)
 
-### Loja no celular
+### Mobile storefront
 
-<img src="docs/demo/loja-mobile.gif" alt="Navegação mobile pelo catálogo, produto, favoritos, carrinho e troca de moeda" width="300">
-
+<img src="docs/demo/loja-mobile.gif" alt="Mobile catalog, products, favorites, cart and currency switching" width="300">
 
 ## Screenshots
 
-Capturas reais do site em português/BRL, com dados fictícios em um banco SQLite temporário. Desktop em 1440 × 1000 e celular em 390 × 844. As 30 fotos do catálogo são arquivos locais, com autores, fontes e licença em [CREDITS.md](CREDITS.md). Capturas atualizadas após a substituição das fotos de roupas e acessórios.
+Captured in Portuguese/BRL using fictional records in a temporary SQLite database: 1440 × 1000 desktop and 390 × 844 mobile. The catalog contains 30 products with local WebP images; authors, sources and licenses are in [CREDITS.md](CREDITS.md).
 
-| Tela | Desktop | Celular |
+| Page | Desktop | Mobile |
 | --- | --- | --- |
-| Home | [Ver captura](docs/screenshots/home-desktop.png) | [Ver captura](docs/screenshots/home-mobile.png) |
-| Catálogo Lume | [Ver captura](docs/screenshots/catalogo-desktop.png) | — |
-| Produto | [Ver captura](docs/screenshots/produto-desktop.png) | [Ver captura](docs/screenshots/produto-mobile.png) |
-| Login | [Ver captura](docs/screenshots/login-desktop.png) | — |
-| Favoritos | [Ver captura](docs/screenshots/favoritos-desktop.png) | — |
-| Carrinho | [Ver captura](docs/screenshots/carrinho-desktop.png) | — |
-| Checkout: entrega | [Ver captura](docs/screenshots/checkout-entrega-desktop.png) | — |
-| Checkout: pagamento | [Ver captura](docs/screenshots/checkout-pagamento-desktop.png) | — |
-| Pedido confirmado | [Ver captura](docs/screenshots/pedido-confirmado-desktop.png) | — |
-| Histórico de pedidos | [Ver captura](docs/screenshots/pedidos-desktop.png) | [Ver captura](docs/screenshots/pedidos-mobile.png) |
-| Conta | [Ver captura](docs/screenshots/conta-desktop.png) | — |
+| Home | [View](docs/screenshots/home-desktop.png) | [View](docs/screenshots/home-mobile.png) |
+| Lume catalog | [View](docs/screenshots/catalogo-desktop.png) | — |
+| Product | [View](docs/screenshots/produto-desktop.png) | [View](docs/screenshots/produto-mobile.png) |
+| Login | [View](docs/screenshots/login-desktop.png) | — |
+| Favorites | [View](docs/screenshots/favoritos-desktop.png) | — |
+| Cart | [View](docs/screenshots/carrinho-desktop.png) | — |
+| Delivery | [View](docs/screenshots/checkout-entrega-desktop.png) | — |
+| Payment | [View](docs/screenshots/checkout-pagamento-desktop.png) | — |
+| Order confirmation | [View](docs/screenshots/pedido-confirmado-desktop.png) | — |
+| Order history | [View](docs/screenshots/pedidos-desktop.png) | [View](docs/screenshots/pedidos-mobile.png) |
+| Account | [View](docs/screenshots/conta-desktop.png) | — |
 
-## Estrutura e stack
+## Structure and stack
 
-- `sneakers-store-backend/`: PHP 8.4, Laravel 13, MySQL, Fortify, Sanctum e Pest.
-- `sneakers-store-frontend/`: React 19, Vite Plus, React Router 7, TypeScript e Tailwind CSS 4.
-- `docs/STATUS.md`: controle de progresso.
+- `sneakers-store-backend/`: PHP 8.4, Laravel 13, MySQL, Fortify, Sanctum and Pest.
+- `sneakers-store-frontend/`: React 19, Vite Plus, React Router 7, TypeScript and Tailwind CSS 4.
+- `docs/STATUS.md`: internal progress and remaining work.
 
-## Executar localmente
+## Local development
 
-Requisitos: **PHP 8.4** com PDO MySQL, PDO SQLite, Intl e as extensões exigidas pelo Composer; Composer 2; **Node.js 24.15.0** (fixado em `.nvmrc`); e MySQL 8. O Vite Plus aceita `^22.18.0 || ^24.11.0 || >=26.0.0`; use 24.15.0 para reproduzir os checks desta entrega. Os testes de navegador exigem Chrome/Chromium ou Edge instalado; `BROWSER_PATH` permite indicar o executável.
+Requirements: PHP 8.4 with PDO MySQL, PDO SQLite, Intl and the extensions required by Composer; Composer 2; MySQL 8; and Node.js 24.15.0, pinned in `.nvmrc`. Vite Plus supports `^22.18.0 || ^24.11.0 || >=26.0.0`; use the pinned version to reproduce the checks. Browser tests require Chrome, Chromium or Edge. Set `BROWSER_PATH` to specify an executable.
 
-### Projeto já configurado
+### An already configured checkout
 
-Inicie o MySQL e, a partir da pasta raiz do projeto, abra dois terminais PowerShell. No primeiro, execute o backend:
+Start MySQL. Open two PowerShell terminals from the repository root. Run the API in the first:
 
 ```powershell
 cd sneakers-store-backend
 php artisan serve --host=localhost --port=8000
 ```
 
-No segundo, execute o frontend:
+Run the frontend in the second:
 
 ```powershell
 cd sneakers-store-frontend
 npm.cmd run dev
 ```
 
-Mantenha os dois terminais abertos e acesse `http://localhost:5173`. Crie uma conta em **Criar conta**, inicie o worker e confirme o e-mail recebido no Mailpit (ou no log) para testar favoritos, carrinho e checkout. Para encerrar cada servidor, pressione `Ctrl+C` no respectivo terminal.
+Keep both terminals open and visit `http://localhost:5173`. Create an account, start the queue worker and verify the email received through Mailpit or the log before using favorites, cart, addresses and checkout. Press `Ctrl+C` in each terminal to stop its server.
 
-Também é possível iniciar os serviços pela raiz, um comando em cada terminal: `npm.cmd run backend:serve` e `npm.cmd run dev`.
+Alternatively, from the repository root, run `npm.cmd run backend:serve` and `npm.cmd run dev` in separate terminals.
 
-Se o projeto já tiver `.env`, banco e chave configurados, preserve-os: não copie novamente os arquivos de exemplo nem gere outra chave. O frontend usa `http://localhost:8000` como padrão do proxy quando `sneakers-store-frontend/.env` não existe.
+Preserve an existing `.env`, application key and database. Do not copy example files or generate another key for a configured installation. The frontend proxy defaults to `http://localhost:8000` when its `.env` is absent.
 
-### Falha do servidor local com OPcache no Windows
+### Windows OPcache startup issue
 
-Na validação com PHP 8.4.27 do Herd, o servidor embutido falhou com `SplFileInfo`/`Class "view" does not exist` quando OPcache estava ativo. Se encontrar esse erro, encerre `artisan serve` e use, dentro do backend, a alternativa abaixo. Ela desativa OPcache apenas nesse processo, sem editar o PHP global:
+During validation with Herd PHP 8.4.27, the built-in server failed with `SplFileInfo` / `Class "view" does not exist` while OPcache was enabled. If this occurs, stop `artisan serve` and run the following inside the backend. It disables OPcache for that process only:
 
 ```powershell
 php -d opcache.enable=0 -S localhost:8000 -t public public/index.php
 ```
 
-Use a mesma porta definida em `APP_URL` e `VITE_API_URL`. O script de concorrência já aplica essa opção aos seus servidores temporários e configura seus próprios domínios Sanctum.
+Keep this port consistent with `APP_URL` and `VITE_API_URL`. The MySQL concurrency script already disables OPcache in its temporary servers and sets its own Sanctum domains.
 
-### Primeira instalação
+### First installation
 
-No PowerShell, para uma instalação nova:
+For a new installation only:
 
 ```powershell
 cd sneakers-store-backend
@@ -124,30 +123,16 @@ Copy-Item .env.example .env
 php artisan key:generate
 ```
 
-Para uma validação descartável, use o procedimento de banco isolado na seção “Teste MySQL isolado” antes das migrations; preserve o banco habitual. Para desenvolvimento normal, crie um banco vazio chamado `sneakers_store` no MySQL e ajuste `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD` em `sneakers-store-backend/.env`. Depois:
+Create an empty `sneakers_store` MySQL database and privately configure `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` and `DB_PASSWORD` in the backend `.env`. For a disposable installation check, use the isolated database procedure below instead of your regular database. Then:
 
 ```powershell
 php artisan migrate --seed --no-interaction
 php artisan serve --host=localhost --port=8000
 ```
 
-O seeder cadastra 30 produtos sem criar contas com senha padrão. A `UserFactory` tem senha previsível apenas para testes; não a use para cadastrar contas reais. O comando de integração substitui essa senha por um segredo aleatório e recusa bancos fora do padrão local/de teste. Uma nova execução preserva produtos e preços já cadastrados. Execute os comandos de cópia e `key:generate` somente na primeira instalação, quando ainda não houver `.env` configurado.
+The seeder adds 30 products, without creating accounts with default passwords. Running it again preserves existing products and prices. The predictable password in `UserFactory` is for tests only; never use it to create real accounts. The integration fixture replaces it with a random secret and refuses non-test databases.
 
-Para substituir o catálogo antigo de calçados em um banco de desenvolvimento local já existente, execute dentro de `sneakers-store-backend/`:
-
-```powershell
-php artisan catalog:replace-footwear --no-interaction
-```
-
-O comando remove os calçados antigos e suas entradas em carrinhos e favoritos, mantendo os snapshots dos pedidos e os demais produtos. Ele adiciona os novos produtos sem sobrescrever edições existentes e não executa fora do ambiente local ou de teste. Faça backup do banco antes de executá-lo se precisar preservar os produtos antigos ou suas associações.
-
-Se a troca do catálogo antigo já foi aplicada, adicione os novos produtos preservando os registros existentes:
-
-```powershell
-php artisan db:seed --class=ProductSeeder --no-interaction
-```
-
-Em outro terminal:
+In another terminal:
 
 ```powershell
 cd sneakers-store-frontend
@@ -156,92 +141,118 @@ Copy-Item .env.example .env
 npm.cmd run dev
 ```
 
-Abra `http://localhost:5173`. O Vite encaminha `/api` e `/sanctum` ao backend configurado em `VITE_API_URL`, cujo valor padrão é `http://localhost:8000`. Reinicie o Vite após alterar essa variável. Use `localhost` em ambos os serviços e configure `FRONTEND_URL` e `SANCTUM_STATEFUL_DOMAINS` no backend para o endereço do frontend. Em produção, configure um proxy da mesma origem para esses caminhos, cookies seguros e o domínio de sessão apropriado.
+Visit `http://localhost:5173`. Vite forwards `/api` and `/sanctum` to `VITE_API_URL`, defaulting to `http://localhost:8000`. Restart Vite after changing this value. Use `localhost` for both services, and configure `FRONTEND_URL` and `SANCTUM_STATEFUL_DOMAINS` accordingly. Production hosting needs a same-origin proxy for these paths, secure cookies and the appropriate session domain.
 
-## Autenticação e interface
+### Existing catalog maintenance
 
-A autenticação usa sessão por cookie com [Sanctum SPA](https://laravel.com/docs/13.x/sanctum). O cliente obtém `/sanctum/csrf-cookie`, envia credenciais e inclui o token XSRF nas alterações. As páginas `/login` e `/register` permitem entrar ou criar conta; `/account` exige autenticação e reúne perfil, senha, endereços, favoritos e histórico de pedidos. Ao entrar depois de acessar uma rota protegida, o usuário retorna ao endereço solicitado.
+To replace the legacy footwear in an existing local development database:
 
-O checkout em `/checkout` usa as etapas de carrinho, entrega, Wallet simulada e confirmação. Uma tentativa pendente mantém a chave de idempotência e os dados em `sessionStorage`, permitindo repetir a confirmação mesmo se a resposta se perder. O histórico apresenta os valores na moeda registrada pelo pedido.
+```powershell
+cd sneakers-store-backend
+php artisan catalog:replace-footwear --no-interaction
+```
 
-O catálogo mantém busca, marca, categoria, faixa de preço, ordenação e paginação na URL. Favoritos e carrinho exigem autenticação; ao favoritar sem sessão, o usuário entra e retorna à página com o produto adicionado. O seletor no cabeçalho vincula inglês a USD e português brasileiro a BRL. A interface salva a preferência de idioma e envia `Accept-Language` à API. A base visual usa tokens de cores, bordas, sombras e espaçamento, com componentes reutilizáveis e foco visível.
+This removes legacy footwear and its cart/favorite entries while retaining order snapshots and other products. It adds the new products without overwriting existing edits and refuses non-local/non-test environments. Back up your database before using it if you need the old products or associations.
+
+If replacement has already been completed, add missing seed products without replacing existing records:
+
+```powershell
+php artisan db:seed --class=ProductSeeder --no-interaction
+```
+
+To update the 13 legacy apparel/accessory images and descriptions:
+
+```powershell
+php artisan catalog:refresh-apparel
+```
+
+This local/test-only command requires a local connection. It updates names, brands, descriptions, colors and images for `legacy_id` 51–63 in one transaction. It preserves IDs, existing slugs, prices, sizes, ratings, cart/favorite associations and order snapshots. It creates or deletes no products. Repeating it reapplies the sample catalog texts and photos. `migrate:fresh` is not needed.
+
+## Authentication and interface
+
+Authentication uses server-side cookie sessions with [Sanctum SPA](https://laravel.com/docs/13.x/sanctum). The client initializes `/sanctum/csrf-cookie`, sends credentials and includes the XSRF token in mutations. `/login` and `/register` handle access; `/account` contains profile, password, addresses, favorites, order history and notifications. Login returns users to the protected page they originally requested.
+
+Checkout follows cart, delivery, simulated Wallet payment and confirmation. Pending attempts retain their idempotency key and payload in `sessionStorage`, so a lost response can be retried. Order history displays the currency saved with each order.
+
+Catalog search, brand, category, price range, sorting and pagination are kept in the URL. Price inputs show currency units; the API receives integer cents. Saving a favorite while signed out redirects through login and returns to the product. The language selector pairs English with USD and Brazilian Portuguese with BRL and sends `Accept-Language` to the API.
+
+The interface uses shared color, border, spacing and shadow tokens, visible keyboard focus, responsive layouts and subtle interaction feedback. The approved reduced-motion variant uses a smaller lift for cards/buttons and disables image zoom and entrance animations.
 
 ## API
 
-Os endpoints abaixo usam o prefixo `/api/v1`:
+All endpoints below use `/api/v1`:
 
-- `POST /auth/register`: name, email, password, password_confirmation, phone, birthday (YYYY-MM-DD), gender e second_contact opcional.
-- `POST /auth/login` e `POST /auth/logout`: entrada e saída.
-- `GET/PATCH/DELETE /user`: conta autenticada; exclusão exige password. `PUT /user/password` altera a senha.
-- `GET /products` e `GET /products/{slug}`: catálogo público. A listagem aceita `brand`, `type`, `search`, `min_price`, `max_price`, `per_page` e `sort`; valores de filtro usam centavos.
-- `GET /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/{id}` e `DELETE /cart`: carrinho autenticado, com quantidades de 1 a 999.
-- `GET/POST /wishlist` e `DELETE /wishlist/{id}`: favoritos.
-- `GET/POST /addresses`, `GET/PATCH/PUT/DELETE /addresses/{id}` e `PUT /addresses/{id}/default`: endereços. Cada usuário pode cadastrar até quatro e definir no máximo um como padrão.
-- `GET /shipping-methods`: preços e prazos de frete na moeda selecionada.
-- `POST /checkout`: recebe `address_id`, `shipping_method` e `payment_method`; exige o cabeçalho `Idempotency-Key` único de 16 a 64 caracteres alfanuméricos, hífen ou sublinhado. Repetir os mesmos dados e chave retorna o mesmo pedido; dados ou idioma diferentes retornam 409.
-- `GET /orders` e `GET /orders/{id}`: histórico e detalhes dos pedidos da conta autenticada.
-- `PATCH /user/locale`: salva `locale` (`en` ou `pt_BR`) da conta autenticada.
-- `GET /notifications` e `GET /notifications/unread-count`: histórico paginado e quantidade de não lidas.
-- `GET /notifications/{id}`, `PATCH /notifications/{id}/read` e `PATCH /notifications/read-all`: consulta e marcação restritas ao dono.
-- `GET /auth/email/verify/{id}/{hash}`: confirmação via assinatura temporária; `POST /auth/email/verification-notification`: reenvio autenticado com rate limit.
-- `POST /auth/forgot-password` e `POST /auth/reset-password`: solicitação e conclusão do reset com rate limit.
+- `POST /auth/register`: `name`, `email`, `password`, `password_confirmation`, `phone`, `birthday` (`YYYY-MM-DD`), `gender` and optional `second_contact`.
+- `POST /auth/login`, `POST /auth/logout`: sign in/out.
+- `GET/PATCH/DELETE /user`: the authenticated account; deletion requires `password`. `PUT /user/password` changes the password.
+- `GET /products`, `GET /products/{slug}`: public catalog. Filters: `brand`, `type`, `search`, `min_price`, `max_price`, `per_page`, `sort`. API prices use cents.
+- `GET /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/{id}`, `DELETE /cart`: authenticated cart; quantities range from 1 to 999.
+- `GET/POST /wishlist`, `DELETE /wishlist/{id}`: favorites.
+- `GET/POST /addresses`, `GET/PATCH/PUT/DELETE /addresses/{id}`, `PUT /addresses/{id}/default`: at most four addresses per account, with at most one default.
+- `GET /shipping-methods`: fixed shipping prices and estimates in the selected currency.
+- `POST /checkout`: `address_id`, `shipping_method`, `payment_method`; requires a 16–64 character alphanumeric/hyphen/underscore `Idempotency-Key`. Repeating the same key and data returns the same order; different data or language returns 409.
+- `GET /orders`, `GET /orders/{id}`: the account's orders.
+- `PATCH /user/locale`: saves `en` or `pt_BR` for the authenticated account.
+- `GET /notifications`, `GET /notifications/unread-count`: paginated history and unread count.
+- `GET /notifications/{id}`, `PATCH /notifications/{id}/read`, `PATCH /notifications/read-all`: owner-scoped retrieval and read state.
+- `DELETE /notifications/{id}`: remove one owned notification.
+- `DELETE /notifications/read`: remove only the authenticated account's read notifications. Unread notifications and other accounts' records are preserved.
+- `GET /auth/email/verify/{id}/{hash}`: temporary signed verification link.
+- `POST /auth/email/verification-notification`: authenticated, rate-limited resend.
+- `POST /auth/forgot-password`, `POST /auth/reset-password`: rate-limited password recovery.
 
-O servidor calcula valores e armazena snapshots de itens, endereço, moeda, subtotal, frete e total. A criação do pedido e a limpeza do carrinho ocorrem na mesma transação. O carrinho conserva o preço de adição na mesma moeda; ao trocar idioma/moeda, seus itens passam a usar os preços cadastrados para a nova moeda.
+The server calculates totals and saves item/address/currency/subtotal/shipping snapshots. Order creation and cart clearing share one transaction. Cart prices remain at their addition snapshot within the same currency; changing language/currency synchronizes items to the configured price for that currency.
 
-## Idiomas, preços e pagamento
+## Languages, prices and payment
 
-- Inglês usa USD e formatação `en-US`; português usa BRL e formatação `pt-BR`. Os valores são armazenados em centavos inteiros.
-- Os preços dos novos calçados foram definidos independentemente em USD e BRL. Os demais preços BRL de demonstração foram inicialmente definidos em 5× os valores USD e podem ser alterados independentemente. Não há cotação em tempo real.
-- Os fretes BRL são **valores provisórios de demonstração** fixados inicialmente em 5× os valores USD, sem cotação em tempo real.
-- Todos os métodos de pagamento são simulados. Na Wallet, o valor considerado é exatamente o total do pedido, sem desconto fictício de US$ 10, saldo financeiro ou integração com gateway.
-- As descrições dos produtos possuem versões em inglês e português. Os nomes e a marca Lume do catálogo são fictícios. O seeder preenche traduções ausentes sem sobrescrever textos e preços editados.
-- As fotos dos 30 produtos são arquivos WebP locais, com miniaturas de 400 px e versões maiores. Autores, fontes e licença estão em [CREDITS.md](CREDITS.md). A home, o catálogo e os detalhes não dependem de CDN de imagens.
+- English uses USD/`en-US`; Portuguese uses BRL/`pt-BR`. Money is stored as integer cents.
+- Footwear USD and BRL prices were defined independently. Other initial demonstration BRL prices were set to five times USD and can be edited independently. There is no live exchange rate.
+- BRL shipping prices are provisional demonstration amounts initially set at five times USD, without live conversion. API and demo share the versioned shipping table.
+- All payments are simulated. Wallet uses the full order amount, with no fictitious $10 discount, financial balance or gateway.
+- Product descriptions are bilingual. Lume names/branding are fictional; the seeder fills missing translations without overwriting edited texts or prices.
+- All product images are local WebP files, with 400 px thumbnails and larger versions. Home/catalog/product views do not depend on image CDNs.
 
-## Fluxo de demonstração
+## Shopping walkthrough
 
-1. Selecione português/BRL ou inglês/USD no cabeçalho e navegue pelo catálogo.
-2. Crie uma conta, confirme o e-mail pelo link recebido, abra um produto e adicione itens ao carrinho ou aos favoritos.
-3. No checkout, revise o carrinho, cadastre ou selecione um endereço e escolha o frete.
-4. Confirme o pagamento simulado pela Wallet e consulte o pedido no painel da conta.
+For the full local application:
 
-## Limites do projeto
+1. Choose Portuguese/BRL or English/USD and explore the catalog.
+2. Register, verify the email, then add products to the cart or favorites.
+3. Review the cart, create/select an address and choose shipping.
+4. Confirm the simulated Wallet purchase and open the order in your account.
 
-- Pagamentos e fretes são demonstrações: não há cobrança real, gateway, cotação de transporte ou rastreamento integrado.
-- Não há painel administrativo, controle quantitativo de estoque ou votação de avaliações; o rating é um dado estático do catálogo.
-- A recuperação de senha tem telas React e envio em fila; a exclusão de conta permanece disponível apenas na API. Para entrega real de e-mails, configure SMTP e mantenha o worker ativo.
-- Não foi feita importação de dados pessoais do MongoDB original. O seeder contém apenas produtos de demonstração.
-- As imagens de roupas e acessórios sem licença confirmada foram substituídas por fotos locais creditadas. O catálogo permanece fictício e voltado à demonstração.
+The public demo uses the ready-made fictional account and needs no email verification.
 
+## Email, verification and notifications
 
-## E-mails, verificação e notificações
+Welcome, verification, password recovery, password-change security, order confirmation and order-status messages use Laravel Notifications. Transactional email and database delivery use the durable database queue, after commit. The saved account language controls future messages and is restored on login. Passwords are never emailed; access uses short-lived verification/reset links.
 
-A loja envia boas-vindas, verificação de e-mail, recuperação de senha, aviso de senha alterada, confirmação de pedido e atualização de status. Os mesmos eventos aparecem no sino e no histórico em **Minha conta → Notificações**. O idioma do cadastro é salvo no usuário; o seletor atualiza a preferência para os próximos avisos, e a conta restaura esse idioma ao entrar.
+Cart-addition notices are **internal only**. They are stored immediately inside the cart transaction and do not send email or require a queue worker. After a successful addition, the frontend refreshes the bell immediately in both the demo and the API-connected application. Failed additions create no notice. Excluding or clearing notifications checks ownership on the server.
 
-**Nunca enviamos senhas por e-mail.** As boas-vindas informam nome e e-mail cadastrado. O acesso usa verificação de e-mail e redefinição de senha por links de curta duração.
-
-Depois de atualizar um checkout existente, execute em `sneakers-store-backend/`:
+Older installations may need the existing locale/notifications migrations:
 
 ```powershell
+cd sneakers-store-backend
 php artisan migrate --no-interaction
 ```
 
-As duas migrations acrescentam o idioma do usuário e a tabela de notificações. Contas existentes recebem `en` como padrão; usuários sem e-mail verificado precisam confirmar o endereço antes de usar carrinho, favoritos, endereços e pedidos.
+The notification controls added after 1.0 require no new migrations. Existing users default to English; unverified accounts must confirm their email before using shopping operations.
 
-### Desenvolvimento com Mailpit
+### Mailpit for development
 
-O padrão de desenvolvimento é `MAIL_MAILER=log`: o conteúdo dos e-mails fica em `sneakers-store-backend/storage/logs/laravel.log`, após o worker processar a fila. Para abrir os e-mails em uma caixa de entrada local, use [Mailpit](https://mailpit.axllent.org/docs/install/). Com Docker:
+Development defaults to `MAIL_MAILER=log`; queued email appears in `storage/logs/laravel.log` after the worker processes it. To inspect a local inbox, use [Mailpit](https://mailpit.axllent.org/docs/install/). With Docker:
 
 ```powershell
 docker run --rm --name sneakers-mailpit -p 127.0.0.1:8025:8025 -p 127.0.0.1:1025:1025 axllent/mailpit:v1.32.0
 ```
 
-No Windows também é possível extrair o executável do [release oficial](https://github.com/axllent/mailpit/releases/tag/v1.32.0) e executá-lo na pasta extraída:
+Alternatively, extract the [official Windows release](https://github.com/axllent/mailpit/releases/tag/v1.32.0) and run:
 
 ```powershell
 .\mailpit.exe --listen 127.0.0.1:8025 --smtp 127.0.0.1:1025
 ```
 
-Configure o `.env` local do backend:
+Backend `.env`:
 
 ```dotenv
 MAIL_MAILER=smtp
@@ -257,55 +268,55 @@ MAIL_FROM_NAME="Sneakers"
 QUEUE_CONNECTION=database
 ```
 
-Depois de mudar o ambiente, execute `php artisan config:clear` e reinicie o backend e o worker. Acesse `http://127.0.0.1:8025` para ler os e-mails. O Mailpit captura as mensagens localmente; não precisa de credenciais de um provedor real.
+After changing environment settings, run `php artisan config:clear` and restart the API and worker. Read captured mail at `http://127.0.0.1:8025`; provider credentials are unnecessary for Mailpit.
 
-### Worker obrigatório
+### Required queue worker
 
-Em um terminal separado, dentro do backend, mantenha:
+Inside the backend, keep a separate terminal running:
 
 ```powershell
 php artisan queue:work database --sleep=1 --tries=3 --timeout=30
 ```
 
-As notificações usam explicitamente a conexão durável `database`, inclusive se outra funcionalidade usar outra conexão padrão. Os dois canais são processados depois do commit da transação. **Sem worker, e-mails e avisos internos ficam pendentes em jobs.** Não use `sync` para tentar contornar isso.
+Queued transactional notifications explicitly use the `database` connection even if another default is configured. **Without a worker, queued email and database notifications remain in jobs.** Do not switch to `sync` to work around missing workers. Cart-addition notices are the immediate internal exception described above.
 
-Para conferir falhas, execute `php artisan queue:failed`; após resolver a causa, use `php artisan queue:retry <uuid>`. Depois de publicar mudanças de código/configuração, use `php artisan queue:restart` e mantenha um gerenciador de processos responsável por reiniciar o worker em produção.
+Inspect failed jobs with `php artisan queue:failed`. Fix the cause before `php artisan queue:retry <uuid>`. After deploying code/configuration, use `php artisan queue:restart` and a process manager to restart the worker.
 
-### SMTP em produção
+### Production SMTP
 
-Use as credenciais do seu provedor nas variáveis de ambiente do servidor, sem salvar valores reais no repositório. Exemplo para SMTP com TLS na porta 465:
+Set provider credentials in the server environment, never in committed files. Example for TLS on port 465:
 
 ```dotenv
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://api.sua-loja.example
-FRONTEND_URL=https://sua-loja.example
+APP_URL=https://api.your-store.example
+FRONTEND_URL=https://your-store.example
 MAIL_MAILER=smtp
 MAIL_SCHEME=smtps
-MAIL_HOST=smtp.seu-provedor.example
+MAIL_HOST=smtp.your-provider.example
 MAIL_PORT=465
-MAIL_USERNAME=usuario-fornecido-pelo-provedor
-MAIL_PASSWORD=segredo-definido-no-servidor
+MAIL_USERNAME=provider-supplied-user
+MAIL_PASSWORD=server-configured-secret
 MAIL_URL=null
-MAIL_EHLO_DOMAIN=sua-loja.example
+MAIL_EHLO_DOMAIN=your-store.example
 MAIL_TIMEOUT=15
-MAIL_FROM_ADDRESS=loja@sua-loja.example
+MAIL_FROM_ADDRESS=store@your-store.example
 MAIL_FROM_NAME="Sneakers"
 QUEUE_CONNECTION=database
 SESSION_SECURE_COOKIE=true
 ```
 
-Ajuste origem de CORS, domínios stateful do Sanctum e domínio do cookie à hospedagem. O `.env.example` é um modelo sem credenciais reais. O worker deve usar o mesmo ambiente e a mesma `APP_KEY` da API, pois os jobs são criptografados.
+Adjust CORS, Sanctum stateful domains and session cookie settings to your hosting. `.env.example` contains placeholders. The worker must use the same environment and `APP_KEY` as the API because queued jobs are encrypted.
 
-### Links e limites
+### Link lifetimes and rate limits
 
-- Verificação: link assinado de 30 minutos, usado uma vez. Abre o React e confirma pela API mesmo se o usuário estiver deslogado; depois é preciso entrar para usar a conta. Cadastro, troca de e-mail e reenvio compartilham limite de cinco tentativas por IP/minuto; perfil e reenvio também compartilham uma tentativa por usuário/minuto. O envio inicial do cadastro inicia a cota do usuário. Alterar apenas outros campos do perfil não consome essa cota.
-- Reset: solicitação com o mesmo status e corpo para e-mail existente e inexistente; telas `/forgot-password` e `/reset-password`; token de 15 minutos e uso único. Solicitação e confirmação limitadas a uma tentativa por e-mail/minuto e cinco por IP/minuto em cada endpoint.
-- Mudança de e-mail invalida a verificação anterior e envia um novo link.
-- O histórico usa paginação de 15 itens. O sino atualiza a cada 30 segundos com a aba visível e ao reabrir a aba; também permite marcar uma ou todas como lidas.
-- Notificações de status são geradas quando uma instância de pedido muda de status via Eloquent. Não há painel administrativo nesta fase; atualizações em massa por SQL não disparam observers.
+- Verification links are signed, valid for 30 minutes and single-use. React confirms through the API even when signed out; login is still required afterward. Registration, email changes and resends share five attempts per IP/minute; profile/resend delivery also shares one attempt per user/minute. Initial registration starts that user quota; unrelated profile changes do not consume it.
+- Password recovery returns the same status/body for existing and unknown emails. `/forgot-password` and `/reset-password` use 15-minute, single-use tokens. Each endpoint allows one attempt per email/minute and five per IP/minute.
+- Changing the account email invalidates verification and sends a new link.
+- Notifications are paginated in groups of 15. Polling runs every 30 seconds while the tab is visible and refreshes on tab visibility changes. Read, remove and clear-read actions update the list and count; deleting the last item of a page returns to a valid page.
+- Order-status notices are triggered by Eloquent model updates. There is no administration interface; bulk SQL updates do not trigger observers.
 
-## Verificação
+## Verification
 
 ```powershell
 cd sneakers-store-backend
@@ -313,7 +324,7 @@ php artisan test --compact
 composer types:check
 ```
 
-Os testes PHP usam SQLite em memória e não alteram o MySQL configurado. `npm.cmd test` também monta o sino e seus providers em Chrome/Edge, com respostas HTTP e relógio controlados: teclado, aba oculta, carregamento/vazio/erro, troca de conta, logout e respostas atrasadas. O teste MySQL de concorrência só pode ser executado pelo procedimento isolado abaixo.
+PHP tests force SQLite in memory and do not modify the configured MySQL database. Frontend tests mount the notification/store providers in Chrome/Edge with controlled HTTP responses: keyboard/focus, visibility polling, immediate cart feedback, read/delete controls, error/retry, account changes, logout and late responses. Demo tests cover storage validation, currency, default addresses, idempotency and notification removal.
 
 ```powershell
 cd sneakers-store-frontend
@@ -321,38 +332,17 @@ npm.cmd test
 npm.cmd run types:check
 npm.cmd run check
 npm.cmd run build
+npm.cmd run build:demo
 ```
 
-### Atualizar as fotos em um banco local existente
+### Isolated MySQL concurrency check
 
-Instalações novas recebem as 30 fotos locais pelo seeder. Para um banco de desenvolvimento que já contém os 13 produtos antigos de roupas e acessórios:
-
-```bash
-cd sneakers-store-backend
-php artisan catalog:refresh-apparel
-```
-
-O comando é restrito ao ambiente local/de teste e a conexões locais. Atualiza apenas nome, marca, descrições, cores e imagens dos produtos com `legacy_id` de 51 a 63, em uma transação. Preserva IDs, slugs/URLs existentes, preços USD/BRL, tamanhos, avaliações, carrinho, favoritos e snapshots de pedidos. Não cria nem exclui produtos. É seguro repetir a execução, mas ela reaplica esses textos e fotos do catálogo de demonstração. Não precisa executar `migrate:fresh`.
-
-## Decisões técnicas
-
-- **Sanctum SPA com cookie:** sessão no servidor, proteção CSRF e cliente HTTP centralizado; React Router controla a navegação.
-- **Checkout transacional:** criação do pedido, snapshots e limpeza do carrinho na mesma transação, com bloqueio do usuário.
-- **Idempotência:** chave por usuário e hash dos dados impedem criar outro pedido ao repetir a confirmação.
-- **Snapshot do pedido:** nomes, preços, moeda e endereço ficam registrados no pedido e não dependem de alterações posteriores no catálogo/perfil.
-- **Moeda:** locale en/USD e pt_BR/BRL; centavos inteiros e preços independentes, sem câmbio em tempo real.
-- **E-mails em fila:** canais mail/database na fila database, após commit, com jobs criptografados e worker separado.
-- **Notificações:** policy por proprietário e polling leve com a aba visível, sem WebSocket.
-- **Tema único:** mantida a identidade visual aprovada, sem alternância de temas.
-
-## Teste MySQL isolado
-
-Requer Python 3.10+ (biblioteca padrão) e o cliente `mysql` no PATH. Abra **um terminal novo** para estas variáveis não afetarem seus serviços normais. Dentro de `sneakers-store-backend/`, gere um nome descartável e crie exclusivamente esse banco:
+Requires Python 3.10+ (standard library only) and the `mysql` client on PATH. Open a **new terminal** so these variables do not affect your regular services. Inside the backend, create only a disposable database:
 
 ```powershell
 $integrationDatabase = 'sneakers_test_' + [guid]::NewGuid().ToString('N')
 mysql --host=127.0.0.1 --user=root --execute="CREATE DATABASE $integrationDatabase CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-if ($LASTEXITCODE -ne 0) { throw 'Falha ao criar banco isolado' }
+if ($LASTEXITCODE -ne 0) { throw 'Could not create the isolated database' }
 $env:APP_ENV='testing'
 $env:DB_CONNECTION='mysql'
 $env:DB_HOST='127.0.0.1'
@@ -366,13 +356,33 @@ php artisan migrate --seed --no-interaction
 python tests/Integration/mysql_concurrency.py
 ```
 
-Ajuste `DB_USERNAME` e `DB_PASSWORD` privadamente ao seu MySQL; não use credenciais reais em arquivos versionados. Se o cliente precisar de senha, use `mysql --password` para solicitar a senha sem gravá-la no comando. Se `php` não resolver para o executável PHP 8.4, configure `$env:PHP_BINARY='C:/caminho/para/php.exe'` antes de chamar o Python.
+Privately set `DB_USERNAME` and `DB_PASSWORD`. Never commit credentials. Use `mysql --password` for an interactive password prompt. If `php` is not the PHP 8.4 executable, set `$env:PHP_BINARY='C:/path/to/php.exe'` before running Python.
 
-O script confirma a configuração efetiva do Laravel antes de iniciar: ambiente testing, driver mysql, host localhost/127.0.0.1/::1 e nome `sneakers_test_` seguido de 12–32 caracteres hexadecimais. Cria uma conta **já verificada**, com senha aleatória transmitida por stdin, e a remove em finally. O fixture fica bloqueado para o banco normal `sneakers_store`. O teste cobre dez pares simultâneos de endereço padrão e checkout concorrente idempotente; não envia e-mails reais.
+The script inspects the effective Laravel configuration first: testing environment, MySQL driver, local host and a database named `sneakers_test_` followed by 12–32 hexadecimal characters. It creates an already verified temporary user with a random password received through stdin and removes it in `finally`. It refuses the regular `sneakers_store` database. Ten concurrent pairs test default-address changes and idempotent checkout; no real emails are sent.
 
-Para conferir a instalação inteira nesse mesmo banco temporário, execute os passos de primeira instalação, frontend, Mailpit e worker acima; inicie backend e worker a partir deste terminal/ambiente, ou replique essas variáveis em terminais novos. Use portas diferentes se seus serviços habituais estiverem ativos e ajuste APP_URL, FRONTEND_URL, SANCTUM_STATEFUL_DOMAINS e VITE_API_URL de forma correspondente. Depois de encerrar todos os processos de teste, remova apenas o banco recém-criado:
+For a full installation check, use the same isolated database for the setup steps, Mailpit and worker. Replicate the variables in each new terminal, use different ports from your regular services and keep `APP_URL`, `FRONTEND_URL`, `SANCTUM_STATEFUL_DOMAINS` and `VITE_API_URL` consistent. After stopping all temporary services, remove **only** the disposable database:
 
 ```powershell
-if ($integrationDatabase -notmatch '^sneakers_test_[a-f0-9]{32}$') { throw 'Nome de banco inesperado' }
+if ($integrationDatabase -notmatch '^sneakers_test_[a-f0-9]{32}$') { throw 'Unexpected database name' }
 mysql --host=127.0.0.1 --user=root --execute="DROP DATABASE $integrationDatabase;"
 ```
+
+## Technical decisions
+
+- Cookie-based Sanctum SPA authentication, CSRF protection and one HTTP client; React Router owns frontend navigation.
+- Transactional checkout, snapshots and cart clearing with a user-row lock.
+- Per-user idempotency keys and request fingerprints prevent duplicate or incompatible retries.
+- Order snapshots retain names, prices, currency and delivery address independently of later catalog/profile edits.
+- Integer cents and fixed, independently editable USD/BRL prices; no live exchange rate.
+- Durable encrypted after-commit email jobs, with a separate worker.
+- Owner-scoped notifications and visible-tab polling without WebSockets; immediate internal cart notices.
+- One approved visual theme with reusable interface components.
+
+## Scope and future work
+
+- **Pending: full-system hosting** for the frontend, Laravel API, MySQL and queue workers. The public frontend demo is already hosted on GitHub Pages.
+- **Pending: real payments**, including a selected gateway, sandbox checks, signed webhooks, idempotency, declined/pending/canceled/refunded states and payment confirmation before marking an order paid.
+- Shipping is simulated; there is no live quote or tracking integration.
+- There is no administration panel, quantitative stock control or customer rating system. Catalog ratings are static sample data.
+- Password recovery has React screens and queued delivery. Account deletion is API-only. Real mail requires configured SMTP and a running worker.
+- No personal data was imported from the original MongoDB project. The seeder contains demonstration products only.

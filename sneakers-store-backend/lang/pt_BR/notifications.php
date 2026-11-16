@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'cart_added' => [
+        'title' => 'Produto adicionado ao carrinho',
+        'body' => ':product está na sua sacola.',
+    ],
     'welcome' => [
         'title' => 'Boas-vindas à Sneakers!',
         'body' => 'Sua conta está pronta. Verifique seu e-mail para começar a comprar.',

@@ -21,8 +21,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/', [NotificationController::class, 'index'])->name('index');
         Route::get('/unread-count', [NotificationController::class, 'count'])->name('count');
         Route::patch('/read-all', [NotificationController::class, 'readAll'])->name('read-all');
+        Route::delete('/read', [NotificationController::class, 'clearRead'])->name('clear-read');
         Route::get('/{notification}', [NotificationController::class, 'show'])->name('show');
         Route::patch('/{notification}/read', [NotificationController::class, 'update'])->name('read');
+        Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
     });
 
     Route::get('products', [ProductController::class, 'index'])->name('products.index');

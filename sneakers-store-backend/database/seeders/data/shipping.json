@@ -1,0 +1,38 @@
+{
+    "USD": {
+        "blue": {
+            "price": 1507,
+            "days": 4
+        },
+        "sedex": {
+            "price": 890,
+            "days": 8
+        },
+        "fedex": {
+            "price": 2202,
+            "days": 5
+        },
+        "red": {
+            "price": 470,
+            "days": 3
+        }
+    },
+    "BRL": {
+        "blue": {
+            "price": 7535,
+            "days": 4
+        },
+        "sedex": {
+            "price": 4450,
+            "days": 8
+        },
+        "fedex": {
+            "price": 11010,
+            "days": 5
+        },
+        "red": {
+            "price": 2350,
+            "days": 3
+        }
+    }
+}

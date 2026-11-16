@@ -43,4 +43,19 @@ class NotificationController extends Controller
 
         return response()->noContent();
     }
+
+    public function destroy(DatabaseNotification $notification): Response
+    {
+        Gate::authorize('delete', $notification);
+        $notification->delete();
+
+        return response()->noContent();
+    }
+
+    public function clearRead(Request $request): Response
+    {
+        $request->user()->notifications()->whereNotNull('read_at')->delete();
+
+        return response()->noContent();
+    }
 }

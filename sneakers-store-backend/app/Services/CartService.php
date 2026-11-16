@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Notifications\CartItemAdded;
 use App\StoreLocale;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +45,8 @@ class CartService
                     'currency' => $locale->currency(),
                 ]);
             }
+
+            $user->notifyNow(new CartItemAdded($product->name, $locale->value), ['database']);
 
             return $item->load('product');
         });

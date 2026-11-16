@@ -16,4 +16,9 @@ class NotificationPolicy
     {
         return $this->view($user, $notification);
     }
+
+    public function delete(User $user, DatabaseNotification $notification): bool
+    {
+        return $this->view($user, $notification);
+    }
 }

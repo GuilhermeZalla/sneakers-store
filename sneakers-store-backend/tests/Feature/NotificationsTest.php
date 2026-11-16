@@ -4,10 +4,13 @@ use App\Mail\StoreMessage;
 use App\Models\Address;
 use App\Models\CartItem;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\User;
 use App\Notifications\ResetStorePassword;
 use App\Notifications\StoreNotification;
 use App\Notifications\VerifyStoreEmail;
+use App\Services\CartService;
+use App\StoreLocale;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Notifications\SendQueuedNotifications;
 use Illuminate\Support\Facades\DB;
@@ -144,4 +147,59 @@ test('expired reset jobs are discarded before either delivery channel', function
     expect($notification->shouldSend($user, 'mail'))->toBeTrue();
     $this->travel(16)->minutes();
     expect($notification->shouldSend($user, 'mail'))->toBeFalse()->and($notification->shouldSend($user, 'database'))->toBeFalse();
+});
+
+test('notification removal is authenticated owner scoped and clearing read preserves unread records', function () {
+    $owner = User::factory()->create();
+    $other = User::factory()->create();
+    foreach ([$owner, $owner, $other] as $user) {
+        $user->notifyNow(new StoreNotification('welcome'), ['database']);
+    }
+    $owned = $owner->notifications()->get();
+    $read = $owned[0];
+    $unread = $owned[1];
+    $read->markAsRead();
+    $foreign = $other->notifications()->firstOrFail();
+    $foreign->markAsRead();
+    $this->deleteJson(route('notifications.destroy', $unread))->assertUnauthorized();
+    $this->deleteJson(route('notifications.clear-read'))->assertUnauthorized();
+    $this->actingAs($owner)->deleteJson(route('notifications.destroy', $foreign))->assertForbidden();
+    $this->deleteJson(route('notifications.clear-read'))->assertNoContent();
+    $this->assertDatabaseMissing('notifications', ['id' => $read->id]);
+    $this->assertDatabaseHas('notifications', ['id' => $foreign->id]);
+    $this->assertDatabaseHas('notifications', ['id' => $unread->id, 'read_at' => null]);
+    $this->getJson(route('notifications.count'))->assertJsonPath('data.unread_count', 1);
+    $this->deleteJson(route('notifications.destroy', $unread))->assertNoContent();
+    $this->getJson(route('notifications.count'))->assertJsonPath('data.unread_count', 0);
+    $this->deleteJson(route('notifications.destroy', $unread))->assertNotFound();
+    $this->deleteJson(route('notifications.clear-read'))->assertNoContent();
+});
+
+test('cart addition creates only an immediate internal notice for the owner', function (string $locale, string $title) {
+    Mail::fake();
+    Queue::fake();
+    $owner = User::factory()->create();
+    $other = User::factory()->create();
+    $product = Product::factory()->create(['name' => 'Lume Ruby']);
+    $this->actingAs($owner)->withHeader('Accept-Language', $locale)
+        ->postJson('/api/v1/cart/items', ['product_id' => $product->id, 'quantity' => 1, 'user_id' => $other->id])->assertCreated();
+    $notice = $owner->notifications()->firstOrFail();
+    expect($notice->data['event'])->toBe('cart_added')
+        ->and($notice->data['title'])->toBe($title)
+        ->and($notice->data['body'])->toContain('Lume Ruby')
+        ->and($notice->data['url'])->toBe('/cart');
+    expect($other->notifications()->count())->toBe(0);
+    Mail::assertNothingSent();
+    Queue::assertNothingPushed();
+    $this->postJson('/api/v1/cart/items', ['product_id' => 99999999, 'quantity' => 1])->assertUnprocessable();
+    expect($owner->notifications()->count())->toBe(1);
+})->with([['en', 'Item added to cart'], ['pt-BR', 'Produto adicionado ao carrinho']]);
+
+test('cart addition rolls back if its internal notice cannot be saved', function () {
+    $owner = User::factory()->create();
+    $product = Product::factory()->create();
+    Notification::shouldReceive('sendNow')->once()->andThrow(new RuntimeException('Notification storage unavailable'));
+    expect(fn () => app(CartService::class)->add($owner, $product, 1, StoreLocale::English))->toThrow(RuntimeException::class);
+    $this->assertDatabaseCount('cart_items', 0);
+    $this->assertDatabaseCount('notifications', 0);
 });

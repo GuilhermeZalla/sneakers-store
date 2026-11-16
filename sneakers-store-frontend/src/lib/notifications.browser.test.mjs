@@ -182,6 +182,50 @@ test('mounted notification bell and provider in a real browser', { timeout: 1200
                 '!!document.querySelector("[role=dialog]") && document.activeElement.tagName === "A"',
             );
         });
+        await t.test(
+            'adding a product refreshes the bell immediately without waiting for polling',
+            async () => {
+                await boot();
+                await evaluate('document.querySelector("#cart-add").click()');
+                await until(
+                    'JSON.parse(document.querySelector("#notification-state").textContent).items.some(item => item.event === "cart_added")',
+                );
+                assert.equal((await state()).count, 3);
+            },
+        );
+        await t.test(
+            'notification deletion failures preserve data and clearing read preserves unread items',
+            async () => {
+                await boot();
+                await evaluate(
+                    `window.notificationHarness.items.push({id:'already-read',event:'welcome',title:'Read notice',body:'Read',url:'/account',read_at:'2026-01-01T00:00:00Z',created_at:'2026-01-01T00:00:00Z'});window.notificationHarness.count=1;document.querySelector('#notifications-refresh').click()`,
+                );
+                await until(
+                    'JSON.parse(document.querySelector("#notification-state").textContent).items.length === 2',
+                );
+                await evaluate(
+                    `window.notificationHarness.fail=true;document.querySelector('button[aria-label^="Remove notification:"]').click()`,
+                );
+                await until(
+                    'JSON.parse(document.querySelector("#notification-state").textContent).error',
+                );
+                assert.equal((await state()).items.length, 2);
+                await evaluate(
+                    `window.notificationHarness.fail=false;[...document.querySelectorAll('button')].find(button=>button.textContent.includes('Clear read notifications')).click()`,
+                );
+                await until(
+                    'JSON.parse(document.querySelector("#notification-state").textContent).items.length === 1 && !JSON.parse(document.querySelector("#notification-state").textContent).busy',
+                );
+                assert.equal((await state()).count, 1);
+                await evaluate(
+                    `document.querySelector('button[aria-label^="Remove notification:"]').click()`,
+                );
+                await until(
+                    'JSON.parse(document.querySelector("#notification-state").textContent).items.length === 0',
+                );
+                assert.equal((await state()).count, 0);
+            },
+        );
         await t.test('polling pauses while hidden and resumes on visibility change', async () => {
             await boot();
             const before = await evaluate('window.notificationHarness.listCalls');

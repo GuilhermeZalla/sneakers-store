@@ -1,9 +1,12 @@
-import catalog from './demo-catalog.json' with { type: 'json' };
+import catalogData from '../../../sneakers-store-backend/database/seeders/data/products.json' with { type: 'json' };
+import descriptions from '../../../sneakers-store-backend/database/seeders/data/descriptions.pt_BR.json' with { type: 'json' };
+import shippingData from '../../../sneakers-store-backend/database/seeders/data/shipping.json' with { type: 'json' };
+const catalog = catalogData.products;
 import type { StoreLocale } from './locale.ts';
 import type { Address, Order } from './checkout.ts';
 import type { Product } from './store.ts';
 
-const storageKey = 'sneakers-demo-v1';
+const storageKey = 'sneakers-demo-v2';
 type DemoState = {
     signedIn: boolean;
     locale: StoreLocale;
@@ -12,7 +15,8 @@ type DemoState = {
     addresses: Address[];
     orders: Order[];
     readNotifications: boolean;
-    attempts: Record<string, number>;
+    attempts: Record<string, { orderId: number; fingerprint: string }>;
+    welcomeRemoved?: boolean;
     cartNotices?: { id: string; productName: string; created_at: string; read_at: string | null }[];
 };
 const initial = (): DemoState => ({
@@ -39,17 +43,118 @@ const initial = (): DemoState => ({
     readNotifications: false,
     attempts: {},
 });
+function record(value: unknown): value is Record<string, unknown> {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+function integer(value: unknown): value is number {
+    return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+}
+export function restoreDemoState(raw: string | null): DemoState {
+    try {
+        const value: unknown = JSON.parse(raw ?? 'null');
+        if (
+            !record(value) ||
+            typeof value.signedIn !== 'boolean' ||
+            !['en', 'pt_BR'].includes(String(value.locale)) ||
+            typeof value.readNotifications !== 'boolean' ||
+            !record(value.attempts)
+        )
+            return initial();
+        const arrays = ['cart', 'wishlist', 'addresses', 'orders'];
+        if (arrays.some((key) => !Array.isArray(value[key]))) return initial();
+        if (
+            !(value.cart as unknown[]).every(
+                (item) =>
+                    record(item) &&
+                    integer(item.id) &&
+                    integer(item.quantity) &&
+                    item.quantity >= 1 &&
+                    item.quantity <= 999,
+            )
+        )
+            return initial();
+        if (!(value.wishlist as unknown[]).every(integer)) return initial();
+        if (
+            !(value.addresses as unknown[]).every(
+                (item) =>
+                    record(item) &&
+                    integer(item.id) &&
+                    typeof item.is_default === 'boolean' &&
+                    ['street', 'number', 'district', 'city', 'state', 'postal_code', 'type'].every(
+                        (key) => typeof item[key] === 'string',
+                    ),
+            )
+        )
+            return initial();
+        if (
+            !(value.orders as unknown[]).every(
+                (item) =>
+                    record(item) &&
+                    integer(item.id) &&
+                    [
+                        'order_number',
+                        'status',
+                        'ordered_at',
+                        'shipping_method',
+                        'payment_method',
+                        'locale',
+                    ].every((key) => typeof item[key] === 'string') &&
+                    ['USD', 'BRL'].includes(String(item.currency)) &&
+                    ['subtotal', 'shipping_price', 'total'].every((key) => integer(item[key])) &&
+                    record(item.shipping_address) &&
+                    ['street', 'number', 'city', 'state', 'postal_code', 'name'].every(
+                        (key) =>
+                            typeof (item.shipping_address as Record<string, unknown>)[key] ===
+                            'string',
+                    ) &&
+                    Array.isArray(item.items) &&
+                    item.items.every(
+                        (entry) =>
+                            record(entry) &&
+                            typeof entry.product_name === 'string' &&
+                            integer(entry.quantity) &&
+                            integer(entry.unit_price),
+                    ),
+            )
+        )
+            return initial();
+        if (
+            !Object.values(value.attempts).every(
+                (entry) =>
+                    record(entry) &&
+                    integer(entry.orderId) &&
+                    typeof entry.fingerprint === 'string',
+            )
+        )
+            return initial();
+        if (
+            value.cartNotices !== undefined &&
+            (!Array.isArray(value.cartNotices) ||
+                !value.cartNotices.every(
+                    (entry) =>
+                        record(entry) &&
+                        typeof entry.id === 'string' &&
+                        typeof entry.productName === 'string' &&
+                        typeof entry.created_at === 'string' &&
+                        (entry.read_at === null || typeof entry.read_at === 'string'),
+                ))
+        )
+            return initial();
+        if (value.welcomeRemoved !== undefined && typeof value.welcomeRemoved !== 'boolean')
+            return initial();
+        return value as unknown as DemoState;
+    } catch {
+        return initial();
+    }
+}
 let state: DemoState | undefined;
 function session(): DemoState {
     if (!state) {
         try {
-            state = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null') as
-                | DemoState
-                | undefined;
+            state = restoreDemoState(sessionStorage.getItem(storageKey));
         } catch {
-            /* A fresh session remains usable when stored demo data is unavailable. */
+            state = initial();
         }
-        state ??= initial();
     }
     return state;
 }
@@ -63,7 +168,11 @@ function save() {
 export function resetDemo() {
     state = initial();
     save();
-    sessionStorage.removeItem('checkout-attempt-1');
+    try {
+        sessionStorage.removeItem('checkout-attempt-1');
+    } catch {
+        /* In-memory reset still works when storage is blocked. */
+    }
     window.location.reload();
 }
 export class DemoError extends Error {
@@ -78,7 +187,10 @@ function products(locale: StoreLocale): Product[] {
         id: Number(item.id),
         name: item.shoeName,
         slug: item.shoeName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + item.id,
-        description: locale === 'pt_BR' ? item.description_pt_br : item.description,
+        description:
+            locale === 'pt_BR'
+                ? descriptions[item.id as keyof typeof descriptions]
+                : item.description,
         brand: item.brand,
         type: item.type,
         price:
@@ -220,8 +332,10 @@ export async function demoRequest(
             const product = list.find((p) => p.id === Number(body.product_id));
             if (!product) return fail();
             const existing = current.cart.find((item) => item.id === product.id);
-            if (existing) existing.quantity += 1;
-            else current.cart.push({ id: product.id, quantity: 1 });
+            if (existing) {
+                if (existing.quantity >= 999) return fail(422);
+                existing.quantity += 1;
+            } else current.cart.push({ id: product.id, quantity: 1 });
             current.cartNotices ??= [];
             current.cartNotices.unshift({
                 id: crypto.randomUUID(),
@@ -233,12 +347,9 @@ export async function demoRequest(
         }
         if (method === 'PATCH') {
             const item = current.cart.find((entry) => entry.id === id);
-            if (item) item.quantity = Math.max(1, Math.min(99, Number(body.quantity) || 1));
+            if (item) item.quantity = Math.max(1, Math.min(999, Number(body.quantity) || 1));
         }
         save();
-        if (method === 'POST' && typeof window !== 'undefined') {
-            window.dispatchEvent(new Event('sneakers-demo-notifications'));
-        }
         return cart();
     }
     if (route.startsWith('/api/v1/wishlist')) {
@@ -270,7 +381,12 @@ export async function demoRequest(
             return { data: address };
         }
         const address = current.addresses.find((a) => a.id === id);
-        if (method === 'PATCH' && address) Object.assign(address, body, { id });
+        if (method === 'PATCH' && address) {
+            if (body.is_default === true)
+                current.addresses.forEach((a) => (a.is_default = a.id === id));
+            Object.assign(address, body, { id });
+            if (!current.addresses.some((a) => a.is_default)) address.is_default = true;
+        }
         if (method === 'PUT' && address)
             current.addresses.forEach((a) => (a.is_default = a.id === id));
         if (method === 'DELETE') {
@@ -281,19 +397,26 @@ export async function demoRequest(
         save();
         return { data: address ?? current.addresses };
     }
-    const shipping = {
-        blue: { price: pt ? 7535 : 1507, days: 4 },
-        sedex: { price: pt ? 4450 : 890, days: 2 },
-        fedex: { price: pt ? 11010 : 2202, days: 5 },
-        red: { price: pt ? 2350 : 470, days: 7 },
-    };
+    const shipping = shippingData[pt ? 'BRL' : 'USD'];
     if (route === '/api/v1/shipping-methods')
         return { data: shipping, currency: pt ? 'BRL' : 'USD' };
     if (route === '/api/v1/checkout') {
         const key = new Headers(options.headers).get('Idempotency-Key') ?? '';
+        if (!/^[a-zA-Z0-9_-]{16,64}$/.test(key) || body.payment_method !== 'wallet')
+            return fail(422);
         current.attempts ??= {};
-        const previous = current.orders.find((o) => o.id === current.attempts[key]);
-        if (previous) return { data: previous };
+        const fingerprint = JSON.stringify([
+            body.address_id,
+            body.shipping_method,
+            body.payment_method,
+            locale,
+        ]);
+        const attempt = Object.hasOwn(current.attempts, key) ? current.attempts[key] : undefined;
+        if (attempt) {
+            if (attempt.fingerprint !== fingerprint) return fail(409);
+            const previous = current.orders.find((o) => o.id === attempt.orderId);
+            if (previous) return { data: previous };
+        }
         const address = current.addresses.find((a) => a.id === body.address_id);
         const delivery = shipping[body.shipping_method as keyof typeof shipping];
         const summary = cart();
@@ -319,7 +442,7 @@ export async function demoRequest(
             })),
         };
         current.orders.unshift(order);
-        current.attempts[key] = order.id;
+        current.attempts[key] = { orderId: order.id, fingerprint };
         current.cart = [];
         save();
         return { data: order };
@@ -331,6 +454,17 @@ export async function demoRequest(
         return order ? { data: order } : fail();
     }
     if (route.startsWith('/api/v1/notifications')) {
+        if (method === 'DELETE') {
+            const clearRead = route.endsWith('/read');
+            const id = decodeURIComponent(route.split('/')[4] ?? '');
+            if ((clearRead && current.readNotifications) || id === 'demo-welcome')
+                current.welcomeRemoved = true;
+            current.cartNotices = (current.cartNotices ?? []).filter((notice) =>
+                clearRead ? !notice.read_at : notice.id !== id,
+            );
+            save();
+            return null;
+        }
         if (method === 'PATCH') {
             const id = decodeURIComponent(route.split('/')[4] ?? '');
             const all = route.endsWith('/read-all');
@@ -345,7 +479,7 @@ export async function demoRequest(
             return {
                 data: {
                     unread_count:
-                        (current.readNotifications ? 0 : 1) +
+                        (current.readNotifications || current.welcomeRemoved ? 0 : 1) +
                         (current.cartNotices ?? []).filter((notice) => !notice.read_at).length,
                 },
             };
@@ -372,13 +506,14 @@ export async function demoRequest(
                 created_at: '2026-11-16T12:00:00Z',
             },
         ];
-        const page = Math.max(
-            1,
-            Math.min(Math.ceil(items.length / 15), Number(url.searchParams.get('page')) || 1),
+        const visibleItems = items.filter(
+            (item) => item.id !== 'demo-welcome' || !current.welcomeRemoved,
         );
+        const lastPage = Math.max(1, Math.ceil(visibleItems.length / 15));
+        const page = Math.max(1, Math.min(lastPage, Number(url.searchParams.get('page')) || 1));
         return {
-            data: items.slice((page - 1) * 15, page * 15),
-            meta: { current_page: page, last_page: Math.ceil(items.length / 15) },
+            data: visibleItems.slice((page - 1) * 15, page * 15),
+            meta: { current_page: page, last_page: lastPage },
         };
     }
     return fail();

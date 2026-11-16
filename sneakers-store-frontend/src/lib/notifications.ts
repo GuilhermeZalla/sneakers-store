@@ -34,6 +34,10 @@ export const notificationApi = {
         ),
     readAll: (locale: StoreLocale) =>
         apiRequest('/api/v1/notifications/read-all', { method: 'PATCH' }, locale),
+    remove: (id: string, locale: StoreLocale) =>
+        apiRequest('/api/v1/notifications/' + encodeURIComponent(id), { method: 'DELETE' }, locale),
+    clearRead: (locale: StoreLocale) =>
+        apiRequest('/api/v1/notifications/read', { method: 'DELETE' }, locale),
 };
 export function notificationLabel(count: number, locale: StoreLocale): string {
     return locale === 'pt_BR'
