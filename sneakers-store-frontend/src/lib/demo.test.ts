@@ -51,6 +51,39 @@ test('demo supports a complete isolated purchase, currency and retry flow', asyn
             ((await demoRequest('/api/v1/cart', {}, 'pt_BR')) as { data: unknown[] }).data,
             [],
         );
+        await demoRequest('/api/v1/notifications/read-all', { method: 'PATCH' }, 'pt_BR');
+        await demoRequest(
+            '/api/v1/cart/items',
+            { method: 'POST', body: JSON.stringify({ product_id: 101 }) },
+            'pt_BR',
+        );
+        const notifications = (await demoRequest('/api/v1/notifications', {}, 'pt_BR')) as {
+            data: { id: string; title: string; body: string; url: string }[];
+        };
+        assert.equal(notifications.data[0].title, 'Produto adicionado ao carrinho');
+        assert.ok(notifications.data[0].body.includes('Lume Ruby'));
+        assert.equal(notifications.data[0].url, '/cart');
+        assert.equal(
+            (
+                (await demoRequest('/api/v1/notifications/unread-count', {}, 'pt_BR')) as {
+                    data: { unread_count: number };
+                }
+            ).data.unread_count,
+            1,
+        );
+        await demoRequest(
+            '/api/v1/notifications/' + notifications.data[0].id + '/read',
+            { method: 'PATCH' },
+            'pt_BR',
+        );
+        assert.equal(
+            (
+                (await demoRequest('/api/v1/notifications/unread-count', {}, 'pt_BR')) as {
+                    data: { unread_count: number };
+                }
+            ).data.unread_count,
+            0,
+        );
         await assert.rejects(
             demoRequest(
                 '/api/v1/user/password',

@@ -91,6 +91,14 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
             document.removeEventListener('visibilitychange', focus);
         };
     }, [userId, refresh]);
+    useEffect(() => {
+        if (import.meta.env?.VITE_DEMO !== 'true') return;
+        const update = () => {
+            void refresh(1);
+        };
+        window.addEventListener('sneakers-demo-notifications', update);
+        return () => window.removeEventListener('sneakers-demo-notifications', update);
+    }, [refresh]);
     const read = async (id: string) => {
         const session = version.current;
         setBusy(true);

@@ -238,6 +238,8 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 
 ## Próximas entregas e publicação
 
+- Demo: adicionar um produto cria um aviso no sino, com nome do item e link para o carrinho. Contador e histórico de notificações atualizados imediatamente, com leitura individual/em lote, paginação e textos EN/PT. Os eventos são locais à demonstração, sem envio de e-mail.
+
 - Contador da sacola: quantidade total de unidades no carrinho, atualizado pelo estado compartilhado após adicionar, alterar quantidade ou remover produtos; oculto quando vazio e limitado visualmente a 99+. Rótulo acessível em português e inglês. Mesma navegação na demo e na aplicação conectada à API.
 
 ### Revisão visual iniciada — 16/11/2026

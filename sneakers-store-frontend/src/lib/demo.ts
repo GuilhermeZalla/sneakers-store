@@ -13,6 +13,7 @@ type DemoState = {
     orders: Order[];
     readNotifications: boolean;
     attempts: Record<string, number>;
+    cartNotices?: { id: string; productName: string; created_at: string; read_at: string | null }[];
 };
 const initial = (): DemoState => ({
     signedIn: true,
@@ -221,12 +222,23 @@ export async function demoRequest(
             const existing = current.cart.find((item) => item.id === product.id);
             if (existing) existing.quantity += 1;
             else current.cart.push({ id: product.id, quantity: 1 });
+            current.cartNotices ??= [];
+            current.cartNotices.unshift({
+                id: crypto.randomUUID(),
+                productName: product.name,
+                created_at: new Date().toISOString(),
+                read_at: null,
+            });
+            current.cartNotices = current.cartNotices.slice(0, 50);
         }
         if (method === 'PATCH') {
             const item = current.cart.find((entry) => entry.id === id);
             if (item) item.quantity = Math.max(1, Math.min(99, Number(body.quantity) || 1));
         }
         save();
+        if (method === 'POST' && typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('sneakers-demo-notifications'));
+        }
         return cart();
     }
     if (route.startsWith('/api/v1/wishlist')) {
@@ -320,27 +332,53 @@ export async function demoRequest(
     }
     if (route.startsWith('/api/v1/notifications')) {
         if (method === 'PATCH') {
-            current.readNotifications = true;
+            const id = decodeURIComponent(route.split('/')[4] ?? '');
+            const all = route.endsWith('/read-all');
+            if (all || id === 'demo-welcome') current.readNotifications = true;
+            for (const notice of current.cartNotices ?? []) {
+                if (all || notice.id === id) notice.read_at = new Date().toISOString();
+            }
             save();
             return null;
         }
         if (route.endsWith('/unread-count'))
-            return { data: { unread_count: current.readNotifications ? 0 : 1 } };
-        return {
-            data: [
-                {
-                    id: 'demo-welcome',
-                    event: 'welcome',
-                    title: pt ? 'Explore a demonstração' : 'Explore the demo',
-                    body: pt
-                        ? 'Monte seu carrinho e experimente uma compra fictícia.'
-                        : 'Build your cart and try a simulated purchase.',
-                    url: '/catalog',
-                    read_at: current.readNotifications ? new Date().toISOString() : null,
-                    created_at: '2026-11-16T12:00:00Z',
+            return {
+                data: {
+                    unread_count:
+                        (current.readNotifications ? 0 : 1) +
+                        (current.cartNotices ?? []).filter((notice) => !notice.read_at).length,
                 },
-            ],
-            meta: { current_page: 1, last_page: 1 },
+            };
+        const notices = (current.cartNotices ?? []).map((notice) => ({
+            ...notice,
+            event: 'cart_added',
+            title: pt ? 'Produto adicionado ao carrinho' : 'Item added to cart',
+            body: pt
+                ? notice.productName + ' está na sua sacola.'
+                : notice.productName + ' is in your bag.',
+            url: '/cart',
+        }));
+        const items = [
+            ...notices,
+            {
+                id: 'demo-welcome',
+                event: 'welcome',
+                title: pt ? 'Explore a demonstração' : 'Explore the demo',
+                body: pt
+                    ? 'Monte seu carrinho e experimente uma compra fictícia.'
+                    : 'Build your cart and try a simulated purchase.',
+                url: '/catalog',
+                read_at: current.readNotifications ? '2026-11-16T12:00:00Z' : null,
+                created_at: '2026-11-16T12:00:00Z',
+            },
+        ];
+        const page = Math.max(
+            1,
+            Math.min(Math.ceil(items.length / 15), Number(url.searchParams.get('page')) || 1),
+        );
+        return {
+            data: items.slice((page - 1) * 15, page * 15),
+            meta: { current_page: page, last_page: Math.ceil(items.length / 15) },
         };
     }
     return fail();
