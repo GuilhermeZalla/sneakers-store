@@ -10,7 +10,24 @@ export function StoreShell() {
     const { locale, setLocale } = useLocale();
     const pt = locale === 'pt_BR';
     const { user } = useAuth();
-    const { wishlistError, refreshWishlist } = useStore();
+    const { cart, wishlistError, refreshWishlist } = useStore();
+    const cartQuantity = user
+        ? (cart?.data.reduce((total, item) => total + item.quantity, 0) ?? 0)
+        : 0;
+    const cartLabel =
+        cartQuantity > 0
+            ? (pt ? 'Carrinho: ' : 'Cart: ') +
+              cartQuantity +
+              (pt
+                  ? cartQuantity === 1
+                      ? ' item'
+                      : ' itens'
+                  : cartQuantity === 1
+                    ? ' item'
+                    : ' items')
+            : pt
+              ? 'Carrinho'
+              : 'Cart';
     return (
         <>
             <header className="store-header">
@@ -25,8 +42,13 @@ export function StoreShell() {
                     <Link to="/wishlist" aria-label={pt ? 'Favoritos' : 'Wishlist'}>
                         <Heart size={20} />
                     </Link>
-                    <Link to="/cart" aria-label={pt ? 'Carrinho' : 'Cart'}>
+                    <Link to="/cart" className="cart-link" aria-label={cartLabel}>
                         <ShoppingBag size={20} />
+                        {cartQuantity > 0 && (
+                            <span className="cart-count" aria-hidden="true">
+                                {cartQuantity > 99 ? '99+' : cartQuantity}
+                            </span>
+                        )}
                     </Link>
                     <NotificationBell />
                     <Link to="/account" aria-label={pt ? 'Minha conta' : 'My account'}>

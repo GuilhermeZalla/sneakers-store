@@ -238,6 +238,8 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 
 ## Próximas entregas e publicação
 
+- Contador da sacola: quantidade total de unidades no carrinho, atualizado pelo estado compartilhado após adicionar, alterar quantidade ou remover produtos; oculto quando vazio e limitado visualmente a 99+. Rótulo acessível em português e inglês. Mesma navegação na demo e na aplicação conectada à API.
+
 ### Revisão visual iniciada — 16/11/2026
 
 - Home: foto local do Lume Ruby integrada ao destaque, com composição adaptada para celular.
