@@ -4,7 +4,7 @@ Atualizado em 16/11/2026. Controle interno; instruções de uso ficam no README.
 
 ## Fase atual
 
-**Versão 1.0.0.** Revisão visual, demo estática e capas de portfólio concluídas. O frontend completo continua integrado à API Laravel; o build de demonstração usa dados fictícios locais e está publicado em https://guilhermezalla.github.io/sneakers-store/ pelo workflow de main após o CI. Os registros anteriores de branch, commits e ausência de push são históricos. A limpeza das duas screenshots antigas do histórico permanece uma ação separada, pois envolve reescrita de commits já publicados.
+**Versão 1.0.0.** Revisão visual, demo estática e capas de portfólio concluídas. O frontend completo continua integrado à API Laravel; o build de demonstração usa dados fictícios locais e está publicado em https://guilhermezalla.github.io/sneakers-store/ pelo workflow de main após o CI. Os registros anteriores de branch, commits e ausência de push são históricos. As duas screenshots antigas foram removidas do histórico público com backup integral externo e validação de igualdade das árvores atuais e da release 1.0.0.
 
 Fonte do MERN: branch `master`, commit `438224126ba5239b4f6c357feafcf4b16473b75c`, de GuilhermeZalla/sneakers. Análise original em `ANALISE_MIGRACAO.md`.
 
@@ -257,7 +257,7 @@ Revisar visualmente as novas imagens e screenshots. A substituição já foi apl
 - [x] Capturas reais e duas capas SVG independentes: 1920 × 1320 e 1920 × 1080 em docs/portfolio. A versão no celular é identificada como site responsivo.
 - [x] Workflow de CI e publicação no Pages; README com comandos, limites da demo e links de portfólio.
 - [ ] Hospedagem do sistema completo (frontend, API, banco e filas), quando houver infraestrutura definida.
-- [ ] Limpeza do histórico antigo: os blobs 08aeff48f8dec70ab9cf25ac7c041fe526544642 e 45566c69a7378431b08035be85608ac8b8f3e7b6 ainda são alcançáveis. Os arquivos atuais e a demo usam apenas imagens creditadas. O roteiro local prepara backup e cópia filtrada; aplicar o histórico ao remoto exige uma decisão explícita sobre a reescrita dos commits públicos.
+- [x] Os dois blobs de screenshots antigas foram removidos das branches e tags públicas. Backup integral externo preservado; um mirror novo do GitHub confirmou a ausência dos blobs. As árvores atuais de main e v1.0.0 foram preservadas.
 
 A remoção de docs/PERGUNTAS_ENTREVISTA.md feita no remoto (7b6876be) foi incorporada por merge, sem reescrever o histórico.
 
@@ -284,3 +284,12 @@ Validação de fechamento: 17 testes unitários de frontend, cinco cenários mon
 - Checks locais: Pint, PHPStan, 128 testes PHP/874 assertions em SQLite em memória; 18 testes unitários frontend e sete cenários reais de navegador; tipos, lint e builds normal/demo passaram. Nenhuma operação no MySQL habitual, alteração de dependências ou comando de migration foi executado.
 - Revisão final: sem imports mortos ou scaffolds genéricos remanescentes nos arquivos alterados; testes adicionados para autorização, rollback, estado inválido, idempotência, limpeza/exclusão, falhas e atualização imediata.
 - Pendências de produto mantidas: hospedagem completa e pagamentos reais. A limpeza histórica é executada separadamente com backup e validação dos blobs e das árvores atuais.
+
+
+### Histórico limpo e fechamento
+
+- Limpeza executada com as ferramentas nativas do Git, sem instalar dependências. Removidos somente os blobs 08aeff48f8dec70ab9cf25ac7c041fe526544642 e 45566c69a7378431b08035be85608ac8b8f3e7b6.
+- Backup mirror integral e mirror filtrado preservados fora do repositório. Igualdade das árvores atuais e de v1.0.0 conferida antes do envio atômico de main/tag com force-with-lease.
+- Mirror novo clonado do GitHub confirmou que os blobs não são alcançáveis pelas referências públicas. Checkpoints locais de agentes e o backup original não são publicados.
+- O histórico foi reescrito por solicitação do titular; cópias antigas devem ser reclonadas ou realinhadas antes de novos pushes para evitar reintroduzir as imagens.
+- Pendências restantes de produto: hospedagem completa e integração de pagamentos reais.

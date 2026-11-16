@@ -386,3 +386,7 @@ mysql --host=127.0.0.1 --user=root --execute="DROP DATABASE $integrationDatabase
 - There is no administration panel, quantitative stock control or customer rating system. Catalog ratings are static sample data.
 - Password recovery has React screens and queued delivery. Account deletion is API-only. Real mail requires configured SMTP and a running worker.
 - No personal data was imported from the original MongoDB project. The seeder contains demonstration products only.
+
+### Git history maintenance
+
+Two historical screenshot blobs with unconfirmed image licensing were removed from public branches and tags. The current application files, approved images and v1.0.0 release tree were preserved. A complete pre-cleanup mirror backup is kept locally outside the repository. If you have an older clone, clone the repository again or realign it before pushing to avoid restoring the removed history. Local agent checkpoints and backup mirrors are not published.
