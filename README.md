@@ -248,3 +248,9 @@ Frontend tests include demo behavior, checkout, product reviews/options and noti
 An independent portfolio project, with no affiliation, association or endorsement from the brands mentioned. This version reimplements the [original MERN project (2022)](https://github.com/GuilhermeZalla/sneakers).
 
 Code is available under the [MIT license](LICENSE). Product images have separate terms and source credits documented in [CREDITS.md](CREDITS.md).
+
+## Use of artificial intelligence
+
+AI tools were used to support productivity in drafting, organizing, and reviewing the **documentation**, creating **mockups and visual references**, suggesting and assisting with the implementation of **layouts, styles, and responsiveness**, and preparing and reviewing **automated test scenarios**.
+
+The product idea and business rules are the developer's own. Technical decisions, architecture, implementation reviews, and responsibility for the code and final result remain with the developer.
