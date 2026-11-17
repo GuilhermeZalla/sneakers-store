@@ -13,6 +13,7 @@ O catálogo tem 30 produtos fictícios da marca Lume, com imagens locais credita
 - Cadastro, login, verificação de e-mail e recuperação de senha.
 - Catálogo com busca, filtros, ordenação e paginação; galeria de imagens, ampliação e produtos relacionados.
 - Avaliações, variantes de tamanho e cor, favoritos e carrinho.
+- Microinterações e animações táteis nos botões, cards, galeria, opções de variantes e hero, com suporte completo a acessibilidade e `prefers-reduced-motion`.
 - Endereços, opções de frete, checkout, pedidos e notificações.
 - Demonstração com os fluxos de compra executados localmente, sem conexão à API.
 
@@ -26,4 +27,4 @@ O catálogo tem 30 produtos fictícios da marca Lume, com imagens locais credita
 - A API usa Laravel, Sanctum e sessões com cookies e proteção CSRF. O frontend usa React Router.
 - Duas migrations de avaliações e variantes foram aplicadas ao banco local em 17/11/2026. Outros ambientes devem aplicar migrations pendentes com `php artisan migrate --no-interaction`.
 - As avaliações na demonstração pública ficam na sessão do visitante; não são compartilhadas entre visitantes.
-- Os testes, verificações de tipos e lint, builds da aplicação e da demonstração passaram na CI do commit `7b637fb5`.
+- Os testes, verificações de tipos, lint e build da demonstração com microanimações integradas passaram com sucesso em 17/11/2026.

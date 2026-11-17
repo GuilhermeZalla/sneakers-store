@@ -1359,6 +1359,11 @@ a {
     outline: 3px solid var(--orange);
     outline-offset: 0;
 }
+.button:active:not(:disabled),
+.store-link-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+}
 @media (prefers-reduced-motion: reduce) {
     .product-card:hover,
     .product-card:focus-within {
@@ -1458,7 +1463,16 @@ a {
     transition:
         color 240ms ease,
         border-color 240ms ease,
-        background-color 240ms ease;
+        background-color 240ms ease,
+        transform 160ms ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .heart-button:hover:not(:disabled) {
+        transform: scale(1.1);
+    }
+}
+.heart-button:active:not(:disabled) {
+    transform: scale(0.92);
 }
 @media (max-width: 600px) {
     .store-section {
@@ -1531,6 +1545,21 @@ a {
     border: 1px solid #8a867b;
     cursor: pointer;
     font-size: 0.85rem;
+    transition:
+        transform 140ms ease,
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        box-shadow 140ms ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .product-options label:hover:not(.is-selected) {
+        border-color: var(--ink);
+        transform: translateY(-1px);
+    }
+}
+.product-options label:active {
+    transform: translateY(1px);
 }
 .product-options input,
 .review-rating input {
@@ -1810,6 +1839,20 @@ a {
     background: var(--white);
     border: var(--border);
     cursor: pointer;
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        outline-color 160ms ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .gallery-thumbnails button:hover:not([aria-pressed='true']) {
+        transform: translateY(-2px);
+        box-shadow: 2px 2px 0 var(--ink);
+    }
+}
+.gallery-thumbnails button:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 .gallery-thumbnails button[aria-pressed='true'] {
     outline: 3px solid var(--orange);
@@ -1936,13 +1979,22 @@ a {
     text-align: left;
     overflow-wrap: anywhere;
     cursor: pointer;
+    transition:
+        background-color 140ms ease,
+        transform 140ms ease;
 }
 .filter-chip span {
     flex-shrink: 0;
     font-size: 18px;
 }
-.filter-chip:hover {
-    background: var(--orange);
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .filter-chip:hover {
+        background: var(--orange);
+        transform: translateY(-1px);
+    }
+}
+.filter-chip:active {
+    transform: translateY(1px);
 }
 .catalog-active-filters .text-button {
     min-height: 40px;
@@ -1974,8 +2026,30 @@ a {
         transform: scale(1.035);
     }
 }
+@media (prefers-reduced-motion: no-preference) {
+    .store-hero h1,
+    .store-hero p,
+    .store-hero .store-link-button {
+        animation: surface-enter 280ms ease-out both;
+    }
+    .store-hero p {
+        animation-delay: 50ms;
+    }
+    .store-hero .store-link-button {
+        animation-delay: 100ms;
+    }
+    .product-grid > .product-card {
+        animation: surface-enter 240ms ease-out both;
+    }
+}
 @media (prefers-reduced-motion: reduce) {
     .gallery-main img {
         transition: none;
+    }
+    .store-hero h1,
+    .store-hero p,
+    .store-hero .store-link-button,
+    .product-grid > .product-card {
+        animation: none;
     }
 }
