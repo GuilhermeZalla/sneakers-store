@@ -193,7 +193,7 @@ cd sneakers-store-backend
 php artisan migrate
 ```
 
-This adds `product_reviews`, adds `size`/`color` snapshots to cart/order items and replaces the cart's product-only unique key with a variant key. No dependency was added. The implementation checks ran in SQLite memory; they did not migrate your regular MySQL database. Legacy API clients that omit options receive the first catalog choice for compatibility; the current UI always asks the customer to choose. Rolling back the variant migration is refused while a cart contains multiple variants of one product, so an older product-only constraint cannot discard or merge items silently.
+This adds `product_reviews`, adds `size`/`color` snapshots to cart/order items and replaces the cart's product-only unique key with a variant key. No dependency was added. The automated suite uses SQLite in memory; apply these migrations separately to each configured MySQL installation. Legacy API clients that omit options receive the first catalog choice for compatibility; the current UI always asks the customer to choose. Rolling back the variant migration is refused while a cart contains multiple variants of one product, so an older product-only constraint cannot discard or merge items silently.
 
 ## API
 

@@ -309,13 +309,22 @@ Validação de fechamento: 17 testes unitários de frontend, cinco cenários mon
 - [x] Aplicar a terceira proposta de marca (sneakers. editorial) e o favicon correspondente.
 - [x] Atualizar documentação/contratos e testar aplicação/demo, incluindo falhas e responsividade.
 - [x] Atualizar capturas/capas e arquivos correspondentes do portfólio após a troca da marca; arquivos sincronizados com o repositório do portfólio.
-- As migrations necessárias serão versionadas; o banco habitual não será alterado nesta tarefa. Hospedagem completa e pagamentos reais continuam pendentes.
+- Migrations versionadas e aplicadas ao banco local após backup, por autorização do titular na etapa de ativação abaixo. Hospedagem completa e pagamentos reais continuam pendentes.
 
 ### Validação e ativação desta entrega
 
 - Backend: 140 testes / 963 assertions em SQLite em memória; Pint e PHPStan sem erros. Cobertura de notas inválidas, comentários, propriedade, uma avaliação por conta/produto, paginação, média/ordenação, variantes distintas, snapshots e e-mails bilíngues.
 - Frontend: 19 testes unitários e sete cenários reais de navegador; tipos, lint e builds normal/demo aprovados. Demo testada sem acesso à API, incluindo editar/remover avaliação, atualizar média e separar variantes até o checkout.
 - Navegador: envio/edição/remoção de avaliação, contadores, seleção de tamanho/cor, linhas distintas no carrinho; produto/avaliações conferidos em 390 e 768 px e desktop. Capas 1920 × 1320 / 1920 × 1080 revisadas, com imagens reais e a marca editorial aprovada.
-- [ ] Ativação no MySQL habitual: após backup, executar `php artisan migrate` na pasta `sneakers-store-backend` antes de iniciar a nova API. As duas migrations foram criadas e testadas somente no banco de testes; nenhum dado habitual foi alterado. Itens antigos sem tamanho/cor não recebem escolhas históricas inventadas.
+- [x] Ativação no banco local: as duas migrations foram aplicadas no lote 5 após backup. API validada com registros temporários dentro de uma transação revertida ao final. Registros existentes preservados; itens antigos sem tamanho/cor mantêm sua informação original.
 - A demo pública armazena avaliações apenas na sessão do visitante; não existe compartilhamento de avaliações entre visitantes sem a API hospedada.
 - Pendências de produto mantidas: hospedagem completa e pagamentos reais.
+
+
+### Ativação local concluída — 17/11/2026
+
+- Conexão confirmada pelo Laravel: driver MySQL, servidor local MariaDB 10.4.32 na porta 3306. Aplicadas somente `2026_11_17_031131_create_product_reviews_table` e `2026_11_17_031132_add_variants_to_cart_and_order_items`; nenhuma migration pendente.
+- Backup SQL completo conferido antes da alteração, com manifesto de contagens e SHA-256. Arquivos privados preservados fora do repositório em `%LOCALAPPDATA%/SneakersStore/backups/20261117-004727/`. Nenhuma credencial ou cópia dos dados foi versionada.
+- 36 verificações concluídas no banco local, incluindo estrutura/índice único, leitura pública, autenticação/verificação de e-mail, média 3,5 com duas contas, edição/remoção, opções inválidas, separação/agrupamento de variantes, autorização do carrinho, checkout idempotente, snapshots e renderização do e-mail sem envio.
+- Os registros de validação foram revertidos em uma transação. Contagens das 17 tabelas originais preservadas, com a alteração esperada de duas entradas em `migrations`; a nova tabela de avaliações ficou sem dados fictícios. Nenhum job de e-mail foi criado.
+- A instalação local está atualizada. Outros clones/bancos ainda precisam aplicar suas próprias migrations seguindo o README. Pendências restantes de produto: hospedagem completa e pagamentos reais.
