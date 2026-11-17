@@ -41,6 +41,8 @@ export type Order = {
     };
     items: {
         product_id: number | null;
+        size?: string;
+        color?: string;
         product_name: string;
         unit_price: number;
         quantity: number;

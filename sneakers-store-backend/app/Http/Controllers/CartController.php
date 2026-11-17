@@ -42,6 +42,8 @@ class CartController extends Controller
             Product::query()->whereKey((int) $validated['product_id'])->firstOrFail(),
             (int) $validated['quantity'],
             StoreLocale::from(app()->getLocale()),
+            $validated['size'] ?? null,
+            $validated['color'] ?? null,
         );
 
         return new CartItemResource($item);

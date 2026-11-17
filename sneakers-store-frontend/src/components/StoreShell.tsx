@@ -32,7 +32,7 @@ export function StoreShell() {
         <>
             <header className="store-header">
                 <Link to="/" className="wordmark">
-                    SNEAKERS<span>✳</span>
+                    sneakers<span>.</span>
                 </Link>
                 <nav
                     aria-label={pt ? 'Navegação principal' : 'Main navigation'}
@@ -89,7 +89,9 @@ export function StoreShell() {
             )}
             <Outlet />
             <footer className="store-footer">
-                <strong>SNEAKERS ✳</strong>
+                <strong className="wordmark">
+                    sneakers<span>.</span>
+                </strong>
                 <span>{pt ? 'FEITO PARA O SEU PRÓXIMO PASSO' : 'MADE FOR YOUR NEXT MOVE'}</span>
             </footer>
         </>

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FavoriteButton, ProductCard } from '../components/ProductCard';
+import { ProductReviews, RatingSummary } from '../components/ProductReviews';
+import { VariantDetails } from '../components/VariantDetails';
+import type { ReviewSummary } from '../lib/reviews';
 import { ProductImage } from '../components/ProductImage';
 import { Button, Select } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
@@ -344,6 +347,18 @@ export function ProductPage() {
     const [error, setError] = useState(false);
     const [retry, setRetry] = useState(0);
     const [added, setAdded] = useState(false);
+    const [size, setSize] = useState('');
+    const [color, setColor] = useState('');
+    const updateRating = useCallback(
+        (summary: ReviewSummary) =>
+            setProduct((current) => (current ? { ...current, ...summary } : current)),
+        [],
+    );
+    useEffect(() => {
+        setSize('');
+        setColor('');
+        setAdded(false);
+    }, [slug]);
     useEffect(() => {
         let active = true;
         setLoading(true);
@@ -373,7 +388,13 @@ export function ProductPage() {
             return;
         }
         try {
-            await addCart(product!.id);
+            if (
+                !product ||
+                (product.sizes.length > 0 && !size) ||
+                (product.colors.length > 0 && !color)
+            )
+                return;
+            await addCart(product.id, { ...(size ? { size } : {}), ...(color ? { color } : {}) });
             setAdded(true);
         } catch {}
     };
@@ -411,25 +432,92 @@ export function ProductPage() {
                         <h1>{product.name}</h1>
                         <strong className="detail-price">{money(product.price)}</strong>
                         <p>{product.description}</p>
-                        <p>
-                            {'★'.repeat(product.rating)}
-                            {'☆'.repeat(5 - product.rating)}
-                        </p>
+                        <button
+                            type="button"
+                            className="product-rating-link"
+                            onClick={() =>
+                                document
+                                    .getElementById('product-reviews')
+                                    ?.scrollIntoView({ block: 'start' })
+                            }
+                        >
+                            <RatingSummary
+                                rating={product.rating}
+                                review_count={product.review_count}
+                            />
+                        </button>
                         {product.colors.length > 0 && (
-                            <p>
-                                <strong>{pt ? 'Cores' : 'Colors'}:</strong>{' '}
-                                {product.colors
-                                    .map((color) => formatProductColor(color, locale))
-                                    .join(', ')}
-                            </p>
+                            <fieldset className="product-options">
+                                <legend>{pt ? 'Cor' : 'Color'}</legend>
+                                <div>
+                                    {product.colors.map((option) => (
+                                        <label
+                                            key={option}
+                                            className={color === option ? 'is-selected' : ''}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="product-color"
+                                                value={option}
+                                                checked={color === option}
+                                                onChange={() => {
+                                                    setColor(option);
+                                                    setAdded(false);
+                                                }}
+                                            />
+                                            <span>{formatProductColor(option, locale)}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </fieldset>
                         )}
                         {product.sizes.length > 0 && (
-                            <p>
-                                <strong>{pt ? 'Tamanhos disponíveis' : 'Available sizes'}:</strong>{' '}
-                                {product.sizes.join(', ')}
+                            <fieldset className="product-options">
+                                <legend>{pt ? 'Tamanho' : 'Size'}</legend>
+                                <div>
+                                    {product.sizes.map((option) => (
+                                        <label
+                                            key={option}
+                                            className={size === option ? 'is-selected' : ''}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="product-size"
+                                                value={option}
+                                                checked={size === option}
+                                                onChange={() => {
+                                                    setSize(option);
+                                                    setAdded(false);
+                                                }}
+                                            />
+                                            <span>{option}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </fieldset>
+                        )}
+                        {((product.sizes.length > 0 && !size) ||
+                            (product.colors.length > 0 && !color)) && (
+                            <p className="variant-guidance" id="variant-guidance">
+                                {pt
+                                    ? 'Selecione as opções acima para adicionar à sacola.'
+                                    : 'Select the options above to add to your bag.'}
                             </p>
                         )}
-                        <Button disabled={busy} onClick={() => void add()}>
+                        <Button
+                            disabled={
+                                busy ||
+                                (product.sizes.length > 0 && !size) ||
+                                (product.colors.length > 0 && !color)
+                            }
+                            aria-describedby={
+                                (product.sizes.length > 0 && !size) ||
+                                (product.colors.length > 0 && !color)
+                                    ? 'variant-guidance'
+                                    : undefined
+                            }
+                            onClick={() => void add()}
+                        >
                             {pt ? 'ADICIONAR AO CARRINHO' : 'ADD TO CART'} ↗
                         </Button>
                         {added && (
@@ -446,6 +534,11 @@ export function ProductPage() {
                             </p>
                         )}
                     </div>
+                </div>
+            )}
+            {product && !loading && (
+                <div id="product-reviews">
+                    <ProductReviews slug={product.slug} onSummary={updateRating} />
                 </div>
             )}
         </main>
@@ -522,6 +615,7 @@ export function CartPage() {
                                     >
                                         {item.product.name}
                                     </Link>
+                                    <VariantDetails size={item.size} color={item.color} />
                                     <p>
                                         {money(item.unit_price)} {pt ? 'cada' : 'each'}
                                     </p>

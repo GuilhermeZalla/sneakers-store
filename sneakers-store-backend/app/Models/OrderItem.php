@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['order_id', 'product_id', 'product_name', 'unit_price', 'quantity'])]
+#[Fillable(['order_id', 'product_id', 'product_name', 'unit_price', 'quantity', 'size', 'color'])]
 class OrderItem extends Model
 {
     /** @use HasFactory<OrderItemFactory> */

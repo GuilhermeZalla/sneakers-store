@@ -40,6 +40,8 @@ class OrderResource extends JsonResource
                 'product_name' => $item->product_name,
                 'unit_price' => $item->unit_price,
                 'quantity' => $item->quantity,
+                'size' => $item->size,
+                'color' => $item->color,
             ])),
         ];
     }

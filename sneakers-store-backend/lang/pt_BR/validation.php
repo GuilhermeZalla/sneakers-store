@@ -35,6 +35,7 @@ return [
         'second_contact' => 'telefone secundário', 'gender' => 'gênero',
         'current_password' => 'senha atual',
         'product_id' => 'produto', 'quantity' => 'quantidade',
+        'rating' => 'nota', 'comment' => 'comentário', 'size' => 'tamanho', 'color' => 'cor',
         'min_price' => 'preço mínimo', 'max_price' => 'preço máximo',
         'postal_code' => 'CEP', 'street' => 'rua', 'number' => 'número',
         'complement' => 'complemento', 'reference' => 'referência',

@@ -24,12 +24,27 @@ class CartService
         });
     }
 
-    public function add(User $user, Product $product, int $quantity, StoreLocale $locale): CartItem
+    public function add(User $user, Product $product, int $quantity, StoreLocale $locale, ?string $size = null, ?string $color = null): CartItem
     {
-        return DB::transaction(function () use ($user, $product, $quantity, $locale): CartItem {
+        $sizes = $product->sizes;
+        $colors = $product->colors;
+        $size ??= (string) ($sizes[0] ?? '');
+        $color ??= (string) ($colors[0] ?? '');
+        if (! in_array($size, $sizes ?: [''], true) || ! in_array($color, $colors ?: [''], true)) {
+            throw ValidationException::withMessages(['variant' => __('The selected product options are invalid.')]);
+        }
+
+        return DB::transaction(function () use ($user, $product, $quantity, $locale, $size, $color): CartItem {
             $this->lockUser($user);
             $this->synchronizeCurrency($user, $locale);
-            $item = $user->cartItems()->where('product_id', $product->id)->first();
+            $item = $user->cartItems()->where('product_id', $product->id)->where('size', $size)->where('color', $color)->first();
+
+            if ($item === null && $size === (string) ($product->sizes[0] ?? '') && $color === (string) ($product->colors[0] ?? '')) {
+                $item = $user->cartItems()->where('product_id', $product->id)->where('size', '')->where('color', '')->first();
+                if ($item !== null) {
+                    $item->update(['size' => $size, 'color' => $color]);
+                }
+            }
 
             if ($item !== null) {
                 if ($item->quantity + $quantity > 999) {
@@ -40,6 +55,8 @@ class CartService
             } else {
                 $item = $user->cartItems()->create([
                     'product_id' => $product->id,
+                    'size' => $size,
+                    'color' => $color,
                     'quantity' => $quantity,
                     'unit_price' => $product->priceFor($locale),
                     'currency' => $locale->currency(),

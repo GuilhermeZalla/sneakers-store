@@ -7,7 +7,7 @@ export function Header() {
     return (
         <header className="header">
             <Link className="wordmark" to="/">
-                SNEAKERS<span>✳</span>
+                sneakers<span>.</span>
             </Link>
             <div className="header-right">
                 <span className="header-note">

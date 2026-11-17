@@ -6,11 +6,21 @@ import type { StoreLocale } from './locale.ts';
 import type { Address, Order } from './checkout.ts';
 import type { Product } from './store.ts';
 
-const storageKey = 'sneakers-demo-v2';
+const storageKey = 'sneakers-demo-v3';
 type DemoState = {
     signedIn: boolean;
     locale: StoreLocale;
-    cart: { id: number; quantity: number }[];
+    cart: { id: number; product_id: number; quantity: number; size: string; color: string }[];
+    reviews: {
+        id: number;
+        product_id: number;
+        user_id: number;
+        author_name: string;
+        rating: number;
+        comment: string;
+        created_at: string;
+        updated_at: string;
+    }[];
     wishlist: number[];
     addresses: Address[];
     orders: Order[];
@@ -22,7 +32,8 @@ type DemoState = {
 const initial = (): DemoState => ({
     signedIn: true,
     locale: 'en',
-    cart: [{ id: 101, quantity: 1 }],
+    cart: [{ id: 101, product_id: 101, quantity: 1, size: '38', color: 'red' }],
+    reviews: [],
     wishlist: [102],
     addresses: [
         {
@@ -60,16 +71,38 @@ export function restoreDemoState(raw: string | null): DemoState {
             !record(value.attempts)
         )
             return initial();
-        const arrays = ['cart', 'wishlist', 'addresses', 'orders'];
+        const arrays = ['cart', 'wishlist', 'addresses', 'orders', 'reviews'];
         if (arrays.some((key) => !Array.isArray(value[key]))) return initial();
         if (
             !(value.cart as unknown[]).every(
                 (item) =>
                     record(item) &&
                     integer(item.id) &&
+                    integer(item.product_id) &&
+                    typeof item.size === 'string' &&
+                    typeof item.color === 'string' &&
                     integer(item.quantity) &&
                     item.quantity >= 1 &&
                     item.quantity <= 999,
+            )
+        )
+            return initial();
+        if (
+            !(value.reviews as unknown[]).every(
+                (item) =>
+                    record(item) &&
+                    integer(item.id) &&
+                    integer(item.product_id) &&
+                    integer(item.user_id) &&
+                    integer(item.rating) &&
+                    item.rating >= 1 &&
+                    item.rating <= 5 &&
+                    typeof item.comment === 'string' &&
+                    item.comment.trim().length >= 5 &&
+                    item.comment.length <= 2000 &&
+                    typeof item.author_name === 'string' &&
+                    typeof item.created_at === 'string' &&
+                    typeof item.updated_at === 'string',
             )
         )
             return initial();
@@ -182,6 +215,17 @@ export class DemoError extends Error {
         this.status = status;
     }
 }
+function reviewSummary(productId: number) {
+    const reviews = session().reviews.filter((review) => review.product_id === productId);
+    return {
+        rating: reviews.length
+            ? Math.round(
+                  (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length) * 10,
+              ) / 10
+            : 0,
+        review_count: reviews.length,
+    };
+}
 function products(locale: StoreLocale): Product[] {
     return catalog.map((item) => ({
         id: Number(item.id),
@@ -202,7 +246,7 @@ function products(locale: StoreLocale): Product[] {
         images: [item.image_url].flat(),
         colors: item.color,
         sizes: item.size ?? [],
-        rating: item.rank,
+        ...reviewSummary(Number(item.id)),
     }));
 }
 export async function demoRequest(
@@ -238,12 +282,14 @@ export async function demoRequest(
     });
     const cart = () => {
         const data = current.cart.flatMap((item) => {
-            const product = list.find((p) => p.id === item.id);
+            const product = list.find((p) => p.id === item.product_id);
             return product
                 ? [
                       {
                           id: item.id,
-                          product_id: item.id,
+                          product_id: item.product_id,
+                          size: item.size,
+                          color: item.color,
                           product,
                           quantity: item.quantity,
                           unit_price: product.price,
@@ -296,8 +342,92 @@ export async function demoRequest(
         };
     }
     if (route.startsWith('/api/v1/products/')) {
-        const product = list.find((p) => p.slug === decodeURIComponent(route.split('/').at(-1)!));
-        return product ? { data: product } : fail();
+        const segments = route.split('/');
+        const product = list.find((p) => p.slug === decodeURIComponent(segments[4] ?? ''));
+        if (!product) return fail();
+        const reviewRoute = segments[5];
+        if (reviewRoute === 'reviews' && method === 'GET') {
+            const reviews = current.reviews
+                .filter((review) => review.product_id === product.id)
+                .sort((a, b) => b.created_at.localeCompare(a.created_at) || b.id - a.id);
+            const own = current.signedIn
+                ? (reviews.find((review) => review.user_id === 1) ?? null)
+                : null;
+            const serialize = (review: (typeof current.reviews)[number]) => ({
+                id: review.id,
+                rating: review.rating,
+                comment: review.comment,
+                author_name: review.author_name,
+                is_mine: current.signedIn && review.user_id === 1,
+                created_at: review.created_at,
+                updated_at: review.updated_at,
+            });
+            const lastPage = Math.max(1, Math.ceil(reviews.length / 10));
+            const page = Math.max(1, Math.min(lastPage, Number(url.searchParams.get('page')) || 1));
+            return {
+                data: reviews.slice((page - 1) * 10, page * 10).map(serialize),
+                summary: reviewSummary(product.id),
+                own_review: own ? serialize(own) : null,
+                meta: { current_page: page, last_page: lastPage, total: reviews.length },
+            };
+        }
+        if (reviewRoute === 'review') {
+            if (!current.signedIn) return fail(401);
+            const own = current.reviews.find(
+                (review) => review.product_id === product.id && review.user_id === 1,
+            );
+            if (method === 'PUT') {
+                if (
+                    !Number.isInteger(body.rating) ||
+                    body.rating < 1 ||
+                    body.rating > 5 ||
+                    typeof body.comment !== 'string' ||
+                    body.comment.trim().length < 5 ||
+                    body.comment.trim().length > 2000
+                ) {
+                    throw new DemoError(
+                        422,
+                        pt
+                            ? 'Escolha uma nota de 1 a 5 e escreva de 5 a 2.000 caracteres.'
+                            : 'Choose 1 to 5 stars and write 5 to 2,000 characters.',
+                    );
+                }
+                const review = own ?? {
+                    id: Math.max(0, ...current.reviews.map((item) => item.id)) + 1,
+                    product_id: product.id,
+                    user_id: 1,
+                    author_name: 'Alex Demo',
+                    rating: 0,
+                    comment: '',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                };
+                review.rating = body.rating;
+                review.comment = body.comment.trim();
+                review.updated_at = new Date().toISOString();
+                if (!own) current.reviews.push(review);
+                save();
+                return {
+                    data: {
+                        id: review.id,
+                        rating: review.rating,
+                        comment: review.comment,
+                        author_name: review.author_name,
+                        is_mine: true,
+                        created_at: review.created_at,
+                        updated_at: review.updated_at,
+                    },
+                };
+            }
+            if (method === 'DELETE') {
+                if (!own) return fail();
+                current.reviews = current.reviews.filter((review) => review !== own);
+                save();
+                return null;
+            }
+            return fail(405);
+        }
+        return !reviewRoute && method === 'GET' ? { data: product } : fail();
     }
     if (route === '/api/v1/auth/login') {
         current.signedIn = true;
@@ -331,11 +461,32 @@ export async function demoRequest(
         if (method === 'POST') {
             const product = list.find((p) => p.id === Number(body.product_id));
             if (!product) return fail();
-            const existing = current.cart.find((item) => item.id === product.id);
+            const size = body.size ?? product.sizes[0] ?? '';
+            const color = body.color ?? product.colors[0] ?? '';
+            const quantity = body.quantity ?? 1;
+            if (
+                !(product.sizes.length ? product.sizes : ['']).includes(size) ||
+                !(product.colors.length ? product.colors : ['']).includes(color) ||
+                !Number.isInteger(quantity) ||
+                quantity < 1 ||
+                quantity > 999
+            )
+                return fail(422);
+            const existing = current.cart.find(
+                (item) =>
+                    item.product_id === product.id && item.size === size && item.color === color,
+            );
             if (existing) {
-                if (existing.quantity >= 999) return fail(422);
-                existing.quantity += 1;
-            } else current.cart.push({ id: product.id, quantity: 1 });
+                if (existing.quantity + quantity > 999) return fail(422);
+                existing.quantity += quantity;
+            } else
+                current.cart.push({
+                    id: Math.max(0, ...current.cart.map((item) => item.id)) + 1,
+                    product_id: product.id,
+                    quantity,
+                    size,
+                    color,
+                });
             current.cartNotices ??= [];
             current.cartNotices.unshift({
                 id: crypto.randomUUID(),
@@ -439,6 +590,8 @@ export async function demoRequest(
                 product_name: item.product.name,
                 unit_price: item.unit_price,
                 quantity: item.quantity,
+                size: item.size,
+                color: item.color,
             })),
         };
         current.orders.unshift(order);

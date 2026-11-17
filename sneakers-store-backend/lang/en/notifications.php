@@ -40,6 +40,8 @@ return [
     'security' => 'We never send passwords by email. Use only the verification and password reset links you requested.',
     'order' => 'Order',
     'item' => 'Item',
+    'size' => 'Size',
+    'color' => 'Color',
     'quantity' => 'Quantity',
     'subtotal' => 'Subtotal',
     'shipping' => 'Shipping',

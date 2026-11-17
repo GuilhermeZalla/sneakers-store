@@ -5,15 +5,34 @@ namespace App\Models;
 use App\StoreLocale;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property list<string> $sizes
+ * @property list<string> $colors
+ * @property list<string> $images
+ */
 #[Fillable(['legacy_id', 'name', 'slug', 'description', 'description_pt_br', 'brand', 'type', 'price_usd', 'price_brl', 'thumbnail', 'images', 'colors', 'sizes', 'rating'])]
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('review_summary', function (Builder $query): void {
+            $query->withCount('reviews')->withAvg('reviews', 'rating');
+        });
+    }
+
+    /** @return HasMany<ProductReview, $this> */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
 
     /** @return array<string, string> */
     protected function casts(): array

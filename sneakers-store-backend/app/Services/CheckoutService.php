@@ -87,6 +87,8 @@ class CheckoutService
                 $order->items()->create([
                     'product_id' => $item->product_id,
                     'product_name' => $item->product->name,
+                    'size' => $item->size,
+                    'color' => $item->color,
                     'unit_price' => $item->unit_price,
                     'quantity' => $item->quantity,
                 ]);

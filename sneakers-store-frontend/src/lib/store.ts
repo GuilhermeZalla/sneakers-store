@@ -15,9 +15,11 @@ export type Product = {
     colors: string[];
     sizes: string[];
     rating: number;
+    review_count: number;
 };
+export type ProductOptions = { size?: string; color?: string };
 export type WishlistItem = { id: number; product_id: number; product: Product };
-export type CartItem = {
+export type CartItem = ProductOptions & {
     id: number;
     product_id: number;
     product: Product;
@@ -30,10 +32,18 @@ export type Cart = { data: CartItem[]; meta: { currency: string; subtotal: numbe
 
 export const storeApi = {
     cart: (locale: StoreLocale) => apiRequest<Cart>('/api/v1/cart', {}, locale),
-    addCart: (productId: number, quantity: number, locale: StoreLocale) =>
+    addCart: (
+        productId: number,
+        quantity: number,
+        locale: StoreLocale,
+        options: ProductOptions = {},
+    ) =>
         apiRequest(
             '/api/v1/cart/items',
-            { method: 'POST', body: JSON.stringify({ product_id: productId, quantity }) },
+            {
+                method: 'POST',
+                body: JSON.stringify({ product_id: productId, quantity, ...options }),
+            },
             locale,
         ),
     updateCart: (id: number, quantity: number, locale: StoreLocale) =>

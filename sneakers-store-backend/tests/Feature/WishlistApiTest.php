@@ -14,7 +14,7 @@ test('wishlist stores products once and responds with localized product data', f
     $product = Product::factory()->create(['price_usd' => 1234, 'price_brl' => 6789]);
 
     $this->actingAs($user)->postJson('/api/v1/wishlist', ['product_id' => $product->id])
-        ->assertCreated()->assertJsonPath('data.product.rating', 4);
+        ->assertCreated()->assertJsonPath('data.product.rating', 0)->assertJsonPath('data.product.review_count', 0);
     $this->postJson('/api/v1/wishlist', ['product_id' => $product->id])->assertOk();
 
     $this->withHeader('Accept-Language', 'pt-BR')->getJson('/api/v1/wishlist')

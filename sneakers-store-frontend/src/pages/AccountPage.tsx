@@ -1,3 +1,4 @@
+import { VariantDetails } from '../components/VariantDetails';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { NotificationList } from '../components/NotificationBell';
@@ -523,7 +524,8 @@ export function OrderDetailPage() {
                         <ul>
                             {order.items.map((item, index) => (
                                 <li key={index}>
-                                    {item.product_name} × {item.quantity} —{' '}
+                                    {item.product_name} × {item.quantity}
+                                    <VariantDetails size={item.size} color={item.color} /> —{' '}
                                     {formatOrderMoney(item.unit_price, order.currency)}{' '}
                                     {pt ? 'cada' : 'each'}
                                 </li>

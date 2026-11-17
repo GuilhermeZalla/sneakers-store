@@ -81,3 +81,18 @@ test('cart totals are read from the server for the selected currency', async () 
         globalThis.fetch = original;
     }
 });
+
+test('cart additions preserve selected size and color without sending client prices', async () => {
+    const original = globalThis.fetch;
+    let sent: unknown;
+    globalThis.fetch = async (_input, init) => {
+        sent = JSON.parse(String(init?.body));
+        return new Response(null, { status: 204 });
+    };
+    try {
+        await storeApi.addCart(101, 1, 'en', { size: '40', color: 'red' });
+        assert.deepEqual(sent, { product_id: 101, quantity: 1, size: '40', color: 'red' });
+    } finally {
+        globalThis.fetch = original;
+    }
+});

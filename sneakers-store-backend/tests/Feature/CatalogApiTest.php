@@ -31,7 +31,7 @@ test('catalog paginates and shows a product by slug', function () {
     $this->getJson('/api/v1/products?per_page=2')->assertOk()
         ->assertJsonCount(2, 'data')->assertJsonPath('meta.total', 3);
     $this->getJson('/api/v1/products/'.$product->slug)->assertOk()
-        ->assertJsonPath('data.id', $product->id)->assertJsonPath('data.rating', 5)
+        ->assertJsonPath('data.id', $product->id)->assertJsonPath('data.rating', 0)->assertJsonPath('data.review_count', 0)
         ->assertJsonPath('data.sizes.0', '38');
     $this->getJson('/api/v1/products/missing')->assertNotFound();
 });

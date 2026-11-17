@@ -29,7 +29,8 @@ class ProductResource extends JsonResource
             'images' => $this->images,
             'colors' => $this->colors,
             'sizes' => $this->sizes,
-            'rating' => $this->rating,
+            'rating' => round((float) $this->getAttribute('reviews_avg_rating'), 1),
+            'review_count' => (int) $this->getAttribute('reviews_count'),
         ];
     }
 }

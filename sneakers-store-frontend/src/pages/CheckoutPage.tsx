@@ -1,3 +1,4 @@
+import { VariantDetails } from '../components/VariantDetails';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AddressForm } from '../components/AddressForm';
@@ -35,6 +36,7 @@ function CheckoutRecap({
                 <div className="checkout-recap-item" key={item.id}>
                     <span>
                         {item.product.name} × {item.quantity}
+                        <VariantDetails size={item.size} color={item.color} />
                     </span>
                     <strong>{money(item.subtotal)}</strong>
                 </div>
@@ -210,7 +212,11 @@ export function CheckoutPage() {
                             <ul>
                                 {cart.data.map((item) => (
                                     <li key={item.id}>
-                                        {item.product.name} × {item.quantity} —{' '}
+                                        {item.product.name} × {item.quantity}
+                                        <VariantDetails
+                                            size={item.size}
+                                            color={item.color}
+                                        /> —{' '}
                                         {money(item.subtotal)}
                                     </li>
                                 ))}

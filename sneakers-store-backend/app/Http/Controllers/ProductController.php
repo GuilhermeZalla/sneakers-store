@@ -38,7 +38,7 @@ class ProductController extends Controller
         $sort = $filters['sort'] ?? 'name';
         $direction = str_starts_with($sort, '-') ? 'desc' : 'asc';
         $field = ltrim($sort, '-');
-        $query->orderBy($field === 'price' ? $priceColumn : $field, $direction)->orderBy('id');
+        $query->orderBy($field === 'price' ? $priceColumn : ($field === 'rating' ? 'reviews_avg_rating' : $field), $direction)->orderBy('id');
 
         return ProductResource::collection($query->paginate($filters['per_page'] ?? 30)->withQueryString());
     }

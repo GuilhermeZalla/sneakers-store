@@ -4,13 +4,13 @@ An independent portfolio project, with no affiliation, association or endorsemen
 
 This version reimplements the [original MERN project (2022)](https://github.com/GuilhermeZalla/sneakers). Code is available under the [MIT license](LICENSE). Images have their own terms, documented in [CREDITS.md](CREDITS.md). Lume Beanie Orange and Lume Beanie Red use images generated with OpenAI image_gen; the remaining catalog photographs come from Pexels and are credited individually.
 
-A full-stack storefront built with a Laravel REST API and a React frontend. It includes registration, login, email verification, password recovery, a filterable product catalog, favorites, cart, addresses, simulated checkout, order history and account notifications. English/USD and Brazilian Portuguese/BRL are supported.
+A full-stack storefront built with a Laravel REST API and a React frontend. It includes registration, login, email verification, password recovery, a filterable product catalog, favorites, cart, addresses, simulated checkout, order history, customer reviews with calculated ratings, selectable sizes/colors and account notifications. English/USD and Brazilian Portuguese/BRL are supported.
 
 ## Public demo
 
 **[Explore the demo](https://guilhermezalla.github.io/sneakers-store/)** · [Releases](https://github.com/GuilhermeZalla/sneakers-store/releases)
 
-The GitHub Pages demo runs entirely in the browser, without an API or database. The sample account, Alex Demo, is ready to use. Browse products, search and filter the catalog, save favorites, edit sample addresses and place simulated orders. No registration, password, real payment or email delivery is involved. Use sample information only.
+The GitHub Pages demo runs entirely in the browser, without an API or database. The sample account, Alex Demo, is ready to use. Browse products, search and filter the catalog, save favorites, select product sizes/colors, write/edit/remove a product review, edit sample addresses and place simulated orders. No registration, password, real payment or email delivery is involved. Use sample information only.
 
 Changes last for the browser session. **Reset demo** restores the initial sample data. Invalid or outdated stored data safely falls back to a fresh session. The bag shows the total item quantity; the bell shows unread notifications. Adding a product creates an internal notice immediately. Notices can be marked as read, removed individually or cleared in bulk using **Clear read notifications**, which preserves unread items.
 
@@ -178,6 +178,23 @@ Catalog search, brand, category, price range, sorting and pagination are kept in
 
 The interface uses shared color, border, spacing and shadow tokens, visible keyboard focus, responsive layouts and subtle interaction feedback. The approved reduced-motion variant uses a smaller lift for cards/buttons and disables image zoom and entrance animations.
 
+## Product options and reviews
+
+Product pages require an explicit choice for each available size and color before adding to the bag. The API checks choices against that product's catalog. The same product/size/color combination increments one cart line; other combinations remain separate. Choices are stored with the order and included in its confirmation email. Existing order items from before this feature retain their original data; no past choices are invented.
+
+Each verified account can publish one review per product, update its score/comment, or remove it. Scores range from 1 to 5 and comments from 5 to 2,000 characters. Public reviews are paginated (10 per page). The displayed score is the arithmetic mean, rounded to one decimal, with the total number of reviews. Products with no reviews show an empty state; the old seed rating is no longer displayed or used for rating sorting. Reviews are user opinions, not verified-purchase endorsements.
+
+The demo follows the same behavior using this browser tab's sample session. Reviews are not shared with other visitors or sent to a server. The new demo state format starts a fresh sample session for visitors using an older format.
+
+Existing API installations need the two new migrations before running this version:
+
+```powershell
+cd sneakers-store-backend
+php artisan migrate
+```
+
+This adds `product_reviews`, adds `size`/`color` snapshots to cart/order items and replaces the cart's product-only unique key with a variant key. No dependency was added. The implementation checks ran in SQLite memory; they did not migrate your regular MySQL database. Legacy API clients that omit options receive the first catalog choice for compatibility; the current UI always asks the customer to choose. Rolling back the variant migration is refused while a cart contains multiple variants of one product, so an older product-only constraint cannot discard or merge items silently.
+
 ## API
 
 All endpoints below use `/api/v1`:
@@ -186,7 +203,10 @@ All endpoints below use `/api/v1`:
 - `POST /auth/login`, `POST /auth/logout`: sign in/out.
 - `GET/PATCH/DELETE /user`: the authenticated account; deletion requires `password`. `PUT /user/password` changes the password.
 - `GET /products`, `GET /products/{slug}`: public catalog. Filters: `brand`, `type`, `search`, `min_price`, `max_price`, `per_page`, `sort`. API prices use cents.
-- `GET /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/{id}`, `DELETE /cart`: authenticated cart; quantities range from 1 to 999.
+- `GET /products/{slug}/reviews`: public review list, rating/count summary and the signed-in account's own review when present.
+- `PUT /products/{slug}/review`: create/update your review with `rating` and `comment`; requires a verified account and is limited to 20 mutations/minute together with deletion.
+- `DELETE /products/{slug}/review`: remove your own review.
+- `GET /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/{id}`, `DELETE /cart`: authenticated cart; quantities range from 1 to 999. Additions accept `product_id`, `quantity`, `size` and `color`; price and ownership come from the server.
 - `GET/POST /wishlist`, `DELETE /wishlist/{id}`: favorites.
 - `GET/POST /addresses`, `GET/PATCH/PUT/DELETE /addresses/{id}`, `PUT /addresses/{id}/default`: at most four addresses per account, with at most one default.
 - `GET /shipping-methods`: fixed shipping prices and estimates in the selected currency.
@@ -217,7 +237,7 @@ The server calculates totals and saves item/address/currency/subtotal/shipping s
 For the full local application:
 
 1. Choose Portuguese/BRL or English/USD and explore the catalog.
-2. Register, verify the email, then add products to the cart or favorites.
+2. Register, verify the email, then select size/color on a product page and add it to the cart or favorites.
 3. Review the cart, create/select an address and choose shipping.
 4. Confirm the simulated Wallet purchase and open the order in your account.
 
@@ -324,7 +344,7 @@ php artisan test --compact
 composer types:check
 ```
 
-PHP tests force SQLite in memory and do not modify the configured MySQL database. Frontend tests mount the notification/store providers in Chrome/Edge with controlled HTTP responses: keyboard/focus, visibility polling, immediate cart feedback, read/delete controls, error/retry, account changes, logout and late responses. Demo tests cover storage validation, currency, default addresses, idempotency and notification removal.
+PHP tests force SQLite in memory and do not modify the configured MySQL database. Frontend tests mount the notification/store providers in Chrome/Edge with controlled HTTP responses: keyboard/focus, visibility polling, immediate cart feedback, read/delete controls, error/retry, account changes, logout and late responses. Demo tests cover storage validation, currency, default addresses, idempotency, notification removal, review ownership/averages and cart/order variants.
 
 ```powershell
 cd sneakers-store-frontend
@@ -383,7 +403,7 @@ mysql --host=127.0.0.1 --user=root --execute="DROP DATABASE $integrationDatabase
 - **Pending: full-system hosting** for the frontend, Laravel API, MySQL and queue workers. The public frontend demo is already hosted on GitHub Pages.
 - **Pending: real payments**, including a selected gateway, sandbox checks, signed webhooks, idempotency, declined/pending/canceled/refunded states and payment confirmation before marking an order paid.
 - Shipping is simulated; there is no live quote or tracking integration.
-- There is no administration panel, quantitative stock control or customer rating system. Catalog ratings are static sample data.
+- There is no administration panel or quantitative stock control. Customer reviews are available; moderation/reporting tools are not included.
 - Password recovery has React screens and queued delivery. Account deletion is API-only. Real mail requires configured SMTP and a running worker.
 - No personal data was imported from the original MongoDB project. The seeder contains demonstration products only.
 

@@ -300,3 +300,22 @@ Validação de fechamento: 17 testes unitários de frontend, cinco cenários mon
 - Itens com hierarquia mais discreta, ações secundárias na mesma linha e rodapé sem botões de destaque. Fundo neutro e marcador laranja indicam avisos não lidos.
 - Cabeçalho/rodapé permanecem visíveis quando a lista rola; no celular o painel abre abaixo da navegação. Alvos de toque de 44 px para dispositivos com ponteiro de toque. Mesmos componentes na demo e na aplicação completa.
 - Conferência visual em 320, 390 e 768 px e desktop; testes existentes de notificações, tipos, lint e builds normal/demo aprovados. Propostas de marca preparadas fora do código do produto; logo e favicon atuais preservados até a escolha do titular.
+
+
+## Avaliações, variantes e marca — 17/11/2026
+
+- [x] Comentários com nota de 1 a 5, média calculada e quantidade de avaliações; validação/autorização, edição/remoção da própria avaliação e estados de interface em pt/en.
+- [x] Escolha real de tamanho e cor, validada contra as opções do catálogo e preservada no carrinho, checkout e histórico; mesmas regras na demo.
+- [x] Aplicar a terceira proposta de marca (sneakers. editorial) e o favicon correspondente.
+- [x] Atualizar documentação/contratos e testar aplicação/demo, incluindo falhas e responsividade.
+- [x] Atualizar capturas/capas e arquivos correspondentes do portfólio após a troca da marca; arquivos sincronizados com o repositório do portfólio.
+- As migrations necessárias serão versionadas; o banco habitual não será alterado nesta tarefa. Hospedagem completa e pagamentos reais continuam pendentes.
+
+### Validação e ativação desta entrega
+
+- Backend: 140 testes / 963 assertions em SQLite em memória; Pint e PHPStan sem erros. Cobertura de notas inválidas, comentários, propriedade, uma avaliação por conta/produto, paginação, média/ordenação, variantes distintas, snapshots e e-mails bilíngues.
+- Frontend: 19 testes unitários e sete cenários reais de navegador; tipos, lint e builds normal/demo aprovados. Demo testada sem acesso à API, incluindo editar/remover avaliação, atualizar média e separar variantes até o checkout.
+- Navegador: envio/edição/remoção de avaliação, contadores, seleção de tamanho/cor, linhas distintas no carrinho; produto/avaliações conferidos em 390 e 768 px e desktop. Capas 1920 × 1320 / 1920 × 1080 revisadas, com imagens reais e a marca editorial aprovada.
+- [ ] Ativação no MySQL habitual: após backup, executar `php artisan migrate` na pasta `sneakers-store-backend` antes de iniciar a nova API. As duas migrations foram criadas e testadas somente no banco de testes; nenhum dado habitual foi alterado. Itens antigos sem tamanho/cor não recebem escolhas históricas inventadas.
+- A demo pública armazena avaliações apenas na sessão do visitante; não existe compartilhamento de avaliações entre visitantes sem a API hospedada.
+- Pendências de produto mantidas: hospedagem completa e pagamentos reais.

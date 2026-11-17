@@ -1,6 +1,7 @@
 @php
     $pt = $notificationLocale === 'pt_BR';
     $t = fn (string $key): string => __('notifications.'.$key, [], $notificationLocale);
+    $colorLabel = fn (string $color): string => $pt && Lang::has('notifications.color_labels.'.$color, $notificationLocale) ? $t('color_labels.'.$color) : $color;
     $money = fn (int $cents): string => ($order?->currency === 'BRL' ? 'R$ ' : 'US$ ').number_format($cents / 100, 2, $pt ? ',' : '.', $pt ? '.' : ',');
 @endphp
 <!doctype html>
@@ -8,7 +9,7 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ $t($event.'.title') }}</title></head>
 <body style="margin:0;padding:24px;background:#f8f5e9;color:#171714;font-family:Arial,sans-serif">
 <table role="presentation" style="max-width:640px;width:100%;margin:auto;border:2px solid #171714;border-collapse:collapse;background:#fff">
-<tr><td style="padding:24px;background:#ff9e43;border-bottom:2px solid #171714;font-weight:900;font-size:28px">SNEAKERS ✳</td></tr>
+<tr><td style="padding:24px;background:#ff9e43;border-bottom:2px solid #171714;font-weight:900;font-size:28px">sneakers.</td></tr>
 <tr><td style="padding:28px">
 <h1 style="font-size:28px;line-height:1.15">{{ $t($event.'.title') }}</h1>
 <p>{{ __('notifications.hello', ['name' => $recipientName], $notificationLocale) }}</p>
@@ -21,7 +22,7 @@
 <thead><tr><th align="left">{{ $t('item') }}</th><th>{{ $t('quantity') }}</th><th align="right">{{ $t('subtotal') }}</th></tr></thead>
 <tbody>
 @foreach($order->items as $item)
-<tr><td style="padding:12px 0;border-top:1px solid #171714">{{ $item->product_name }}</td><td align="center">{{ $item->quantity }}</td><td align="right">{{ $money($item->unit_price * $item->quantity) }}</td></tr>
+<tr><td style="padding:12px 0;border-top:1px solid #171714">{{ $item->product_name }}@if($item->size)<br><small>{{ $t('size') }}: {{ $item->size }}</small>@endif @if($item->color)<br><small>{{ $t('color') }}: {{ $colorLabel($item->color) }}</small>@endif</td><td align="center">{{ $item->quantity }}</td><td align="right">{{ $money($item->unit_price * $item->quantity) }}</td></tr>
 @endforeach
 </tbody></table>
 <p>{{ $t('subtotal') }}: {{ $money($order->subtotal) }}</p>

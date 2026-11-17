@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Middleware\ThrottleVerificationDelivery;
 use Illuminate\Support\Facades\Route;
@@ -28,9 +29,12 @@ Route::prefix('v1')->group(function (): void {
     });
 
     Route::get('products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('products/{product:slug}/reviews', [ProductReviewController::class, 'index'])->name('products.reviews.index');
     Route::get('products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function (): void {
+        Route::put('products/{product:slug}/review', [ProductReviewController::class, 'store'])->middleware('throttle:20,1')->name('products.reviews.store');
+        Route::delete('products/{product:slug}/review', [ProductReviewController::class, 'destroy'])->middleware('throttle:20,1')->name('products.reviews.destroy');
         Route::get('shipping-methods', [CheckoutController::class, 'shipping']);
         Route::post('checkout', [CheckoutController::class, 'store']);
         Route::get('orders', [OrderController::class, 'index']);
