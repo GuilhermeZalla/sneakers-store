@@ -34,9 +34,9 @@ export function NotificationList({ history = false }: { history?: boolean }) {
                             ? 'Não foi possível atualizar as notificações.'
                             : 'Could not update notifications.'}
                     </p>
-                    <Button onClick={() => void refresh()}>
+                    <button className="notification-action" onClick={() => void refresh()}>
                         {pt ? 'Tentar novamente' : 'Try again'}
-                    </Button>
+                    </button>
                 </div>
             )}
             {loading && (
@@ -69,47 +69,51 @@ export function NotificationList({ history = false }: { history?: boolean }) {
                                     {formatDate(item.created_at, locale)}
                                 </time>
                             </Link>
-                            {!item.read_at && (
+                            <div className="notification-item-actions">
+                                {!item.read_at && (
+                                    <button
+                                        className="notification-action"
+                                        disabled={busy}
+                                        onClick={() => void read(item.id)}
+                                    >
+                                        {pt ? 'Marcar como lida' : 'Mark as read'}
+                                    </button>
+                                )}
                                 <button
-                                    className="text-button"
+                                    className="notification-action"
                                     disabled={busy}
-                                    onClick={() => void read(item.id)}
+                                    aria-label={
+                                        (pt ? 'Remover notificação: ' : 'Remove notification: ') +
+                                        item.title
+                                    }
+                                    onClick={() => void remove(item.id)}
                                 >
-                                    {pt ? 'Marcar como lida' : 'Mark as read'}
+                                    {pt ? 'Remover' : 'Remove'}
                                 </button>
-                            )}
-                            <button
-                                className="text-button"
-                                disabled={busy}
-                                aria-label={
-                                    (pt ? 'Remover notificação: ' : 'Remove notification: ') +
-                                    item.title
-                                }
-                                onClick={() => void remove(item.id)}
-                            >
-                                {pt ? 'Remover' : 'Remove'}
-                            </button>
+                            </div>
                         </li>
                     ))}
                 </ul>
             )}
-            <div className="button-row">
-                <Button
-                    variant="quiet"
-                    disabled={busy || count === 0}
-                    onClick={() => void readAll()}
-                >
-                    {pt ? 'Marcar todas como lidas' : 'Mark all as read'}
-                </Button>
-                <Button
-                    variant="quiet"
-                    disabled={busy || items.length === 0}
-                    onClick={() => void clearRead()}
-                >
-                    {pt ? 'Limpar notificações lidas' : 'Clear read notifications'}
-                </Button>
+            <div className="notification-footer">
+                <div className="notification-bulk-actions">
+                    <button
+                        className="notification-action"
+                        disabled={busy || count === 0}
+                        onClick={() => void readAll()}
+                    >
+                        {pt ? 'Marcar todas como lidas' : 'Mark all as read'}
+                    </button>
+                    <button
+                        className="notification-action"
+                        disabled={busy || items.length === 0}
+                        onClick={() => void clearRead()}
+                    >
+                        {pt ? 'Limpar lidas' : 'Clear read notifications'}
+                    </button>
+                </div>
                 {!history && (
-                    <Link to="/account?tab=notifications">
+                    <Link className="notification-history" to="/account?tab=notifications">
                         {pt ? 'Ver histórico' : 'View history'} →
                     </Link>
                 )}
@@ -200,7 +204,7 @@ export function NotificationBell() {
                     <div className="notification-heading">
                         <h2>{locale === 'pt_BR' ? 'Notificações' : 'Notifications'}</h2>
                         <button
-                            className="text-button"
+                            className="notification-action"
                             onClick={() => {
                                 setOpen(false);
                                 trigger.current?.focus();

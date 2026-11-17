@@ -293,3 +293,10 @@ Validação de fechamento: 17 testes unitários de frontend, cinco cenários mon
 - Mirror novo clonado do GitHub confirmou que os blobs não são alcançáveis pelas referências públicas. Checkpoints locais de agentes e o backup original não são publicados.
 - O histórico foi reescrito por solicitação do titular; cópias antigas devem ser reclonadas ou realinhadas antes de novos pushes para evitar reintroduzir as imagens.
 - Pendências restantes de produto: hospedagem completa e integração de pagamentos reais.
+
+
+### Painel de notificações compacto — 17/11/2026
+
+- Itens com hierarquia mais discreta, ações secundárias na mesma linha e rodapé sem botões de destaque. Fundo neutro e marcador laranja indicam avisos não lidos.
+- Cabeçalho/rodapé permanecem visíveis quando a lista rola; no celular o painel abre abaixo da navegação. Alvos de toque de 44 px para dispositivos com ponteiro de toque. Mesmos componentes na demo e na aplicação completa.
+- Conferência visual em 320, 390 e 768 px e desktop; testes existentes de notificações, tipos, lint e builds normal/demo aprovados. Propostas de marca preparadas fora do código do produto; logo e favicon atuais preservados até a escolha do titular.
