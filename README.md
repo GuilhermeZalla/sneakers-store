@@ -1,6 +1,6 @@
 # Sneakers Store
 
-A full-stack sneakers and apparel storefront built with a Laravel REST API and a React frontend. Browse the catalog, choose product options, save favorites and complete a simulated purchase, with English/USD and Brazilian Portuguese/BRL support.
+A full-stack sneakers and apparel storefront developed in 2026 with a Laravel REST API and a React frontend. Browse the catalog, choose product options, save favorites and complete a simulated purchase, with English/USD and Brazilian Portuguese/BRL support.
 
 **[Explore the demo](https://guilhermezalla.github.io/sneakers-store/)** · [Releases](https://github.com/GuilhermeZalla/sneakers-store/releases)
 
