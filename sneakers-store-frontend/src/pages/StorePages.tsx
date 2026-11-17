@@ -382,7 +382,8 @@ export function ProductPage() {
             active = false;
         };
     }, [slug, locale, retry]);
-    const add = async () => {
+    const add = async (checkout = false) => {
+        if (busy) return;
         if (!user) {
             navigate('/login', { state: { from: '/products/' + slug } });
             return;
@@ -396,6 +397,7 @@ export function ProductPage() {
                 return;
             await addCart(product.id, { ...(size ? { size } : {}), ...(color ? { color } : {}) });
             setAdded(true);
+            if (checkout) navigate('/checkout');
         } catch {}
     };
     return (
@@ -504,22 +506,41 @@ export function ProductPage() {
                                     : 'Select the options above to add to your bag.'}
                             </p>
                         )}
-                        <Button
-                            disabled={
-                                busy ||
-                                (product.sizes.length > 0 && !size) ||
-                                (product.colors.length > 0 && !color)
-                            }
-                            aria-describedby={
-                                (product.sizes.length > 0 && !size) ||
-                                (product.colors.length > 0 && !color)
-                                    ? 'variant-guidance'
-                                    : undefined
-                            }
-                            onClick={() => void add()}
-                        >
-                            {pt ? 'ADICIONAR AO CARRINHO' : 'ADD TO CART'} ↗
-                        </Button>
+                        <div className="button-row product-purchase-actions">
+                            <Button
+                                disabled={
+                                    busy ||
+                                    (product.sizes.length > 0 && !size) ||
+                                    (product.colors.length > 0 && !color)
+                                }
+                                aria-describedby={
+                                    (product.sizes.length > 0 && !size) ||
+                                    (product.colors.length > 0 && !color)
+                                        ? 'variant-guidance'
+                                        : undefined
+                                }
+                                onClick={() => void add()}
+                            >
+                                {pt ? 'ADICIONAR AO CARRINHO' : 'ADD TO CART'} ↗
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                disabled={
+                                    busy ||
+                                    (product.sizes.length > 0 && !size) ||
+                                    (product.colors.length > 0 && !color)
+                                }
+                                aria-describedby={
+                                    (product.sizes.length > 0 && !size) ||
+                                    (product.colors.length > 0 && !color)
+                                        ? 'variant-guidance'
+                                        : undefined
+                                }
+                                onClick={() => void add(true)}
+                            >
+                                {pt ? 'COMPRAR AGORA' : 'BUY NOW'} →
+                            </Button>
+                        </div>
                         {added && (
                             <p role="status">
                                 {pt ? 'Adicionado ao carrinho.' : 'Added to cart.'}{' '}

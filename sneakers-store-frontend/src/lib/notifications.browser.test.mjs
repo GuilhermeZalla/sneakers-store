@@ -194,6 +194,34 @@ test('mounted notification bell and provider in a real browser', { timeout: 1200
             },
         );
         await t.test(
+            'checkout shortcut follows cart contents even when notifications are empty',
+            async () => {
+                await boot();
+                await evaluate('document.querySelector(".notification-trigger").click()');
+                await until('!!document.querySelector("[role=dialog]")');
+                assert.equal(
+                    await evaluate(
+                        'document.querySelectorAll("[role=dialog] a[href$=checkout]").length',
+                    ),
+                    0,
+                );
+                await evaluate('document.querySelector("#cart-add").click()');
+                await until('!!document.querySelector("[role=dialog] a[href$=checkout]")');
+                await evaluate(
+                    'window.notificationHarness.items=[];window.notificationHarness.count=0;document.querySelector("#notifications-refresh").click()',
+                );
+                await until(
+                    'JSON.parse(document.querySelector("#notification-state").textContent).items.length === 0',
+                );
+                assert.equal(
+                    await evaluate(
+                        'document.querySelector("[role=dialog] a[href$=checkout]").textContent',
+                    ),
+                    'Checkout →',
+                );
+            },
+        );
+        await t.test(
             'notification deletion failures preserve data and clearing read preserves unread items',
             async () => {
                 await boot();

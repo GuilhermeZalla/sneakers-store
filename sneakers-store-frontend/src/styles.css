@@ -1740,3 +1740,30 @@ a {
         padding: 1rem;
     }
 }
+
+.notification-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 1rem;
+}
+.notification-links .notification-history:first-child:not(:last-child) {
+    margin-left: 0;
+}
+.product-purchase-actions {
+    margin-top: 1.5rem;
+    gap: 1rem;
+}
+.product-purchase-actions .button {
+    white-space: normal;
+}
+
+.product-purchase-actions {
+    align-items: stretch;
+}
+@media (max-width: 600px) {
+    .product-purchase-actions .button {
+        flex-basis: 100%;
+    }
+}

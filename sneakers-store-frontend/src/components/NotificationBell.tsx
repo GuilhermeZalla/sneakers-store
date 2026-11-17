@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useStore } from '../context/StoreContext';
 import { useLocale } from '../context/LocaleContext';
 import { useNotifications } from '../context/NotificationContext';
 import { NotificationIndicator } from '../lib/notifications';
@@ -25,6 +26,7 @@ export function NotificationList({ history = false }: { history?: boolean }) {
     const { locale } = useLocale();
     const pt = locale === 'pt_BR';
     const navigate = useNavigate();
+    const { cart, cartLoading, cartError } = useStore();
     return (
         <div className="notification-list">
             {error && (
@@ -113,9 +115,16 @@ export function NotificationList({ history = false }: { history?: boolean }) {
                     </button>
                 </div>
                 {!history && (
-                    <Link className="notification-history" to="/account?tab=notifications">
-                        {pt ? 'Ver histórico' : 'View history'} →
-                    </Link>
+                    <div className="notification-links">
+                        {!cartLoading && !cartError && !!cart?.data.length && (
+                            <Link className="notification-history" to="/checkout">
+                                {pt ? 'Finalizar compra' : 'Checkout'} →
+                            </Link>
+                        )}
+                        <Link className="notification-history" to="/account?tab=notifications">
+                            {pt ? 'Ver histórico' : 'View history'} →
+                        </Link>
+                    </div>
                 )}
             </div>
             {history && lastPage > 1 && (

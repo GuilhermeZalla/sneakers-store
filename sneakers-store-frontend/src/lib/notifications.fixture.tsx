@@ -71,6 +71,7 @@ window.clearInterval = ((id?: number) => {
     if (id !== undefined && harness.ticks.delete(id)) return;
     originalClear(id);
 }) as typeof window.clearInterval;
+let hasCart = false;
 window.fetch = async (input, init) => {
     const path = String(input);
     const json = (data: unknown, status = 200) =>
@@ -79,9 +80,27 @@ window.fetch = async (input, init) => {
             headers: { 'Content-Type': 'application/json' },
         });
     if (path === '/api/v1/user') return harness.user ? json({ data: harness.user }) : json({}, 401);
-    if (path === '/api/v1/cart' || path === '/api/v1/wishlist')
-        return json({ data: [], meta: { currency: 'USD', subtotal: 0 } });
+    if (path === '/api/v1/wishlist') return json({ data: [] });
+    if (path === '/api/v1/cart')
+        return json({
+            data: hasCart
+                ? [
+                      {
+                          id: 1,
+                          product_id: 1,
+                          quantity: 1,
+                          size: '40',
+                          color: 'red',
+                          unit_price: 10000,
+                          currency: 'USD',
+                          subtotal: 10000,
+                      },
+                  ]
+                : [],
+            meta: { currency: 'USD', subtotal: hasCart ? 10000 : 0 },
+        });
     if (path === '/api/v1/cart/items' && init?.method === 'POST') {
+        hasCart = true;
         harness.items.push({
             id: 'cart-added',
             event: 'cart_added',

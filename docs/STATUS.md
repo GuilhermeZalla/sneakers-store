@@ -328,3 +328,10 @@ Validação de fechamento: 17 testes unitários de frontend, cinco cenários mon
 - 36 verificações concluídas no banco local, incluindo estrutura/índice único, leitura pública, autenticação/verificação de e-mail, média 3,5 com duas contas, edição/remoção, opções inválidas, separação/agrupamento de variantes, autorização do carrinho, checkout idempotente, snapshots e renderização do e-mail sem envio.
 - Os registros de validação foram revertidos em uma transação. Contagens das 17 tabelas originais preservadas, com a alteração esperada de duas entradas em `migrations`; a nova tabela de avaliações ficou sem dados fictícios. Nenhum job de e-mail foi criado.
 - A instalação local está atualizada. Outros clones/bancos ainda precisam aplicar suas próprias migrations seguindo o README. Pendências restantes de produto: hospedagem completa e pagamentos reais.
+
+
+### Atalhos de checkout — 17/11/2026
+
+- Comprar agora no produto: exige as opções disponíveis, adiciona a variante e só navega após sucesso; preserva os demais itens da sacola.
+- Atalho Finalizar compra no painel do sininho quando o carrinho está carregado e contém itens, independentemente de existirem notificações. Demo e aplicação usam os mesmos componentes.
+- [x] Validação: 19 testes unitários frontend, oito cenários de navegador, tipos, lint e builds normal/demo aprovados. Navegador confirmou Comprar agora com a variante correta e os demais itens preservados, atalho disponível mesmo sem avisos e fechamento do painel ao clicar. Alterações compartilhadas entre demo/aplicação.
