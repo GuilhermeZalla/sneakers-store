@@ -7,7 +7,8 @@ A full-stack sneakers and apparel storefront developed in 2026 with a Laravel RE
 ## Features
 
 - Registration, login, email verification and password recovery.
-- Product search, category/brand/price filters, sorting and pagination.
+- Product search, category/brand/price filters, sorting and pagination, with collapsible mobile filters and removable active filters.
+- Product galleries with zoom and available-image thumbnails, plus related products.
 - Selectable sizes and colors, favorites and a cart that keeps product variants separate.
 - Address book, shipping options, simulated checkout and order history.
 - Customer reviews with editable scores/comments, average ratings and review counts.

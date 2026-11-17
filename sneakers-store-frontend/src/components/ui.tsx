@@ -45,18 +45,26 @@ export function Modal({
     title,
     children,
     closeLabel,
+    className,
+    onCloseAutoFocus,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     title: string;
     children: ReactNode;
     closeLabel: string;
+    className?: string;
+    onCloseAutoFocus?: (event: Event) => void;
 }) {
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             <Dialog.Portal>
                 <Dialog.Overlay className="modal-overlay" />
-                <Dialog.Content className="modal-content" aria-describedby={undefined}>
+                <Dialog.Content
+                    className={clsx('modal-content', className)}
+                    aria-describedby={undefined}
+                    onCloseAutoFocus={onCloseAutoFocus}
+                >
                     <Dialog.Title>{title}</Dialog.Title>
                     <Dialog.Close className="modal-close" aria-label={closeLabel}>
                         <X size={20} />

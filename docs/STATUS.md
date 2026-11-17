@@ -335,3 +335,19 @@ Validação de fechamento: 17 testes unitários de frontend, cinco cenários mon
 - Comprar agora no produto: exige as opções disponíveis, adiciona a variante e só navega após sucesso; preserva os demais itens da sacola.
 - Atalho Finalizar compra no painel do sininho quando o carrinho está carregado e contém itens, independentemente de existirem notificações. Demo e aplicação usam os mesmos componentes.
 - [x] Validação: 19 testes unitários frontend, oito cenários de navegador, tipos, lint e builds normal/demo aprovados. Navegador confirmou Comprar agora com a variante correta e os demais itens preservados, atalho disponível mesmo sem avisos e fechamento do painel ao clicar. Alterações compartilhadas entre demo/aplicação.
+
+
+## Melhorias de navegação de compra — 17/11/2026 (implementado e validado localmente)
+
+Escopo aprovado: mesma implementação para demo e aplicação conectada à API, mantendo o estilo atual e sem novas dependências.
+
+- [x] Galeria de produto com ampliação acessível e miniaturas quando existirem fotos diferentes (sem inventar ângulos ou repetir a mesma foto como galeria).
+- [x] Produtos relacionados por categoria/marca, sem repetir o produto aberto, com estados de carregamento/erro.
+- [x] Filtros mobile recolhíveis, filtros ativos visíveis e remoção individual, preservando URL e paginação.
+- [x] Testes relevantes, tipos/lint, builds normal/demo e revisão visual em desktop/tablet/celular.
+- [x] Atualizar README e status.
+- [x] Publicar por push na main; a CI do GitHub valida e publica a demo no Pages.
+
+Vistos recentemente e guia de tamanhos são sugestões posteriores, fora deste primeiro conjunto. Hospedagem completa e pagamentos reais continuam pendentes.
+
+Validação local: 22 testes unitários e oito cenários de navegador passaram; lint/formatação, TypeScript e builds normal/demo passaram. Navegador confirmou zoom com retorno do foco por Escape, filtros mobile recolhíveis com busca/ordenação visíveis, remoção de filtro preservando os demais e sem overflow horizontal em 360, 768 e 1280 px. Nenhuma dependência ou alteração de banco. A publicação pública depende de commit/push e CI e não foi executada.

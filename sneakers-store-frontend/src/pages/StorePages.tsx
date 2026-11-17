@@ -1,5 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ProductGallery } from '../components/ProductGallery';
+import { CatalogFilters } from '../components/CatalogFilters';
+import { clearCatalogFilters, relatedProducts, updateCatalogParams } from '../lib/catalog';
 import { FavoriteButton, ProductCard } from '../components/ProductCard';
 import { ProductReviews, RatingSummary } from '../components/ProductReviews';
 import { VariantDetails } from '../components/VariantDetails';
@@ -10,12 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
 import { useStore } from '../context/StoreContext';
 import { apiRequest } from '../lib/api';
-import {
-    formatPriceInput,
-    formatProductColor,
-    formatProductType,
-    parsePriceInput,
-} from '../lib/locale';
+import { formatProductColor, formatProductType } from '../lib/locale';
 import type { Product } from '../lib/store';
 
 type ProductList = {
@@ -165,36 +163,21 @@ export function CatalogPage() {
     const { locale } = useLocale();
     const pt = locale === 'pt_BR';
     const [params, setParams] = useSearchParams();
+    const latestParams = useRef(params);
+    useEffect(() => {
+        latestParams.current = params;
+    }, [params]);
     const query = params.toString();
     const { data, loading, error, retry } = useProducts(query);
-    const minPrice = params.get('min_price');
-    const maxPrice = params.get('max_price');
-    const [minPriceInput, setMinPriceInput] = useState(() => formatPriceInput(minPrice, locale));
-    const [maxPriceInput, setMaxPriceInput] = useState(() => formatPriceInput(maxPrice, locale));
-    const [priceError, setPriceError] = useState<'min_price' | 'max_price' | null>(null);
-    useEffect(() => {
-        setMinPriceInput(formatPriceInput(minPrice, locale));
-        setMaxPriceInput(formatPriceInput(maxPrice, locale));
-        setPriceError(null);
-    }, [minPrice, maxPrice, locale]);
     function update(name: string, value: string) {
-        const next = new URLSearchParams(params);
-        if (value) next.set(name, value);
-        else next.delete(name);
-        if (name !== 'page') next.delete('page');
+        const next = updateCatalogParams(latestParams.current, name, value);
+        latestParams.current = next;
         setParams(next);
     }
-    function commitPrice(name: 'min_price' | 'max_price', value: string) {
-        const cents = parsePriceInput(value, locale);
-        if (cents === undefined) {
-            setPriceError(name);
-            return;
-        }
-        setPriceError(null);
-        const formatted = cents === null ? '' : formatPriceInput(String(cents), locale);
-        if (name === 'min_price') setMinPriceInput(formatted);
-        else setMaxPriceInput(formatted);
-        update(name, cents === null ? '' : String(cents));
+    function clearFilters() {
+        const next = clearCatalogFilters(latestParams.current);
+        latestParams.current = next;
+        setParams(next);
     }
     return (
         <main className="store-section">
@@ -203,100 +186,7 @@ export function CatalogPage() {
                 <h1>{pt ? 'ENCONTRE SEU PAR.' : 'FIND YOUR PAIR.'}</h1>
                 <p>{pt ? 'Escolha o que combina com você.' : 'Find what moves you.'}</p>
             </div>
-            <div className="filters">
-                <label>
-                    {pt ? 'Buscar' : 'Search'}
-                    <input
-                        className="input"
-                        type="search"
-                        value={params.get('search') ?? ''}
-                        onChange={(e) => update('search', e.target.value)}
-                    />
-                </label>
-                <label>
-                    {pt ? 'Marca' : 'Brand'}
-                    <input
-                        className="input"
-                        value={params.get('brand') ?? ''}
-                        onChange={(e) => update('brand', e.target.value.toLowerCase())}
-                    />
-                </label>
-                <label>
-                    {pt ? 'Categoria' : 'Category'}
-                    <Select
-                        value={params.get('type') ?? ''}
-                        onChange={(e) => update('type', e.target.value)}
-                    >
-                        <option value="">{pt ? 'Todas' : 'All'}</option>
-                        <option value="sneaker">{pt ? 'Tênis' : 'Sneakers'}</option>
-                        <option value="shirt">{pt ? 'Roupas' : 'Clothing'}</option>
-                        <option value="cap">{pt ? 'Bonés' : 'Caps'}</option>
-                        <option value="gift">{pt ? 'Presentes' : 'Gifts'}</option>
-                    </Select>
-                </label>
-                <label>
-                    {pt ? 'Ordenar' : 'Sort'}
-                    <Select
-                        value={params.get('sort') ?? 'name'}
-                        onChange={(e) => update('sort', e.target.value)}
-                    >
-                        <option value="name">{pt ? 'Nome A–Z' : 'Name A–Z'}</option>
-                        <option value="-name">{pt ? 'Nome Z–A' : 'Name Z–A'}</option>
-                        <option value="price">{pt ? 'Menor preço' : 'Price low to high'}</option>
-                        <option value="-price">{pt ? 'Maior preço' : 'Price high to low'}</option>
-                        <option value="-rating">{pt ? 'Melhor avaliação' : 'Top rated'}</option>
-                        <option value="rating">{pt ? 'Menor avaliação' : 'Lowest rated'}</option>
-                    </Select>
-                </label>
-            </div>
-            <div className="filters filters--prices">
-                <label>
-                    {pt ? 'Preço mínimo (R$)' : 'Minimum price ($)'}
-                    <input
-                        className="input"
-                        type="text"
-                        inputMode="decimal"
-                        value={minPriceInput}
-                        onChange={(e) => setMinPriceInput(e.target.value)}
-                        onBlur={() => commitPrice('min_price', minPriceInput)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') e.currentTarget.blur();
-                        }}
-                        aria-invalid={priceError === 'min_price'}
-                        aria-describedby={
-                            priceError === 'min_price' ? 'min-price-error' : undefined
-                        }
-                    />
-                    {priceError === 'min_price' && (
-                        <span className="field-error" id="min-price-error">
-                            {pt ? 'Use um valor como 150,00.' : 'Use an amount like 150.00.'}
-                        </span>
-                    )}
-                </label>
-                <label>
-                    {pt ? 'Preço máximo (R$)' : 'Maximum price ($)'}
-                    <input
-                        className="input"
-                        type="text"
-                        inputMode="decimal"
-                        value={maxPriceInput}
-                        onChange={(e) => setMaxPriceInput(e.target.value)}
-                        onBlur={() => commitPrice('max_price', maxPriceInput)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') e.currentTarget.blur();
-                        }}
-                        aria-invalid={priceError === 'max_price'}
-                        aria-describedby={
-                            priceError === 'max_price' ? 'max-price-error' : undefined
-                        }
-                    />
-                    {priceError === 'max_price' && (
-                        <span className="field-error" id="max-price-error">
-                            {pt ? 'Use um valor como 300,00.' : 'Use an amount like 300.00.'}
-                        </span>
-                    )}
-                </label>
-            </div>
+            <CatalogFilters params={params} update={update} clear={clearFilters} />
             <ListStatus loading={loading} error={error} empty={!data?.data.length} retry={retry} />
             {!loading && !error && data && (
                 <>
@@ -413,19 +303,7 @@ export function ProductPage() {
             />
             {product && !loading && (
                 <div className="product-detail">
-                    <div className="detail-image">
-                        <ProductImage
-                            src={product.images[0] || product.thumbnail}
-                            alt={
-                                product.type === 'sneaker'
-                                    ? `${product.name}: ${product.description}`
-                                    : product.name
-                            }
-
-                            width="700"
-                            height="700"
-                        />
-                    </div>
+                    <ProductGallery key={product.slug} product={product} />
                     <div className="detail-copy">
                         <FavoriteButton product={product} className="detail-favorite" />
                         <span className="store-eyebrow">
@@ -562,7 +440,36 @@ export function ProductPage() {
                     <ProductReviews slug={product.slug} onSummary={updateRating} />
                 </div>
             )}
+            {product && !loading && <RelatedProducts product={product} />}
         </main>
+    );
+}
+function RelatedProducts({ product }: { product: Product }) {
+    const { locale } = useLocale();
+    const pt = locale === 'pt_BR';
+    const { data, loading, error, retry } = useProducts(
+        new URLSearchParams({ type: product.type, per_page: '30' }).toString(),
+    );
+    const related = relatedProducts(data?.data || [], product);
+    if (!loading && !error && !related.length) return null;
+    return (
+        <section className="related-products" aria-labelledby="related-products-heading">
+            <div className="section-heading">
+                <div>
+                    <span className="store-eyebrow">
+                        {pt ? 'CONTINUE EXPLORANDO' : 'KEEP EXPLORING'}
+                    </span>
+                    <h2 id="related-products-heading">
+                        {pt ? 'NA MESMA LINHA.' : 'MORE IN THIS CATEGORY.'}
+                    </h2>
+                </div>
+                <Link to={'/catalog?type=' + encodeURIComponent(product.type)}>
+                    {pt ? 'Ver categoria ↗' : 'View category ↗'}
+                </Link>
+            </div>
+            <ListStatus loading={loading} error={error} empty={false} retry={retry} />
+            {!loading && !error && <Grid products={related} />}
+        </section>
     );
 }
 export function WishlistPage() {
