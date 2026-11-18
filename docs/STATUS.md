@@ -1,6 +1,6 @@
 # Status do projeto
 
-Atualizado em 17/11/2026.
+Atualizado em 18/11/2026.
 
 ## Estado atual
 
@@ -13,7 +13,7 @@ O catálogo tem 30 produtos fictícios da marca Lume, com imagens locais credita
 - Cadastro, login, verificação de e-mail e recuperação de senha.
 - Catálogo com busca, filtros, ordenação e paginação; galeria de imagens, ampliação e produtos relacionados.
 - Avaliações, variantes de tamanho e cor, favoritos e carrinho.
-- Microinterações e animações táteis nos botões, cards, galeria, opções de variantes e hero, com suporte completo a acessibilidade e `prefers-reduced-motion`.
+- Microinterações e animações táteis nos botões, cards, galeria, opções de variantes e hero, com foco de teclado e tratamento de `prefers-reduced-motion`.
 - Endereços, opções de frete, checkout, pedidos e notificações.
 - Demonstração com os fluxos de compra executados localmente, sem conexão à API.
 
@@ -28,3 +28,14 @@ O catálogo tem 30 produtos fictícios da marca Lume, com imagens locais credita
 - Duas migrations de avaliações e variantes foram aplicadas ao banco local em 17/11/2026. Outros ambientes devem aplicar migrations pendentes com `php artisan migrate --no-interaction`.
 - As avaliações na demonstração pública ficam na sessão do visitante; não são compartilhadas entre visitantes.
 - Os testes, verificações de tipos, lint e build da demonstração com microanimações integradas passaram com sucesso em 17/11/2026.
+
+## Revisão de continuidade — 18/11/2026
+
+- Galeria/zoom, produtos relacionados e filtros mobile já foram incorporados em `7b637fb5`; não precisam ser refeitos.
+- [x] Corrigida a permanência do último quadro da animação de entrada sobre o transform dos cards: após a entrada, o hover/foco volta a usar o movimento aprovado. A correção também libera o deslocamento da imagem de destaque após a entrada.
+- [x] Movimento reduzido não apaga mais a transformação estrutural que posiciona a imagem da Home no desktop. Mantida a entrada desativada nessa preferência.
+- [x] Lint, formatação, tipos, 22 testes unitários e oito cenários de navegador aprovados; builds normal/demo aprovados. Navegador confirmou o posicionamento da imagem no desktop e foco nos cards com deslocamento de 3 px em movimento reduzido. O navegador de revisão estava com essa preferência ativa; a entrada em movimento normal foi conferida no CSS, sem simular uma preferência global diferente.
+- Propostas ainda NÃO aplicadas ao produto, aguardando avaliação: abertura/fechamento discreto dos filtros e feedback breve no botão após adicionar ao carrinho. Exemplos separados da aplicação; nenhuma animação nova será aplicada sem aprovação.
+- Hospedagem completa e pagamentos reais continuam pendentes. Mesmos componentes e estilos atendem demo e aplicação conectada à API.
+
+Os exemplos de filtros (180 ms) e confirmação na sacola (160 ms) estão separados do repositório. São propostas para aprovação, não funcionalidades pendentes já autorizadas. Nenhuma migration, alteração de dados ou dependência nesta revisão.

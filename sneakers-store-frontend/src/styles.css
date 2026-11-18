@@ -2049,23 +2049,23 @@ a {
 }
 
 .store-hero .store-eyebrow {
-    animation: hero-fade-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: hero-fade-up 500ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 .store-hero h1 {
-    animation: hero-fade-up 650ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+    animation: hero-fade-up 650ms cubic-bezier(0.16, 1, 0.3, 1) 80ms backwards;
 }
 .store-hero p {
-    animation: hero-fade-up 650ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+    animation: hero-fade-up 650ms cubic-bezier(0.16, 1, 0.3, 1) 160ms backwards;
 }
 .store-hero .store-link-button {
-    animation: hero-fade-up 650ms cubic-bezier(0.16, 1, 0.3, 1) 240ms both;
+    animation: hero-fade-up 650ms cubic-bezier(0.16, 1, 0.3, 1) 240ms backwards;
 }
 .store-hero-feature {
-    animation: hero-fade-up 750ms cubic-bezier(0.16, 1, 0.3, 1) 140ms both;
+    animation: hero-fade-up 750ms cubic-bezier(0.16, 1, 0.3, 1) 140ms backwards;
 }
 
 .product-grid > .product-card {
-    animation: card-fade-up 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: card-fade-up 520ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 .product-grid > .product-card:nth-child(1) {
     animation-delay: 40ms;
@@ -2103,8 +2103,6 @@ a {
     .store-hero-feature,
     .product-grid > .product-card {
         animation: none !important;
-        translate: 0 0 !important;
-        transform: none !important;
         opacity: 1 !important;
     }
 }
