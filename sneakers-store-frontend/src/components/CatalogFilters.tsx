@@ -17,6 +17,15 @@ export function CatalogFilters({
     const { locale, money } = useLocale();
     const pt = locale === 'pt_BR';
     const [open, setOpen] = useState(false);
+    const [desktop, setDesktop] = useState(() => window.matchMedia('(min-width: 1024px)').matches);
+    useEffect(() => {
+        const media = window.matchMedia('(min-width: 1024px)');
+        const sync = () => setDesktop(media.matches);
+        media.addEventListener('change', sync);
+        sync();
+        return () => media.removeEventListener('change', sync);
+    }, []);
+    const expanded = open || desktop;
     const min = params.get('min_price');
     const max = params.get('max_price');
     const [prices, setPrices] = useState({
@@ -102,63 +111,73 @@ export function CatalogFilters({
             </div>
             <div
                 id="catalog-filter-fields"
-                className={'catalog-filter-fields' + (open ? ' is-open' : '')}
+                className={'catalog-filter-reveal' + (expanded ? ' is-open' : '')}
+                aria-hidden={!expanded}
+                inert={!expanded}
             >
-                <label>
-                    {pt ? 'Marca' : 'Brand'}
-                    <input
-                        className="input"
-                        value={params.get('brand') || ''}
-                        onChange={(event) => update('brand', event.target.value.toLowerCase())}
-                    />
-                </label>
-                <label>
-                    {pt ? 'Categoria' : 'Category'}
-                    <Select
-                        value={params.get('type') || ''}
-                        onChange={(event) => update('type', event.target.value)}
-                    >
-                        <option value="">{pt ? 'Todas' : 'All'}</option>
-                        <option value="sneaker">{pt ? 'Tênis' : 'Sneakers'}</option>
-                        <option value="shirt">{pt ? 'Roupas' : 'Clothing'}</option>
-                        <option value="cap">{pt ? 'Bonés' : 'Caps'}</option>
-                        <option value="gift">{pt ? 'Presentes' : 'Gifts'}</option>
-                    </Select>
-                </label>
-                {(['min_price', 'max_price'] as const).map((key) => (
-                    <label key={key}>
-                        {key === 'min_price'
-                            ? pt
-                                ? 'Preço mínimo (R$)'
-                                : 'Minimum price ($)'
-                            : pt
-                              ? 'Preço máximo (R$)'
-                              : 'Maximum price ($)'}
-                        <input
-                            className="input"
-                            type="text"
-                            inputMode="decimal"
-                            value={prices[key]}
-                            onChange={(event) =>
-                                setPrices((previous) => ({
-                                    ...previous,
-                                    [key]: event.target.value,
-                                }))
-                            }
-                            onBlur={() => commitPrice(key)}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter') event.currentTarget.blur();
-                            }}
-                            aria-invalid={error === key}
-                            aria-describedby={error === key ? key + '-error' : undefined}
-                        />
-                        {error === key && (
-                            <span className="field-error" id={key + '-error'} role="alert">
-                                {pt ? 'Use um valor como 150,00.' : 'Use an amount like 150.00.'}
-                            </span>
-                        )}
-                    </label>
-                ))}
+                <div className="catalog-filter-clip">
+                    <div className="catalog-filter-fields">
+                        <label>
+                            {pt ? 'Marca' : 'Brand'}
+                            <input
+                                className="input"
+                                value={params.get('brand') || ''}
+                                onChange={(event) =>
+                                    update('brand', event.target.value.toLowerCase())
+                                }
+                            />
+                        </label>
+                        <label>
+                            {pt ? 'Categoria' : 'Category'}
+                            <Select
+                                value={params.get('type') || ''}
+                                onChange={(event) => update('type', event.target.value)}
+                            >
+                                <option value="">{pt ? 'Todas' : 'All'}</option>
+                                <option value="sneaker">{pt ? 'Tênis' : 'Sneakers'}</option>
+                                <option value="shirt">{pt ? 'Roupas' : 'Clothing'}</option>
+                                <option value="cap">{pt ? 'Bonés' : 'Caps'}</option>
+                                <option value="gift">{pt ? 'Presentes' : 'Gifts'}</option>
+                            </Select>
+                        </label>
+                        {(['min_price', 'max_price'] as const).map((key) => (
+                            <label key={key}>
+                                {key === 'min_price'
+                                    ? pt
+                                        ? 'Preço mínimo (R$)'
+                                        : 'Minimum price ($)'
+                                    : pt
+                                      ? 'Preço máximo (R$)'
+                                      : 'Maximum price ($)'}
+                                <input
+                                    className="input"
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={prices[key]}
+                                    onChange={(event) =>
+                                        setPrices((previous) => ({
+                                            ...previous,
+                                            [key]: event.target.value,
+                                        }))
+                                    }
+                                    onBlur={() => commitPrice(key)}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter') event.currentTarget.blur();
+                                    }}
+                                    aria-invalid={error === key}
+                                    aria-describedby={error === key ? key + '-error' : undefined}
+                                />
+                                {error === key && (
+                                    <span className="field-error" id={key + '-error'} role="alert">
+                                        {pt
+                                            ? 'Use um valor como 150,00.'
+                                            : 'Use an amount like 150.00.'}
+                                    </span>
+                                )}
+                            </label>
+                        ))}
+                    </div>
+                </div>
             </div>
             {!!active.length && (
                 <div

@@ -237,6 +237,13 @@ export function ProductPage() {
     const [error, setError] = useState(false);
     const [retry, setRetry] = useState(0);
     const [added, setAdded] = useState(false);
+    const [confirmation, setConfirmation] = useState(0);
+    const confirmationSequence = useRef(0);
+    useEffect(() => {
+        if (!confirmation) return;
+        const timer = window.setTimeout(() => setConfirmation(0), 1000);
+        return () => window.clearTimeout(timer);
+    }, [confirmation]);
     const [size, setSize] = useState('');
     const [color, setColor] = useState('');
     const updateRating = useCallback(
@@ -248,6 +255,7 @@ export function ProductPage() {
         setSize('');
         setColor('');
         setAdded(false);
+        setConfirmation(0);
     }, [slug]);
     useEffect(() => {
         let active = true;
@@ -285,8 +293,11 @@ export function ProductPage() {
                 (product.colors.length > 0 && !color)
             )
                 return;
+            setConfirmation(0);
+            setAdded(false);
             await addCart(product.id, { ...(size ? { size } : {}), ...(color ? { color } : {}) });
             setAdded(true);
+            if (!checkout) setConfirmation(++confirmationSequence.current);
             if (checkout) navigate('/checkout');
         } catch {}
     };
@@ -343,6 +354,7 @@ export function ProductPage() {
                                                 onChange={() => {
                                                     setColor(option);
                                                     setAdded(false);
+                                                    setConfirmation(0);
                                                 }}
                                             />
                                             <span>{formatProductColor(option, locale)}</span>
@@ -368,6 +380,7 @@ export function ProductPage() {
                                                 onChange={() => {
                                                     setSize(option);
                                                     setAdded(false);
+                                                    setConfirmation(0);
                                                 }}
                                             />
                                             <span>{option}</span>
@@ -386,6 +399,9 @@ export function ProductPage() {
                         )}
                         <div className="button-row product-purchase-actions">
                             <Button
+                                className={
+                                    'cart-add-feedback' + (confirmation ? ' is-confirmed' : '')
+                                }
                                 disabled={
                                     busy ||
                                     (product.sizes.length > 0 && !size) ||
@@ -399,7 +415,20 @@ export function ProductPage() {
                                 }
                                 onClick={() => void add()}
                             >
-                                {pt ? 'ADICIONAR AO CARRINHO' : 'ADD TO CART'} ↗
+                                <span className="cart-add-labels">
+                                    <span
+                                        aria-hidden={!!confirmation}
+                                        className={confirmation ? 'is-hidden' : ''}
+                                    >
+                                        {pt ? 'ADICIONAR AO CARRINHO' : 'ADD TO CART'} ↗
+                                    </span>
+                                    <span
+                                        aria-hidden={!confirmation}
+                                        className={confirmation ? '' : 'is-hidden'}
+                                    >
+                                        {pt ? 'ADICIONADO' : 'ADDED'} ✓
+                                    </span>
+                                </span>
                             </Button>
                             <Button
                                 variant="secondary"

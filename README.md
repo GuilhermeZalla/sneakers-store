@@ -14,6 +14,7 @@ A full-stack sneakers and apparel storefront developed in 2026 with a Laravel RE
 - Customer reviews with editable scores/comments, average ratings and review counts.
 - Account notifications with unread counts, individual removal and a clear-read action.
 - Responsive layouts and language/currency switching.
+- Subtle mobile filter transitions and brief confirmation after successfully adding to the cart, with reduced-motion support.
 
 ## How it works
 
